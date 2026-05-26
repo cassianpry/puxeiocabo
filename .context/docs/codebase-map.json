@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-05-18T15:11:01.524Z",
+  "stack": {
+    "primaryLanguage": null,
+    "languages": [],
+    "frameworks": [],
+    "buildTools": [],
+    "testFrameworks": [],
+    "packageManager": null,
+    "isMonorepo": false,
+    "hasDocker": false,
+    "hasCI": false
+  },
+  "structure": {
+    "totalFiles": 1,
+    "rootPath": ".",
+    "topDirectories": [],
+    "languageDistribution": [
+      {
+        "extension": ".json",
+        "count": 1
+      }
+    ]
+  },
+  "architecture": {
+    "layers": [],
+    "patterns": [],
+    "entryPoints": [],
+    "mainEntryPoints": [],
+    "moduleExports": []
+  },
+  "symbols": {
+    "classes": [],
+    "interfaces": [],
+    "functions": [],
+    "types": [],
+    "enums": []
+  },
+  "publicAPI": [],
+  "dependencies": {
+    "mostImported": []
+  },
+  "stats": {
+    "totalSymbols": 0,
+    "exportedSymbols": 0,
+    "analysisTimeMs": 8
+  },
+  "keyFiles": [],
+  "navigation": {
+    "tests": "src/**/*.test.ts",
+    "config": [],
+    "types": [],
+    "mainLogic": [
+      "src"
+    ]
+  }
+}

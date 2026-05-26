@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
+  passwordHash    String
+  shortId         BigInt?  @unique
+  fighter         Fighter? @relation(fields: [shortId], references: [shortId])
+  refreshToken    String?
+  role            String   @default("user")
+  createdAt       DateTime @default(now())
+}
+
+model Fighter {
+  shortId         BigInt   @id @unique
+  fighterId       String?
+  platformId      Int
+  platformName    String
+  platformTool    String
+  account         Account?
+  reportsMade     Report[] @relation("Reporter")
+  reportsReceived Report[] @relation("Reported")
+}
+
+model Report {
+  id             Int      @id @default(autoincrement())
+  reporterId     BigInt
+  reportedId     BigInt
+  reporter       Fighter  @relation("Reporter", fields: [reporterId], references: [shortId])
+  reported       Fighter  @relation("Reported", fields: [reportedId], references: [shortId])
+  proofImagePath String
+  comment        String
+  adminComment   String?
+  exifData       String?
+  aiSuspicious   Boolean  @default(false)
+  aiReason       String?
+  createdAt      DateTime @default(now())
+  status         String   @default("pending")
+}

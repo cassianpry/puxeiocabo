@@ -1,0 +1,22 @@
+{
+  "name": "@puxeiocabo/scraper",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "run": "tsx src/index.ts run",
+    "validate": "tsx src/index.ts validate",
+    "resume": "tsx src/index.ts resume --failed"
+  },
+  "dependencies": {
+    "axios": "^1.7.0",
+    "cheerio": "^1.0.0",
+    "dotenv": "^16.4.0",
+    "p-limit": "^6.0.0",
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

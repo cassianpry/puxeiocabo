@@ -1,0 +1,51 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "Puxei o Cabo" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - navigation [ref=e7]:
+        - link "Entrar" [ref=e8] [cursor=pointer]:
+          - /url: /login
+        - link "Cadastrar" [ref=e9] [cursor=pointer]:
+          - /url: /register
+  - main [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - heading "Puxei o Cabo" [level=1] [ref=e13]
+        - paragraph [ref=e14]: Denuncie rage-quitters do Street Fighter 6
+        - generic [ref=e15]:
+          - link "Entrar" [ref=e16] [cursor=pointer]:
+            - /url: /login
+            - button "Entrar" [ref=e17]
+          - link "Cadastrar" [ref=e18] [cursor=pointer]:
+            - /url: /register
+            - button "Cadastrar" [ref=e19]
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - heading "Denúncias Recentes" [level=2] [ref=e22]
+          - generic [ref=e23]: 2 no total
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26] [cursor=pointer]:
+              - img "Prova" [ref=e27]
+              - generic:
+                - img
+            - generic [ref=e29]: Fake Fighter Test → ZSF | ricniclas
+            - paragraph [ref=e31]: Edited via Playwright test
+            - generic [ref=e33]: 25/05/2026
+          - generic [ref=e34]:
+            - generic [ref=e35] [cursor=pointer]:
+              - img "Prova" [ref=e36]
+              - generic:
+                - img
+            - generic [ref=e38]: Fake Fighter Test → ZSF | ricniclas
+            - paragraph [ref=e40]: Test report via Playwright
+            - generic [ref=e42]: 25/05/2026
+  - generic:
+    - contentinfo:
+      - button "Open TanStack Router Devtools" [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]:
+          - img [ref=e46]
+          - img [ref=e81]
+        - generic [ref=e115]: "-"
+        - generic [ref=e116]: TanStack Router
