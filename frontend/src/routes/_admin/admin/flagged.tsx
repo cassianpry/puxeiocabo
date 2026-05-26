@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useFlaggedReports } from '@/hooks/useFlaggedReports'
 import { useAdminStats } from '@/hooks/useAdminStats'
+import { EXIFIndicator } from '@/components/app/EXIFIndicator'
 import { EXIFViewer } from '@/components/app/EXIFViewer'
 import { ReportActions } from '@/components/app/ReportActions'
 import { StatusBadge } from '@/components/app/StatusBadge'
@@ -138,6 +139,9 @@ function AdminFlaggedPage() {
           <h3 className="text-sm font-medium text-muted-foreground">
             Denúncia #{report.id} — Dados EXIF
           </h3>
+          {report.aiSuspicious && (
+            <EXIFIndicator aiSuspicious={report.aiSuspicious} aiReason={report.aiReason || ''} />
+          )}
           {report.exifData ? (
             <EXIFViewer exifData={report.exifData} />
           ) : (

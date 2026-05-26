@@ -1,6 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useReport } from '@/hooks/useReport'
-import { EXIFIndicator } from '@/components/app/EXIFIndicator'
 import { StatusBadge } from '@/components/app/StatusBadge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -114,10 +113,6 @@ function ReportDetailPage() {
           />
         </CardContent>
       </Card>
-
-      {report.aiSuspicious && (
-        <EXIFIndicator aiSuspicious={report.aiSuspicious} aiReason={report.aiReason || ''} />
-      )}
 
       <div className="text-sm text-muted-foreground flex items-center gap-2">
         <Calendar className="h-4 w-4" />
