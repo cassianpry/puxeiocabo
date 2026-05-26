@@ -25,6 +25,7 @@ async function importFighters() {
     platformId: number;
     platformName: string;
     platformTool: string;
+    circleName: string | null;
   }>();
 
   // First pass: collect all unique fighters
@@ -41,12 +42,14 @@ async function importFighters() {
       }
       
       if (!fightersMap.has(pi.short_id)) {
+        const mc = entry.fighter_banner_info?.main_circle;
         fightersMap.set(pi.short_id, {
           shortId: BigInt(pi.short_id),
           fighterId: pi.fighter_id || null,
           platformId: pi.platform_id,
           platformName: pi.platform_name,
           platformTool: pi.platform_tool_name,
+          circleName: mc?.circle_name || null,
         });
       }
     }
@@ -72,11 +75,21 @@ async function importFighters() {
                 platformId: f.platformId,
                 platformName: f.platformName,
                 platformTool: f.platformTool,
+                circleName: f.circleName,
               },
             });
             updated++;
           } else {
-            await tx.fighter.create({ data: f });
+            await tx.fighter.create({
+              data: {
+                shortId: f.shortId,
+                fighterId: f.fighterId,
+                platformId: f.platformId,
+                platformName: f.platformName,
+                platformTool: f.platformTool,
+                circleName: f.circleName,
+              },
+            });
             imported++;
           }
         }

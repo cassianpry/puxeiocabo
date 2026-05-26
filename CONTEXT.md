@@ -10,6 +10,7 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
 | **short_id** | Unique numeric identifier for a Fighter. Stored as BigInt (exceeds 32-bit INT range). |
 | **fighter_id** | Player's display name on Capcom's system. Can be null or empty. |
 | **Platform** | Gaming platform (Steam, PS5, Xbox). Identified by `platform_id`. |
+| **circle_name** | The name of the Capcom Fighters Network circle a Fighter belongs to. Stored as `circleName` in the DB. Null when the Fighter has no circle. |
 | **Report** | A player-submitted report of a rage-quit (leaving mid-match). Includes proof image, comment, and status. |
 | **CFN** | Capcom Fighters Network — the in-game social/ranking system. |
 | **Buckler's Boot Camp** | Capcom's web portal for SF6 player stats and rankings. |

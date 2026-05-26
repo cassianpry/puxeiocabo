@@ -6,6 +6,7 @@ export interface Fighter {
   platformId: number
   platformName: string
   platformTool: string
+  circleName: string | null
 }
 
 export interface Report {

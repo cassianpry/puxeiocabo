@@ -1,6 +1,5 @@
-import { createFileRoute, redirect, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { api } from "@/lib/api";
-import { getPostAuthPath } from "@/lib/admin-routing";
 import type { Report } from "@/types/api";
 import { Button } from "@/components/ui/button";
 import { ReportCard } from "@/components/app/ReportCard";
@@ -9,24 +8,17 @@ export const Route = createFileRoute("/")({
   loader: async () => {
     const user = await api<{ role: string }>("/auth/me").catch(() => null);
 
-    if (user) {
-      throw redirect({ to: getPostAuthPath(user.role) });
-    }
+    const reports = await api<{ reports: Report[]; total: number }>(
+      "/reports?page=1&limit=10",
+    ).catch(() => ({ reports: [], total: 0 }));
 
-    try {
-      const reports = await api<{ reports: Report[]; total: number }>(
-        "/reports?page=1&limit=10",
-      );
-      return { reports: reports.reports, total: reports.total };
-    } catch {
-      return { reports: [], total: 0 };
-    }
+    return { user, reports: reports.reports, total: reports.total };
   },
   component: HomePage,
 });
 
 function HomePage() {
-  const { reports, total } = Route.useLoaderData();
+  const { user, reports, total } = Route.useLoaderData();
 
   return (
     <div className="space-y-8">
@@ -36,12 +28,25 @@ function HomePage() {
           Denuncie rage-quitters do Street Fighter 6
         </p>
         <div className="mt-6 flex justify-center gap-4">
-          <Link to="/login">
-            <Button>Entrar</Button>
-          </Link>
-          <Link to="/register">
-            <Button variant="outline">Cadastrar</Button>
-          </Link>
+          {user ? (
+            <>
+              <Link to="/dashboard">
+                <Button>Painel</Button>
+              </Link>
+              <Link to="/reports/new">
+                <Button variant="outline">Nova Denúncia</Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button>Entrar</Button>
+              </Link>
+              <Link to="/register">
+                <Button variant="outline">Cadastrar</Button>
+              </Link>
+            </>
+          )}
         </div>
       </section>
 
