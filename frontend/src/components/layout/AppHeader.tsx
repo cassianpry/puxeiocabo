@@ -12,7 +12,7 @@ export interface AppHeaderProps {
 
 export function AppHeader({ title, isAuthenticated, isLinked, role, onLogout }: AppHeaderProps) {
   return (
-    <header className="border-b border-border bg-card px-6 py-4">
+    <header className="border-b-2 border-b-primary bg-background px-6 py-4">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link to="/" className="text-lg font-bold">
           {title}
