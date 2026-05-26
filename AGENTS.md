@@ -27,6 +27,9 @@
 - Agent playbooks: `.context/agents/README.md`
 - Contributor guide: `CONTRIBUTING.md`
 
+## Project rules (`.opencode/rules/`)
+- `shadcn-never-edit.mdc` — **Never** touch files under `frontend/src/components/ui/` or `frontend/src/routeTree.gen.ts`. Custom styling goes in `globals.css`, `className` props, or `components/app/` wrappers.
+
 ## Build discipline
 - **NEVER** run `npm run build` after every change.
 - Only build when the user explicitly says `build` or `build it`.

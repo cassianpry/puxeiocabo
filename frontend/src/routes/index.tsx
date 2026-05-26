@@ -1,7 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { api } from "@/lib/api";
 import type { Report } from "@/types/api";
-import { Button } from "@/components/ui/button";
 import { ReportCard } from "@/components/app/ReportCard";
 
 export const Route = createFileRoute("/")({
@@ -18,36 +17,14 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const { user, reports, total } = Route.useLoaderData();
+  const { reports, total } = Route.useLoaderData();
 
   return (
     <div className="space-y-8">
       <section className="text-center py-12">
-        <h1 className="text-4xl font-bold">Puxei o Cabo</h1>
-        <p className="mt-3 text-lg text-muted-foreground">
+        <h1 className="text-4xl font-bold">
           Denuncie rage-quitters do Street Fighter 6
-        </p>
-        <div className="mt-6 flex justify-center gap-4">
-          {user ? (
-            <>
-              <Link to="/dashboard">
-                <Button>Painel</Button>
-              </Link>
-              <Link to="/reports/new">
-                <Button variant="outline">Nova Denúncia</Button>
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link to="/login">
-                <Button>Entrar</Button>
-              </Link>
-              <Link to="/register">
-                <Button variant="outline">Cadastrar</Button>
-              </Link>
-            </>
-          )}
-        </div>
+        </h1>
       </section>
 
       <section>
