@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export const Route = createFileRoute('/_auth/profile')({
   component: ProfilePage,
@@ -11,7 +12,17 @@ function ProfilePage() {
   const { user, isLoading } = useAuth()
 
   if (isLoading) {
-    return <div className="space-y-4">Carregando...</div>
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-32" />
+        <div className="rounded-lg border p-6 space-y-4">
+          <Skeleton className="h-4 w-40" />
+          <Skeleton className="h-6 w-56" />
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-6 w-36" />
+        </div>
+      </div>
+    )
   }
 
   return (

@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, redirect, Link } from '@tanstack/react-router'
 import { api } from '@/lib/api'
 import { getPostAuthPath } from '@/lib/admin-routing'
 import { useRegister } from '@/hooks/useRegister'
@@ -86,9 +86,9 @@ function RegisterPage() {
 
         <p className="text-center text-sm text-muted-foreground">
           Já tem uma conta?{' '}
-          <a href="/login" className="text-primary underline">
+          <Link to="/login" className="text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors duration-150">
             Entrar
-          </a>
+          </Link>
         </p>
       </div>
     </div>

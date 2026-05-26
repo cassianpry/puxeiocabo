@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { FighterSearchCombobox } from '@/components/app/FighterSearchCombobox'
 import { ImageUpload } from '@/components/app/ImageUpload'
 import { Button } from '@/components/ui/button'
@@ -15,6 +15,7 @@ export const Route = createFileRoute('/_auth/reports/new')({
 })
 
 function NewReportPage() {
+  const navigate = useNavigate()
   const [reported, setReported] = useState<Fighter | null>(null)
   const [comment, setComment] = useState('')
   const [proofFile, setProofFile] = useState<File | null>(null)
@@ -40,8 +41,7 @@ function NewReportPage() {
       formData.append('proof', proofFile)
       await apiFormData('/reports', formData)
       toast.success('Denúncia enviada com sucesso!')
-      // Navigate to dashboard
-      window.location.href = '/dashboard'
+      navigate({ to: '/dashboard' })
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Erro ao enviar denúncia')
       setError(err instanceof Error ? err.message : 'Erro ao enviar denúncia')
