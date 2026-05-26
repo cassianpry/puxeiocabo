@@ -76,6 +76,12 @@ function NewReportPage() {
 
         <div className="space-y-2">
           <Label>Imagem de prova</Label>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            O print precisa mostrar <strong>seu nome de jogador</strong>, o{" "}
+            <strong>nome do oponente</strong> e a{" "}
+            <strong>mensagem de desconexão</strong> na tela. Sem esses
+            elementos a denúncia pode ser rejeitada.
+          </p>
           <ImageUpload onChange={setProofFile} />
         </div>
 

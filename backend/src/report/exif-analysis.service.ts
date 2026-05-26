@@ -50,18 +50,6 @@ export class ExifAnalysisService {
         }
       }
 
-      const hasCameraMake = exifKeys.some(k => k.includes('make') || k.includes('model') || k.includes('software'));
-      const hasDateTime = exifKeys.some(k => k.includes('datetimeoriginal') || k.includes('createdate') || k.includes('modifydate'));
-
-      if (!hasCameraMake && !hasDateTime) {
-        return {
-          exifData,
-          aiSuspicious: true,
-          aiReason: 'Sem metadados de câmera ou data/hora — suspeito para uma foto',
-          autoReject: false,
-        };
-      }
-
       const softwareValue = (exif as any).Software || (exif as any).software || '';
       if (softwareValue && typeof softwareValue === 'string') {
         const softwareLower = softwareValue.toLowerCase();
