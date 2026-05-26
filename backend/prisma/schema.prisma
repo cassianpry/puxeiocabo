@@ -24,6 +24,7 @@ model Fighter {
   platformId      Int
   platformName    String
   platformTool    String
+  circleName      String?
   account         Account?
   reportsMade     Report[] @relation("Reporter")
   reportsReceived Report[] @relation("Reported")
