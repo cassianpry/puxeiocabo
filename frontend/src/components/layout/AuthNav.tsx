@@ -18,7 +18,7 @@ export function AuthNav({ isAuthenticated, isLinked, isAdmin, onLogout }: AuthNa
           <Link
             key={item.label}
             to={item.to}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors duration-150"
           >
             {item.label}
           </Link>
@@ -27,7 +27,7 @@ export function AuthNav({ isAuthenticated, isLinked, isAdmin, onLogout }: AuthNa
             key={item.label}
             type="button"
             onClick={onLogout}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors duration-150"
           >
             {item.label}
           </button>

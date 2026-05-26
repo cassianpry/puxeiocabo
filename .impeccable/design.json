@@ -7,65 +7,76 @@
       "deep-canvas": {
         "role": "neutral",
         "displayName": "Deep Canvas",
-        "canonical": "oklch(0.14 0.015 250)",
-        "tonalRamp": ["oklch(0.05 0.005 250)", "oklch(0.08 0.008 250)", "oklch(0.11 0.01 250)", "oklch(0.14 0.015 250)", "oklch(0.18 0.012 250)", "oklch(0.22 0.01 250)", "oklch(0.28 0.008 250)", "oklch(0.35 0.006 250)"]
+        "canonical": "oklch(0.10 0.02 260)",
+        "tonalRamp": ["oklch(0.04 0.01 260)", "oklch(0.06 0.015 260)", "oklch(0.08 0.018 260)", "oklch(0.10 0.02 260)", "oklch(0.13 0.018 260)", "oklch(0.16 0.015 260)", "oklch(0.19 0.012 260)", "oklch(0.22 0.01 260)"]
       },
       "dark-ash": {
         "role": "neutral",
         "displayName": "Dark Ash",
-        "canonical": "oklch(0.20 0.01 250)",
-        "tonalRamp": ["oklch(0.08 0.004 250)", "oklch(0.12 0.006 250)", "oklch(0.16 0.008 250)", "oklch(0.20 0.01 250)", "oklch(0.26 0.008 250)", "oklch(0.32 0.006 250)", "oklch(0.40 0.004 250)", "oklch(0.50 0.003 250)"]
+        "canonical": "oklch(0.16 0.03 260)",
+        "tonalRamp": ["oklch(0.07 0.01 260)", "oklch(0.10 0.015 260)", "oklch(0.13 0.02 260)", "oklch(0.16 0.03 260)", "oklch(0.20 0.025 260)", "oklch(0.24 0.02 260)", "oklch(0.28 0.015 260)", "oklch(0.32 0.01 260)"]
       },
       "muted-stone": {
         "role": "neutral",
         "displayName": "Muted Stone",
-        "canonical": "oklch(0.27 0.008 250)",
-        "tonalRamp": ["oklch(0.10 0.003 250)", "oklch(0.15 0.005 250)", "oklch(0.20 0.006 250)", "oklch(0.27 0.008 250)", "oklch(0.34 0.006 250)", "oklch(0.42 0.005 250)", "oklch(0.50 0.003 250)", "oklch(0.60 0.002 250)"]
+        "canonical": "oklch(0.22 0.04 260)",
+        "tonalRamp": ["oklch(0.10 0.015 260)", "oklch(0.14 0.02 260)", "oklch(0.18 0.03 260)", "oklch(0.22 0.04 260)", "oklch(0.28 0.035 260)", "oklch(0.34 0.03 260)", "oklch(0.40 0.025 260)", "oklch(0.46 0.02 260)"]
       },
       "iron-border": {
         "role": "neutral",
         "displayName": "Iron Border",
-        "canonical": "oklch(0.37 0.006 250)",
-        "tonalRamp": ["oklch(0.15 0.002 250)", "oklch(0.22 0.003 250)", "oklch(0.29 0.004 250)", "oklch(0.37 0.006 250)", "oklch(0.45 0.004 250)", "oklch(0.53 0.003 250)", "oklch(0.62 0.002 250)", "oklch(0.72 0.001 250)"]
+        "canonical": "oklch(0.35 0.08 260)",
+        "tonalRamp": ["oklch(0.15 0.03 260)", "oklch(0.20 0.04 260)", "oklch(0.28 0.06 260)", "oklch(0.35 0.08 260)", "oklch(0.42 0.07 260)", "oklch(0.50 0.06 260)", "oklch(0.58 0.05 260)", "oklch(0.66 0.04 260)"]
       },
-      "match-light": {
+      "arcade-blue": {
         "role": "primary",
-        "displayName": "Match Light",
-        "canonical": "oklch(0.92 0.01 250)",
-        "tonalRamp": ["oklch(0.30 0.003 250)", "oklch(0.42 0.005 250)", "oklch(0.55 0.006 250)", "oklch(0.68 0.008 250)", "oklch(0.78 0.008 250)", "oklch(0.85 0.009 250)", "oklch(0.92 0.01 250)", "oklch(0.96 0.005 250)"]
+        "displayName": "Arcade Blue",
+        "canonical": "oklch(0.60 0.22 235)",
+        "tonalRamp": ["oklch(0.20 0.22 235)", "oklch(0.30 0.22 235)", "oklch(0.40 0.22 235)", "oklch(0.50 0.22 235)", "oklch(0.60 0.22 235)", "oklch(0.70 0.22 235)", "oklch(0.80 0.22 235)", "oklch(0.90 0.22 235)"]
+      },
+      "arcade-yellow": {
+        "role": "accent",
+        "displayName": "Arcade Yellow",
+        "canonical": "oklch(0.78 0.2 85)",
+        "tonalRamp": ["oklch(0.25 0.2 85)", "oklch(0.38 0.2 85)", "oklch(0.50 0.2 85)", "oklch(0.65 0.2 85)", "oklch(0.78 0.2 85)", "oklch(0.85 0.15 85)", "oklch(0.90 0.1 85)", "oklch(0.95 0.05 85)"]
+      },
+      "arcade-pink": {
+        "role": "destructive",
+        "displayName": "Arcade Pink",
+        "canonical": "oklch(0.58 0.24 350)",
+        "tonalRamp": ["oklch(0.15 0.24 350)", "oklch(0.25 0.24 350)", "oklch(0.35 0.24 350)", "oklch(0.45 0.24 350)", "oklch(0.58 0.24 350)", "oklch(0.68 0.24 350)", "oklch(0.78 0.24 350)", "oklch(0.88 0.24 350)"]
       },
       "dusk-text": {
         "role": "neutral",
         "displayName": "Dusk Text",
-        "canonical": "oklch(0.71 0.01 250)",
-        "tonalRamp": ["oklch(0.25 0.003 250)", "oklch(0.38 0.005 250)", "oklch(0.50 0.006 250)", "oklch(0.62 0.008 250)", "oklch(0.71 0.01 250)", "oklch(0.80 0.008 250)", "oklch(0.88 0.005 250)", "oklch(0.95 0.003 250)"]
+        "canonical": "oklch(0.65 0.03 260)",
+        "tonalRamp": ["oklch(0.22 0.01 260)", "oklch(0.33 0.015 260)", "oklch(0.44 0.02 260)", "oklch(0.55 0.025 260)", "oklch(0.65 0.03 260)", "oklch(0.75 0.025 260)", "oklch(0.85 0.02 260)", "oklch(0.92 0.015 260)"]
       },
       "snow-text": {
         "role": "neutral",
         "displayName": "Snow Text",
-        "canonical": "oklch(0.98 0.005 250)",
-        "tonalRamp": ["oklch(0.35 0.002 250)", "oklch(0.48 0.003 250)", "oklch(0.62 0.003 250)", "oklch(0.75 0.004 250)", "oklch(0.85 0.004 250)", "oklch(0.92 0.005 250)", "oklch(0.98 0.005 250)", "oklch(0.99 0.003 250)"]
+        "canonical": "oklch(0.96 0.01 260)",
+        "tonalRamp": ["oklch(0.30 0.003 260)", "oklch(0.42 0.005 260)", "oklch(0.55 0.006 260)", "oklch(0.70 0.008 260)", "oklch(0.82 0.008 260)", "oklch(0.90 0.009 260)", "oklch(0.96 0.01 260)", "oklch(0.99 0.005 260)"]
       },
-      "signal-blue": {
-        "role": "accent",
-        "displayName": "Signal Blue",
-        "canonical": "oklch(0.55 0.2 250)",
-        "tonalRamp": ["oklch(0.15 0.2 250)", "oklch(0.25 0.2 250)", "oklch(0.35 0.2 250)", "oklch(0.45 0.2 250)", "oklch(0.55 0.2 250)", "oklch(0.65 0.2 250)", "oklch(0.75 0.2 250)", "oklch(0.85 0.2 250)"]
-      },
-      "flag-red": {
-        "role": "destructive",
-        "displayName": "Flag Red",
-        "canonical": "oklch(0.577 0.245 27.325)",
-        "tonalRamp": ["oklch(0.15 0.245 27)", "oklch(0.25 0.245 27)", "oklch(0.35 0.245 27)", "oklch(0.45 0.245 27)", "oklch(0.577 0.245 27.325)", "oklch(0.68 0.245 27)", "oklch(0.78 0.245 27)", "oklch(0.88 0.245 27)"]
-      },
-      "clear-green": {
+      "success-green": {
         "role": "success",
-        "displayName": "Clear Green",
-        "canonical": "oklch(0.723 0.219 149.579)",
-        "tonalRamp": ["oklch(0.15 0.219 150)", "oklch(0.25 0.219 150)", "oklch(0.35 0.219 150)", "oklch(0.50 0.219 150)", "oklch(0.62 0.219 150)", "oklch(0.723 0.219 149.579)", "oklch(0.82 0.219 150)", "oklch(0.92 0.219 150)"]
+        "displayName": "Success Green",
+        "canonical": "oklch(0.65 0.2 145)",
+        "tonalRamp": ["oklch(0.15 0.2 145)", "oklch(0.25 0.2 145)", "oklch(0.35 0.2 145)", "oklch(0.50 0.2 145)", "oklch(0.65 0.2 145)", "oklch(0.75 0.2 145)", "oklch(0.85 0.15 145)", "oklch(0.92 0.1 145)"]
+      },
+      "warning-amber": {
+        "role": "warning",
+        "displayName": "Warning Amber",
+        "canonical": "oklch(0.7 0.2 65)",
+        "tonalRamp": ["oklch(0.15 0.2 65)", "oklch(0.25 0.2 65)", "oklch(0.35 0.2 65)", "oklch(0.50 0.2 65)", "oklch(0.7 0.2 65)", "oklch(0.80 0.15 65)", "oklch(0.88 0.1 65)", "oklch(0.95 0.05 65)"]
       }
     },
     "typographyMeta": {
+      "heading": {
+        "displayName": "Heading",
+        "fontFamily": "Archivo Black, sans-serif",
+        "purpose": "Bold uppercase titles and section headings. Display impact for arcade feel."
+      },
       "body": {
         "displayName": "Body",
         "purpose": "Primary reading text, descriptions, paragraph content."
@@ -106,127 +117,127 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Primary call-to-action. Light button on dark background — the spotlight effect.",
+      "description": "Primary call-to-action. Arcade-blue background with neon glow on hover.",
       "html": "<button class=\"ds-btn-primary\">Entrar</button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 2.25rem; padding: 0.5rem 1rem; border-radius: 0.375rem; background: oklch(0.92 0.01 250); color: oklch(0.14 0.015 250); font-size: 0.875rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; border: none; cursor: pointer; transition: background 150ms cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; } .ds-btn-primary:hover { background: oklch(0.83 0.01 250); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.55 0.2 250 / 0.5); } .ds-btn-primary:disabled { opacity: 0.5; pointer-events: none; }"
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 2.25rem; padding: 0.5rem 1rem; border-radius: 0.375rem; background: oklch(0.60 0.22 235); color: oklch(0.10 0.02 260); font-size: 0.875rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; border: none; cursor: pointer; transition: box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1), background 150ms cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 0 0 0 oklch(0.60 0.22 235 / 0); white-space: nowrap; } .ds-btn-primary:hover { box-shadow: 0 0 16px oklch(0.60 0.22 235 / 0.5); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.60 0.22 235 / 0.5); } .ds-btn-primary:disabled { opacity: 0.5; pointer-events: none; }"
     },
     {
       "name": "Outline Button",
       "kind": "button",
       "refersTo": "button-outline",
-      "description": "Secondary action. Bordered, transparent. For dismissive or non-primary calls.",
+      "description": "Secondary action. Arcade-blue border, transparent background.",
       "html": "<button class=\"ds-btn-outline\">Cancelar</button>",
-      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 2.25rem; padding: 0.5rem 1rem; border-radius: 0.375rem; background: transparent; color: oklch(0.98 0.005 250); font-size: 0.875rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; border: 1px solid oklch(0.37 0.006 250); cursor: pointer; transition: background 150ms cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; } .ds-btn-outline:hover { background: oklch(0.27 0.008 250); } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.55 0.2 250 / 0.5); } .ds-btn-outline:disabled { opacity: 0.5; pointer-events: none; }"
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 2.25rem; padding: 0.5rem 1rem; border-radius: 0.375rem; background: transparent; color: oklch(0.60 0.22 235); font-size: 0.875rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; border: 1px solid oklch(0.60 0.22 235); cursor: pointer; transition: background 150ms cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; } .ds-btn-outline:hover { background: oklch(0.60 0.22 235 / 0.1); } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.60 0.22 235 / 0.5); } .ds-btn-outline:disabled { opacity: 0.5; pointer-events: none; }"
     },
     {
       "name": "Card",
       "kind": "card",
       "refersTo": "card-default",
-      "description": "Content container. Used for report cards, fighter info, stat cards, detail sections.",
-      "html": "<div class=\"ds-card\"><div class=\"ds-card-header\"><h3 class=\"ds-card-title\">Título do Card</h3></div><div class=\"ds-card-body\"><p class=\"ds-card-text\">Conteúdo do card. Texto descritivo ou metadados.</p></div></div>",
-      "css": ".ds-card { background: oklch(0.20 0.01 250); border-radius: 0.5rem; border: 1px solid oklch(0.37 0.006 250); padding: 1.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: oklch(0.98 0.005 250); } .ds-card-header { margin-bottom: 0.5rem; } .ds-card-title { font-size: 1rem; font-weight: 600; line-height: 1.4; margin: 0; } .ds-card-body { } .ds-card-text { font-size: 0.875rem; line-height: 1.5; color: oklch(0.71 0.01 250); margin: 0; }"
+      "description": "Content container with arcade-blue neon shelf (2px top border). Hover lifts with glow.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-header\"><h3 class=\"ds-card-title\">Título do Card</h3></div><div class=\"ds-card-body\"><p class=\"ds-card-text\">Conteúdo do card.</p></div></div>",
+      "css": ".ds-card { background: oklch(0.16 0.03 260); border-radius: 0.5rem; border: 1px solid oklch(0.35 0.08 260); border-top: 2px solid oklch(0.60 0.22 235); padding: 1.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: oklch(0.96 0.01 260); transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px oklch(0.60 0.22 235 / 0.15); } .ds-card-header { margin-bottom: 0.5rem; } .ds-card-title { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; font-size: 1rem; font-weight: 400; line-height: 1.4; margin: 0; } .ds-card-body { } .ds-card-text { font-size: 0.875rem; line-height: 1.5; color: oklch(0.65 0.03 260); margin: 0; }"
     },
     {
       "name": "Text Input",
       "kind": "input",
       "refersTo": "input-default",
-      "description": "Standard form input for email, password, search, and text data.",
+      "description": "Standard form input with arcade-blue focus ring.",
       "html": "<div class=\"ds-input-wrapper\"><label class=\"ds-input-label\" for=\"email\">E-mail</label><input class=\"ds-input\" id=\"email\" type=\"email\" placeholder=\"seu@email.com\" /></div>",
-      "css": ".ds-input-wrapper { display: flex; flex-direction: column; gap: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; } .ds-input-label { font-size: 0.875rem; font-weight: 500; color: oklch(0.98 0.005 250); line-height: 1; } .ds-input { height: 2.25rem; padding: 0.5rem 0.75rem; border-radius: 0.375rem; background: oklch(0.14 0.015 250); color: oklch(0.98 0.005 250); font-size: 0.875rem; font-family: inherit; border: 1px solid oklch(0.37 0.006 250); transition: box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1); outline: none; } .ds-input::placeholder { color: oklch(0.71 0.01 250); } .ds-input:focus { box-shadow: 0 0 0 3px oklch(0.55 0.2 250 / 0.5); } .ds-input:disabled { opacity: 0.5; pointer-events: none; }"
+      "css": ".ds-input-wrapper { display: flex; flex-direction: column; gap: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; } .ds-input-label { font-size: 0.875rem; font-weight: 500; color: oklch(0.96 0.01 260); line-height: 1; } .ds-input { height: 2.25rem; padding: 0.5rem 0.75rem; border-radius: 0.375rem; background: oklch(0.10 0.02 260); color: oklch(0.96 0.01 260); font-size: 0.875rem; font-family: inherit; border: 1px solid oklch(0.35 0.08 260); transition: box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1); outline: none; } .ds-input::placeholder { color: oklch(0.65 0.03 260); } .ds-input:focus { box-shadow: 0 0 0 3px oklch(0.60 0.22 235 / 0.5); } .ds-input:disabled { opacity: 0.5; pointer-events: none; }"
     },
     {
       "name": "Status Badge — Pending",
       "kind": "chip",
       "refersTo": "badge-pending",
-      "description": "Shows a report is awaiting review. Neutral secondary tone.",
+      "description": "Shows a report is awaiting review. Arcade-yellow background.",
       "html": "<span class=\"ds-badge-pending\">Pendente</span>",
-      "css": ".ds-badge-pending { display: inline-flex; align-items: center; padding: 0.125rem 0.625rem; border-radius: 0.375rem; background: oklch(0.27 0.008 250); color: oklch(0.98 0.005 250); font-size: 0.75rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; line-height: 1.25rem; white-space: nowrap; }"
+      "css": ".ds-badge-pending { display: inline-flex; align-items: center; padding: 0.125rem 0.625rem; border-radius: 0.375rem; background: oklch(0.78 0.2 85); color: oklch(0.10 0.02 260); font-size: 0.75rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; line-height: 1.25rem; white-space: nowrap; }"
     },
     {
       "name": "Status Badge — Approved",
       "kind": "chip",
       "refersTo": "badge-approved",
-      "description": "Confirmed legitimate report. Green semantic color.",
+      "description": "Confirmed legitimate report. Success green background.",
       "html": "<span class=\"ds-badge-approved\">Aprovado</span>",
-      "css": ".ds-badge-approved { display: inline-flex; align-items: center; padding: 0.125rem 0.625rem; border-radius: 0.375rem; background: oklch(0.723 0.219 149.579); color: oklch(0.985 0 0); font-size: 0.75rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; line-height: 1.25rem; white-space: nowrap; }"
+      "css": ".ds-badge-approved { display: inline-flex; align-items: center; padding: 0.125rem 0.625rem; border-radius: 0.375rem; background: oklch(0.65 0.2 145); color: oklch(0.96 0.01 260); font-size: 0.75rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; line-height: 1.25rem; white-space: nowrap; }"
     },
     {
       "name": "Status Badge — Rejected",
       "kind": "chip",
       "refersTo": "badge-rejected",
-      "description": "Report denied by admin. Red destructive color.",
+      "description": "Report denied by admin. Arcade-pink background.",
       "html": "<span class=\"ds-badge-rejected\">Rejeitado</span>",
-      "css": ".ds-badge-rejected { display: inline-flex; align-items: center; padding: 0.125rem 0.625rem; border-radius: 0.375rem; background: oklch(0.577 0.245 27.325); color: oklch(0.985 0 0); font-size: 0.75rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; line-height: 1.25rem; white-space: nowrap; }"
+      "css": ".ds-badge-rejected { display: inline-flex; align-items: center; padding: 0.125rem 0.625rem; border-radius: 0.375rem; background: oklch(0.58 0.24 350); color: oklch(0.96 0.01 260); font-size: 0.75rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; line-height: 1.25rem; white-space: nowrap; }"
     },
     {
       "name": "Report Card (Homepage)",
       "kind": "card",
       "refersTo": "card-report",
-      "description": "Image-first grid card with hover overlay and lightbox dialog, on blue-toned dark background.",
+      "description": "Image-first grid card with hover overlay, arcade-blue neon shelf, and lightbox dialog.",
       "html": "<div class=\"ds-report-card\"><div class=\"ds-report-image-wrap\"><div class=\"ds-report-overlay\"><svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg></div></div><div class=\"ds-report-info\"><div class=\"ds-report-title\">Reporter → Reported</div><p class=\"ds-report-comment\">Comentário da denúncia.</p></div><div class=\"ds-report-footer\">26/05/2026</div></div>",
-      "css": ".ds-report-card { background: oklch(0.20 0.01 250); border-radius: 0.5rem; border: 1px solid oklch(0.37 0.006 250); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: oklch(0.98 0.005 250); } .ds-report-image-wrap { position: relative; overflow: hidden; cursor: pointer; } .ds-report-image-wrap::before { content: ''; display: block; padding-top: 66%; background: oklch(0.27 0.008 250); } .ds-report-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: oklch(0.92 0.01 250 / 0.6); opacity: 0; transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-report-card:hover .ds-report-overlay { opacity: 1; } .ds-report-info { padding: 0.75rem 1rem 0.5rem; text-align: center; } .ds-report-title { font-size: 0.875rem; font-weight: 500; line-height: 1.3; margin-bottom: 0.25rem; } .ds-report-comment { font-size: 0.875rem; line-height: 1.5; color: oklch(0.71 0.01 250); margin: 0; } .ds-report-footer { padding: 0.75rem 1rem; text-align: center; border-top: 1px solid oklch(0.37 0.006 250); font-size: 0.75rem; color: oklch(0.71 0.01 250); }"
+      "css": ".ds-report-card { background: oklch(0.16 0.03 260); border-radius: 0.5rem; border: 1px solid oklch(0.35 0.08 260); border-top: 2px solid oklch(0.60 0.22 235); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: oklch(0.96 0.01 260); transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-report-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px oklch(0.60 0.22 235 / 0.15); } .ds-report-image-wrap { position: relative; overflow: hidden; cursor: pointer; } .ds-report-image-wrap::before { content: ''; display: block; padding-top: 66%; background: oklch(0.22 0.04 260); } .ds-report-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: oklch(0.60 0.22 235 / 0.6); opacity: 0; transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-report-card:hover .ds-report-overlay { opacity: 1; } .ds-report-info { padding: 0.75rem 1rem 0.5rem; text-align: center; } .ds-report-title { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; font-size: 0.875rem; font-weight: 400; margin-bottom: 0.25rem; } .ds-report-comment { font-size: 0.875rem; line-height: 1.5; color: oklch(0.65 0.03 260); margin: 0; } .ds-report-footer { padding: 0.75rem 1rem; text-align: center; border-top: 1px solid oklch(0.35 0.08 260); font-size: 0.75rem; color: oklch(0.65 0.03 260); }"
     },
     {
       "name": "Image Upload Zone",
       "kind": "custom",
       "refersTo": "upload-zone",
-      "description": "Drag-and-drop file upload area with dashed border, icon, and select button.",
+      "description": "Drag-and-drop file upload area with dashed border and arcade-blue focus state.",
       "html": "<div class=\"ds-upload-zone\"><svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"ds-upload-icon\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"17 8 12 3 7 8\"/><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/></svg><p class=\"ds-upload-text\">Arraste a imagem aqui</p><p class=\"ds-upload-text\">ou</p><button class=\"ds-upload-btn\">Selecionar</button><p class=\"ds-upload-small\">JPEG apenas</p></div>",
-      "css": ".ds-upload-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; padding: 2rem; border-radius: 0.5rem; border: 2px dashed oklch(0.71 0.01 250 / 0.3); background: oklch(0.27 0.008 250 / 0.2); cursor: pointer; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; transition: border-color 150ms cubic-bezier(0.16, 1, 0.3, 1), background 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-upload-zone:hover { border-color: oklch(0.71 0.01 250 / 0.5); background: oklch(0.27 0.008 250 / 0.3); } .ds-upload-icon { color: oklch(0.71 0.01 250); } .ds-upload-text { font-size: 0.875rem; color: oklch(0.71 0.01 250); margin: 0; } .ds-upload-small { font-size: 0.75rem; color: oklch(0.71 0.01 250); margin: 0; } .ds-upload-btn { display: inline-flex; align-items: center; justify-content: center; height: 2rem; padding: 0 0.75rem; border-radius: 0.375rem; background: oklch(0.27 0.008 250); color: oklch(0.98 0.005 250); font-size: 0.875rem; font-weight: 500; border: none; cursor: pointer; transition: background 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-upload-btn:hover { background: oklch(0.27 0.008 250 / 0.8); }"
+      "css": ".ds-upload-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; padding: 2rem; border-radius: 0.5rem; border: 2px dashed oklch(0.35 0.08 260 / 0.3); background: oklch(0.22 0.04 260 / 0.2); cursor: pointer; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; transition: border-color 150ms cubic-bezier(0.16, 1, 0.3, 1), background 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-upload-zone:hover { border-color: oklch(0.60 0.22 235 / 0.5); background: oklch(0.22 0.04 260 / 0.3); } .ds-upload-icon { color: oklch(0.65 0.03 260); } .ds-upload-text { font-size: 0.875rem; color: oklch(0.65 0.03 260); margin: 0; } .ds-upload-small { font-size: 0.75rem; color: oklch(0.65 0.03 260); margin: 0; } .ds-upload-btn { display: inline-flex; align-items: center; justify-content: center; height: 2rem; padding: 0 0.75rem; border-radius: 0.375rem; background: oklch(0.60 0.22 235); color: oklch(0.10 0.02 260); font-size: 0.875rem; font-weight: 500; font-family: 'Archivo Black', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; border: none; cursor: pointer; transition: box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-upload-btn:hover { box-shadow: 0 0 16px oklch(0.60 0.22 235 / 0.5); }"
     },
     {
       "name": "Navigation Link",
       "kind": "nav",
       "refersTo": "nav-link",
-      "description": "Top bar navigation item. Muted default, bright on hover.",
+      "description": "Top bar navigation item. Muted default, arcade-blue on hover.",
       "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link\" href=\"#\">Painel</a><a class=\"ds-nav-link\" href=\"#\">Nova Denúncia</a><a class=\"ds-nav-link\" href=\"#\">Perfil</a><a class=\"ds-nav-link ds-nav-link-logout\" href=\"#\">Sair</a></nav>",
-      "css": ".ds-nav { display: flex; align-items: center; gap: 1rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; } .ds-nav-link { font-size: 0.875rem; font-weight: 400; color: oklch(0.71 0.01 250); text-decoration: none; transition: color 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-nav-link:hover { color: oklch(0.98 0.005 250); } .ds-nav-link-logout { cursor: pointer; }"
+      "css": ".ds-nav { display: flex; align-items: center; gap: 1rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; } .ds-nav-link { font-size: 0.875rem; font-weight: 400; color: oklch(0.65 0.03 260); text-decoration: none; transition: color 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-nav-link:hover { color: oklch(0.60 0.22 235); text-decoration: underline; text-underline-offset: 4px; } .ds-nav-link-logout { cursor: pointer; }"
     }
   ],
   "narrative": {
-    "northStar": "O Ringue (The Ring)",
-    "overview": "The interface is the arena. Deep blue-black backdrop, bright central action, no distractions around the edges. Like a fighting game tournament stage under a cool arena light: the player's evidence is the only thing that matters, and everything else exists to support it without competing.\n\nThis system is built for the Brazilian Street Fighter 6 community — players who just finished a ranked match where the opponent disconnected, frustrated but looking for a constructive outlet. The design serves that moment: fast to enter, clear to read, honest about what it is. No corporate polish, no gamer theatrics. Just a well-lit table where proof is examined and calls are made.\n\nThe system explicitly rejects generic dark SaaS aesthetics, neon/cyberpunk gaming tropes, and false authority badges.",
+    "northStar": "Arcade Cabinet",
+    "overview": "The interface is a Brazilian arcade at night. Deep blue-black backdrop, neon glows, colors that pop against the darkness. Like walking past a row of arcade cabinets — each screen is a portal to a different fight. The player's evidence is front and center, highlighted by electric blue and yellow accents that say 'this matters.'\n\nBuilt for the Brazilian Street Fighter 6 community. Players who just finished a ranked match where the opponent disconnected, frustrated but looking for a constructive outlet. The design serves that moment: fast, familiar, energetic. No corporate polish, no sterile SaaS — this is a community tool with the soul of an arcade.\n\nThe system explicitly rejects generic dark SaaS aesthetics and false authority badges.",
     "keyCharacteristics": [
-      "Blue-black canvas with tonal depth through contrast, not shadows",
-      "Single near-white spotlight accent against cool blue-toned neutrals",
-      "Desaturated signal blue for interactive states and focus indicators",
-      "System fonts throughout — one family, no pairing",
-      "Evidence-first layouts: images centered, chrome receded",
-      "Tactile responsiveness on every interactive element",
-      "pt-BR language throughout — the interface speaks to the community in its own voice"
+      "Deep blue-black canvas (oklch(0.10 0.02 260)) — darker and cooler than ever",
+      "Electric arcade-blue primary action color with neon glow on hover",
+      "Arcade-yellow for badges and secondary highlights",
+      "Arcade-pink for destructive actions (replaces standard red)",
+      "Archivo Black for headings — bold, uppercase, impactful",
+      "System fonts for body readability",
+      "2px arcade-blue top border on cards as the Neon Shelf signature",
+      "Flat at rest, glow on interaction — no shadows when idle",
+      "pt-BR language throughout"
     ],
     "rules": [
-      { "name": "The Single Spotlight Rule", "body": "The `match-light` accent occupies at most 10% of any given screen. Its rarity is what makes it read as the focus. Applying it to backgrounds, decorative elements, or more than one competing element per viewport dilutes the whole system.", "section": "colors" },
-      { "name": "The Tonal Depth Rule", "body": "Hierarchy is communicated through lightness steps, not shadows. `deep-canvas` → `dark-ash` → `muted-stone` form a three-step elevation ladder. No surface at rest carries a box-shadow. This rule keeps the ring feeling flat, honest, and grounded.", "section": "colors" },
-      { "name": "The Signal Rule", "body": "`signal-blue` is reserved for focus and interaction feedback only — never as a surface color or page accent. It signals that an element is interactive, not decorative.", "section": "colors" },
-      { "name": "The One Family Rule", "body": "No display fonts, no serif/sans pairings, no variable font axes to animate. Every piece of text uses the same system stack. Differentiation comes from weight (400/500/600/700) and scale, not family changes.", "section": "typography" },
-      { "name": "The Flat Surface Rule", "body": "A surface at rest has no shadow. Elevation cues exist only through tonal layer shifts. If a card needs to feel 'higher,' move it one lightness step: card to popover (`dark-ash` to `muted-stone` border). Do not add a shadow.", "section": "elevation" }
+      { "name": "The Neon Shelf Rule", "body": "Every card gets a 2px arcade-blue top border. This is the primary visual signature of the system. Applied consistently across all card surfaces, it creates the sensation of a shelf of arcade cabinets.", "section": "colors" },
+      { "name": "The Single Glow Rule", "body": "Only one element per viewport should have active glow at a time. Glow is feedback for the element being interacted with — never decorative, never persistent.", "section": "colors" },
+      { "name": "The Signal Rule", "body": "Arcade-blue is reserved for interactive states and feedback — buttons, links, focus rings. Never use it as a surface background or decorative element.", "section": "colors" },
+      { "name": "The One Family Rule", "body": "Body text uses system fonts. Headings use Archivo Black exclusively. No pairing, no variable axes. Differentiation comes from weight and scale, not family changes.", "section": "typography" },
+      { "name": "The Flat Surface Rule", "body": "A surface at rest has no shadow. Glow appears only on hover or focus as interaction feedback. If a card needs to feel higher, move it one tonal step, not shadow.", "section": "elevation" }
     ],
     "dos": [
-      "Do use the three tonal steps (canvas → ash → stone) for surface hierarchy. It's the only elevation tool you need.",
-      "Do lead with the image. Report cards center proof screenshots; lightboxes open them full-width. Evidence is the hero.",
-      "Do use `match-light` sparingly. One primary action per view. The spotlight only hits one spot.",
-      "Do reserve `signal-blue` for focus rings and interaction states only — never as a surface or accent.",
-      "Do write in pt-BR with the warmth and directness of the Brazilian fighting game community. \"Playful, sharp, clear\" — like a tournament referee who has seen it all (PRODUCT.md).",
-      "Do use system fonts everywhere. No `@font-face`, no Google Fonts, no variable fonts. The platform's native typeface is the right one.",
-      "Do show skeleton loading for tables, cards, and detail views. Never show a spinner in the middle of content.",
-      "Do keep buttons responsive at 150ms transitions. The ring is a fast place.",
-      "Do use 65–75ch line length for prose sections. Data tables can run wider."
+      "Do use the Neon Shelf (2px arcade-blue top border) on all cards",
+      "Do use arcade-blue for primary actions, links, and focus indicators",
+      "Do use arcade-yellow for pending/warning states",
+      "Do use arcade-pink for destructive/rejected states",
+      "Do use Archivo Black for headings — uppercase for impact",
+      "Do write in pt-BR with the warmth and directness of the Brazilian fighting game community",
+      "Do use hover glow (box-shadow with arcade-blue) on buttons and cards",
+      "Do keep 150ms transitions on interactive elements",
+      "Do show skeleton loading for tables, cards, and detail views"
     ],
     "donts": [
-      "Don't use border-left or border-right greater than 1px as a colored accent on cards, list items, or alerts. Use full borders, background tints, or nothing — never a stripe.",
-      "Don't use gradient text (background-clip: text + gradient). Emphasis is for weight and size only.",
-      "Don't apply glassmorphism (blurs, glass cards) as a default. The interface is flat and honest, not glossy.",
-      "Don't use the hero-metric template (big number, small label, supporting stats, gradient accent). This is a community tool, not a SaaS landing page.",
-      "Don't create identical card grids with icon + heading + text repeated endlessly. Vary the card types.",
-      "Don't use modals as a first thought — exhaust inline and progressive disclosure alternatives first (PRODUCT.md: \"Respect the user's time\").",
-      "Don't use neon, cyberpunk, or RGB-gamer aesthetic — no excessive glow, no forced gaming tropes (PRODUCT.md anti-reference).",
-      "Don't add badges, trust seals, or \"enterprise\" signaling. False authority has no place here (PRODUCT.md anti-reference).",
-      "Don't make the design look like a generic dark SaaS admin panel. This is the Brazilian SF6 community's tool, not a corporate dashboard (PRODUCT.md anti-reference).",
-      "Don't use `signal-blue` as a surface color or decorative backdrop. It belongs on focus rings and interactive feedback only.",
-      "Don't animate CSS layout properties. Use transition on opacity, transform, and color only. Ease with exponential curves (ease-out).",
-      "Don't use em dashes. Substitute commas, colons, semicolons, or periods.",
-      "Don't apply color to inactive states. Inactive means muted (dusk-text or muted-stone)."
+      "Don't use arcade-blue as a surface or decorative background",
+      "Don't use box-shadow at rest — glow is for interaction only",
+      "Don't use gradient text or glassmorphism",
+      "Don't use modals as a first thought — exhaust inline and progressive disclosure first",
+      "Don't use neon/cyberpunk/RGB-gamer aesthetic — arcade is about restraint, not excess",
+      "Don't add badges, trust seals, or 'enterprise' signaling",
+      "Don't make the design look like a generic dark SaaS admin panel",
+      "Don't animate CSS layout properties — use opacity, transform, and color only",
+      "Don't use em dashes — substitute commas, colons, or periods",
+      "Don't apply color to inactive states — inactive means muted (dusk-text)",
+      "Don't use Archivo Black for body text"
     ]
   }
 }

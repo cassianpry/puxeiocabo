@@ -10,7 +10,7 @@ button[data-variant="default"]::after {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: oklch(1 0 0);
+  background: oklch(0.60 0.22 235);
   pointer-events: none;
   opacity: 0;
 }
@@ -91,6 +91,16 @@ button[data-variant="default"]:active:not(:disabled)::after {
   }
 }
 
+/* === Neon Pulse === */
+@keyframes neon-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.neon-pulse {
+  animation: neon-glow 2s ease-in-out infinite;
+}
+
 /* === Reduced Motion === */
 @media (prefers-reduced-motion: reduce) {
   .card-enter,
@@ -101,6 +111,10 @@ button[data-variant="default"]:active:not(:disabled)::after {
 
   button[data-variant="default"]::after {
     display: none;
+  }
+
+  .neon-pulse {
+    animation: none;
   }
 
   button[data-variant="default"]:active:not(:disabled) {
