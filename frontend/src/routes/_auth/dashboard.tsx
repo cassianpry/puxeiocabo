@@ -72,6 +72,13 @@ function DashboardPage() {
               }
             />
           ))}
+          {data?.reports.filter(r => r.status === 'rejected' && r.adminComment).map(report => (
+            <TableRow key={`rejected-${report.id}`} className="border-t-0">
+              <TableCell colSpan={6} className="pt-0 pb-2 text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">Motivo da rejeição:</span> {report.adminComment}
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </DataTable>
 

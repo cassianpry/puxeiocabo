@@ -17,6 +17,7 @@ export interface Report {
   reported: Fighter
   proofImagePath: string
   comment: string
+  adminComment: string | null
   exifData: string | null
   aiSuspicious: boolean
   aiReason: string | null
