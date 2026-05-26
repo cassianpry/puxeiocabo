@@ -62,7 +62,7 @@ export class ReportService {
   }
 
   async findAll(page = 1, limit = 20) {
-    const where = { status: { not: 'deleted' } };
+    const where = { status: 'approved' };
     const skip = (page - 1) * limit;
 
     const [reports, total] = await Promise.all([

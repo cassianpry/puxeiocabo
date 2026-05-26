@@ -39,6 +39,12 @@ export function EditReportDialog({ report, open, onOpenChange }: EditReportDialo
             Atualize o comentário ou substitua a imagem de prova.
           </DialogDescription>
         </DialogHeader>
+        {report.adminComment && (
+          <div className="rounded-md bg-destructive/10 p-3 text-sm space-y-1">
+            <span className="font-medium text-destructive">Motivo da rejeição:</span>
+            <p className="text-muted-foreground">{report.adminComment}</p>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label>Comentário</Label>
