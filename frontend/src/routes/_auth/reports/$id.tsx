@@ -115,6 +115,17 @@ function ReportDetailPage() {
         </CardContent>
       </Card>
 
+      {report.adminComment && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Comentário do admin</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm whitespace-pre-wrap">{report.adminComment}</p>
+          </CardContent>
+        </Card>
+      )}
+
       {report.aiSuspicious && (
         <EXIFIndicator aiSuspicious={report.aiSuspicious} aiReason={report.aiReason || ''} />
       )}
