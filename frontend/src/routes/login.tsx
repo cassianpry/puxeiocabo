@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, redirect, Link } from '@tanstack/react-router'
 import { api } from '@/lib/api'
 import { getPostAuthPath } from '@/lib/admin-routing'
 import { useLogin } from '@/hooks/useLogin'
@@ -86,9 +86,9 @@ function LoginPage() {
 
         <p className="text-center text-sm text-muted-foreground">
           Não tem uma conta?{' '}
-          <a href="/register" className="text-primary underline">
+          <Link to="/register" className="text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors duration-150">
             Criar conta
-          </a>
+          </Link>
         </p>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQueryClient } from '@tanstack/react-query'
+import { api } from '@/lib/api'
 import { useFlaggedReports } from '@/hooks/useFlaggedReports'
 import { useAdminStats } from '@/hooks/useAdminStats'
 import { EXIFViewer } from '@/components/app/EXIFViewer'
@@ -9,7 +10,7 @@ import { DataTable, TableHead, TableRow, TableHeader, TableBody, TableCell } fro
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
-
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_admin/admin/flagged')({
   component: AdminFlaggedPage,
@@ -22,45 +23,40 @@ function AdminFlaggedPage() {
 
   async function handleApprove(id: number) {
     try {
-      await fetch(`/api/reports/${id}/status`, {
+      await api(`/reports/${id}/status`, {
         method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'approved' }),
       })
       queryClient.invalidateQueries({ queryKey: ['admin', 'flagged'] })
       queryClient.invalidateQueries({ queryKey: ['admin', 'stats'] })
+      toast.success('Denúncia aprovada com sucesso!')
     } catch {
-      alert('Erro ao aprovar denúncia.')
+      toast.error('Erro ao aprovar denúncia.')
     }
   }
 
   async function handleReject(id: number) {
     try {
-      await fetch(`/api/reports/${id}/status`, {
+      await api(`/reports/${id}/status`, {
         method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'rejected' }),
       })
       queryClient.invalidateQueries({ queryKey: ['admin', 'flagged'] })
       queryClient.invalidateQueries({ queryKey: ['admin', 'stats'] })
+      toast.success('Denúncia rejeitada com sucesso!')
     } catch {
-      alert('Erro ao rejeitar denúncia.')
+      toast.error('Erro ao rejeitar denúncia.')
     }
   }
 
   async function handleDelete(id: number) {
-    if (!confirm('Tem certeza que deseja excluir esta denúncia?')) return
     try {
-      await fetch(`/api/reports/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      })
+      await api(`/reports/${id}`, { method: 'DELETE' })
       queryClient.invalidateQueries({ queryKey: ['admin', 'flagged'] })
       queryClient.invalidateQueries({ queryKey: ['admin', 'stats'] })
+      toast.success('Denúncia excluída com sucesso!')
     } catch {
-      alert('Erro ao excluir denúncia.')
+      toast.error('Erro ao excluir denúncia.')
     }
   }
 

@@ -6,11 +6,15 @@ import type { Report } from '@/types/api'
 
 interface ReportCardProps {
   report: Report
+  index?: number
 }
 
-export function ReportCard({ report }: ReportCardProps) {
+export function ReportCard({ report, index }: ReportCardProps) {
   return (
-    <Card className="group overflow-hidden">
+    <Card
+      className={`group overflow-hidden transition-shadow duration-150 hover:ring-1 hover:ring-foreground/10${index !== undefined ? ' card-enter' : ''}`}
+      style={index !== undefined ? { animationDelay: `${index * 60}ms` } : undefined}
+    >
       <Dialog>
         <DialogTrigger asChild>
           <div className="relative cursor-pointer overflow-hidden">

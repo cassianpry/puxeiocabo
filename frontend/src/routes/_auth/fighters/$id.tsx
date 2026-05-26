@@ -1,19 +1,14 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useFighter } from '@/hooks/useFighter'
 import { FighterCard } from '@/components/app/FighterCard'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Link } from '@tanstack/react-router'
+import { Skeleton } from '@/components/ui/skeleton'
 import { ArrowLeft, Shield } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export const Route = createFileRoute('/_auth/fighters/$id')({
-  beforeLoad: async () => {
-    const auth = await fetch('/auth/me', { credentials: 'include' }).then(r => r.json()).catch(() => null)
-    if (!auth) {
-      throw redirect({ to: '/login' })
-    }
-  },
   component: FighterDetailPage,
 })
 
@@ -22,7 +17,16 @@ function FighterDetailPage() {
   const { data: fighter, isLoading } = useFighter(id)
 
   if (isLoading) {
-    return <div className="space-y-4">Carregando...</div>
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-24" />
+        <div className="rounded-lg border p-6 space-y-3">
+          <Skeleton className="h-5 w-40" />
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+      </div>
+    )
   }
 
   if (!fighter) {

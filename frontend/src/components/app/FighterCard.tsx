@@ -8,7 +8,7 @@ interface FighterCardProps {
 
 export function FighterCard({ fighter, onClick }: FighterCardProps) {
   return (
-    <Card onClick={onClick} className="cursor-pointer">
+    <Card onClick={onClick} className="cursor-pointer transition-all duration-150 hover:ring-1 hover:ring-foreground/10">
       <CardHeader className="pb-3">
         <CardTitle>{fighter.platformName}</CardTitle>
       </CardHeader>

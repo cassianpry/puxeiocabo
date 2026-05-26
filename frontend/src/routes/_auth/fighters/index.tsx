@@ -1,19 +1,14 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useFighterSearch } from '@/hooks/useFighterSearch'
 import { FighterCard } from '@/components/app/FighterCard'
 import { Link } from '@tanstack/react-router'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useState } from 'react'
 
 export const Route = createFileRoute('/_auth/fighters/')({
-  beforeLoad: async () => {
-    const auth = await fetch('/auth/me', { credentials: 'include' }).then(r => r.json()).catch(() => null)
-    if (!auth) {
-      throw redirect({ to: '/login' })
-    }
-  },
   component: FightersPage,
 })
 
@@ -39,7 +34,17 @@ function FightersPage() {
         />
       </div>
 
-      {isLoading && <div className="text-muted-foreground">Buscando...</div>}
+      {isLoading && (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="rounded-lg border p-6 space-y-3">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+          ))}
+        </div>
+      )}
 
       {!isLoading && fighters.length === 0 && search.length > 1 && (
         <Alert>

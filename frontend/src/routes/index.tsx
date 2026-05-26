@@ -59,8 +59,8 @@ function HomePage() {
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {reports.map((report) => (
-              <ReportCard key={report.id} report={report} />
+            {reports.map((report, index) => (
+              <ReportCard key={report.id} report={report} index={index} />
             ))}
           </div>
         )}

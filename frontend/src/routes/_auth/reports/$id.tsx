@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useReport } from '@/hooks/useReport'
 import { EXIFIndicator } from '@/components/app/EXIFIndicator'
 import { StatusBadge } from '@/components/app/StatusBadge'
@@ -6,15 +6,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Link } from '@tanstack/react-router'
+import { Skeleton } from '@/components/ui/skeleton'
 import { ArrowLeft, Camera, Calendar, User } from 'lucide-react'
 
 export const Route = createFileRoute('/_auth/reports/$id')({
-  beforeLoad: async () => {
-    const auth = await fetch('/auth/me', { credentials: 'include' }).then(r => r.json()).catch(() => null)
-    if (!auth) {
-      throw redirect({ to: '/login' })
-    }
-  },
   component: ReportDetailPage,
 })
 
@@ -23,7 +18,23 @@ function ReportDetailPage() {
   const { data: report, isLoading } = useReport(id)
 
   if (isLoading) {
-    return <div className="space-y-4">Carregando...</div>
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-24" />
+        <Skeleton className="h-10 w-64" />
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-lg border p-6 space-y-3">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+          <div className="rounded-lg border p-6 space-y-3">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-6 w-40" />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!report) {
