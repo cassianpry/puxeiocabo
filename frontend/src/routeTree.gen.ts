@@ -9,10 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosDeServicoRouteImport } from './routes/termos-de-servico'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ComoUsarRouteImport } from './routes/como-usar'
+import { Route as BugReportRouteImport } from './routes/bug-report'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -25,6 +27,11 @@ import { Route as AuthReportsIdRouteImport } from './routes/_auth/reports/$id'
 import { Route as AuthFightersIdRouteImport } from './routes/_auth/fighters/$id'
 import { Route as AdminAdminFlaggedRouteImport } from './routes/_admin/admin/flagged'
 
+const TermosDeServicoRoute = TermosDeServicoRouteImport.update({
+  id: '/termos-de-servico',
+  path: '/termos-de-servico',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -43,6 +50,11 @@ const LoginRoute = LoginRouteImport.update({
 const ComoUsarRoute = ComoUsarRouteImport.update({
   id: '/como-usar',
   path: '/como-usar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BugReportRoute = BugReportRouteImport.update({
+  id: '/bug-report',
+  path: '/bug-report',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -101,10 +113,12 @@ const AdminAdminFlaggedRoute = AdminAdminFlaggedRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bug-report': typeof BugReportRoute
   '/como-usar': typeof ComoUsarRoute
   '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
+  '/termos-de-servico': typeof TermosDeServicoRoute
   '/dashboard': typeof AuthDashboardRoute
   '/profile': typeof AuthProfileRoute
   '/admin/flagged': typeof AdminAdminFlaggedRoute
@@ -116,10 +130,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bug-report': typeof BugReportRoute
   '/como-usar': typeof ComoUsarRoute
   '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
+  '/termos-de-servico': typeof TermosDeServicoRoute
   '/dashboard': typeof AuthDashboardRoute
   '/profile': typeof AuthProfileRoute
   '/admin/flagged': typeof AdminAdminFlaggedRoute
@@ -134,10 +150,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_admin': typeof AdminRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
+  '/bug-report': typeof BugReportRoute
   '/como-usar': typeof ComoUsarRoute
   '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
+  '/termos-de-servico': typeof TermosDeServicoRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
   '/_auth/profile': typeof AuthProfileRoute
   '/_admin/admin/flagged': typeof AdminAdminFlaggedRoute
@@ -151,10 +169,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bug-report'
     | '/como-usar'
     | '/login'
     | '/privacidade'
     | '/register'
+    | '/termos-de-servico'
     | '/dashboard'
     | '/profile'
     | '/admin/flagged'
@@ -166,10 +186,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/bug-report'
     | '/como-usar'
     | '/login'
     | '/privacidade'
     | '/register'
+    | '/termos-de-servico'
     | '/dashboard'
     | '/profile'
     | '/admin/flagged'
@@ -183,10 +205,12 @@ export interface FileRouteTypes {
     | '/'
     | '/_admin'
     | '/_auth'
+    | '/bug-report'
     | '/como-usar'
     | '/login'
     | '/privacidade'
     | '/register'
+    | '/termos-de-servico'
     | '/_auth/dashboard'
     | '/_auth/profile'
     | '/_admin/admin/flagged'
@@ -201,14 +225,23 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  BugReportRoute: typeof BugReportRoute
   ComoUsarRoute: typeof ComoUsarRoute
   LoginRoute: typeof LoginRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   RegisterRoute: typeof RegisterRoute
+  TermosDeServicoRoute: typeof TermosDeServicoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos-de-servico': {
+      id: '/termos-de-servico'
+      path: '/termos-de-servico'
+      fullPath: '/termos-de-servico'
+      preLoaderRoute: typeof TermosDeServicoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -235,6 +268,13 @@ declare module '@tanstack/react-router' {
       path: '/como-usar'
       fullPath: '/como-usar'
       preLoaderRoute: typeof ComoUsarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bug-report': {
+      id: '/bug-report'
+      path: '/bug-report'
+      fullPath: '/bug-report'
+      preLoaderRoute: typeof BugReportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -353,10 +393,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  BugReportRoute: BugReportRoute,
   ComoUsarRoute: ComoUsarRoute,
   LoginRoute: LoginRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   RegisterRoute: RegisterRoute,
+  TermosDeServicoRoute: TermosDeServicoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { apiFormData } from '@/lib/api'
+import { trackEvent } from '@/hooks/useAnalytics'
 import type { Fighter } from '@/types/api'
 
 export const Route = createFileRoute('/_auth/reports/new')({
@@ -40,6 +41,7 @@ function NewReportPage() {
       formData.append('comment', comment)
       formData.append('proof', proofFile)
       await apiFormData('/reports', formData)
+      trackEvent('report_submitted')
       toast.success('Denúncia enviada com sucesso!')
       navigate({ to: '/dashboard' })
     } catch (err) {

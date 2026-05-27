@@ -31,6 +31,13 @@ model Fighter {
   reportsReceived Report[] @relation("Reported")
 }
 
+model BugReport {
+  id          Int      @id @default(autoincrement())
+  subject     String
+  description String
+  createdAt   DateTime @default(now())
+}
+
 model Report {
   id             Int      @id @default(autoincrement())
   reporterId     BigInt

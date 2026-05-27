@@ -16,6 +16,7 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
 | **Buckler's Boot Camp** | Capcom's web portal for SF6 player stats and rankings. |
 | **consentGivenAt** | Timestamp when the user consented to the Privacy Policy at registration. Stored on Account. |
 | **LGPD** | Lei Geral de Proteção de Dados Pessoais (Law 13.709/2018) — Brazil's data protection regulation governing collection, storage, and processing of personal data. |
+| **GA4** | Google Analytics 4 — web analytics service that tracks page views and user events. Loaded client-side via gtag.js only after user consents via banner. Three tiers: `refused` (no GA), `essential` (page views only), `full` (page views + custom events). |
 
 ## Project Phases
 
@@ -69,7 +70,7 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
   - Project setup with Vite + TypeScript + Tailwind dark theme
   - 20 shadcn/ui components installed (button, input, card, badge, label, form, alert, dialog, table, pagination, dropdown-menu, separator, sheet, popover, command, select, textarea, avatar, skeleton, sonner)
   - Auth system: login/register pages with react-hook-form + zod, `_auth`/`_admin` route guards
-    - Smart hooks: `useAuth`, `useLogin`, `useRegister`, `useLogout`, `useDebounce`, `useFighterSearch`, `useLinkShortId`, `useChangePassword`, `useFlaggedReports`, `useAdminStats`, `useMyReports`, `useUpdateReport`, `useExportData`, `useDeleteAccount`
+    - Smart hooks: `useAuth`, `useLogin`, `useRegister`, `useLogout`, `useDebounce`, `useFighterSearch`, `useLinkShortId`, `useChangePassword`, `useFlaggedReports`, `useAdminStats`, `useMyReports`, `useUpdateReport`, `useExportData`, `useDeleteAccount`, `useAnalytics`
     - Dumb components: `AuthNav`, `AppHeader`, `LinkFighterModal`, `AdminStatCard`, `EXIFViewer`, `ReportActions`, `EditReportDialog`, `ReportCard`
     - Public homepage (`/`) with recent reports feed — NFT-style report cards in grid layout (4 cols lg)
       - Image at top with hover overlay (eye icon), click opens Dialog lightbox (max-w-7xl!)
@@ -212,8 +213,12 @@ puxeiocabo/
 - **Report card design:** NFT Preview Card style (image + hover overlay + centered metadata + dialog lightbox), grid layout with `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`
 - **ESLint react-refresh:** `allowExportNames: ['Route']` instead of `allowConstantExport` — `createFileRoute()` is a `CallExpression` not a literal constant
 - **Build discipline:** No automatic builds — only when user explicitly says "build" or "build it"; verify via manual/Playwright testing first
+- **Footer:** `AppFooter` in `__root.tsx` — 2px arcade-blue top border, `bg-background`. Links: Privacidade (`/privacidade`), Termos de Serviço (`/termos-de-servico`), Reportar um bug (`/bug-report`), Contato (external `cassiano-portfolio.onrender.com`). Copyright `© 2026 cassianpry`. "Privacidade" link removed from `AppHeader`, moved to footer.
+- **Bug report:** `POST /contact/bug-report` — public endpoint, stores in `BugReport` table (subject + description). Frontend form at `/bug-report`.
+- **Terms of service:** Static page at `/termos-de-servico` — 7 sections (aceitação, uso aceitável, denúncias, propriedade intelectual, isenção, limitação, alterações). Same layout pattern as `privacidade.tsx`.
 - **shadcn/ui rule enforced:** `cursor-pointer` applied globally via `globals.css` (`button:not(:disabled), [role="button"]:not(:disabled), [data-slot="button"]:not(:disabled)`) — shadcn Button component never edited directly; previously reverted a direct edit to `button.tsx`
 - **LGPD compliance:** Standard tier implemented. Consent collected at registration with timestamp. Account deletion replaces PII with placeholders (`deleted-{id}@removed`, `DELETED` hash) rather than hard delete — preserves FK integrity and report records for community blocklist. Report EXIF data is cleared on account deletion (potential GPS/camera metadata). Proof images are preserved (evidence of reported player behavior). Data export returns JSON with account info, fighter data, and report history. See `docs/adr/0001-lgpd-anonymization-strategy.md`.
+- **Google Analytics:** GA4 loaded via gtag.js with three-tier consent gate. Bottom banner (`LgpdConsentBanner`) on first visit offers "Recusar" (`refused`), "Apenas Essenciais" (`essential`), or "Aceitar Completo" (`full`) — stored in localStorage (`ga-consent`). GA initializes for both `essential` and `full` (both need page views). Custom events only fire when `full`. Page views tracked via TanStack Router's `useLocation`. Custom events on `register`, `login`, `report_submitted`, `password_changed`, `account_deleted` — all guarded centrally in `trackEvent()`. Measurement ID via `VITE_GA_MEASUREMENT_ID` env var. Privacy policy updated to list GA cookie with tier descriptions.
 
 ## Swagger Documentation
 - **URL:** `http://localhost:3000/api`

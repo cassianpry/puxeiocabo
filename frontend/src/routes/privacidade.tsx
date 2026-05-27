@@ -221,11 +221,16 @@ function PrivacyPage() {
             <strong>refreshToken:</strong> cookie httpOnly para renovação de
             sessão. Expira em 7 dias.
           </li>
+          <li>
+            <strong>_ga (Google Analytics):</strong> cookie de análise de
+            audiência. Coleta dados anônimos de navegação. Você pode escolher
+            entre dois níveis: <strong>Apenas Essenciais</strong> (apenas
+            páginas visitadas) ou <strong>Completo</strong> (páginas visitadas
+            + interações como login, cadastro e denúncias). Ativado somente
+            mediante seu aceite no banner de cookies. Dados armazenados nos
+            servidores do Google (EUA).
+          </li>
         </ul>
-        <p className="text-muted-foreground leading-relaxed">
-          Não utilizamos cookies de rastreamento, publicidade ou análise de
-          terceiros.
-        </p>
       </section>
 
       <section className="space-y-4">

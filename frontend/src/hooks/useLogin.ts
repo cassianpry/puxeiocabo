@@ -2,6 +2,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { apiJson } from '@/lib/api'
 import { queryClient } from '@/lib/queryClient'
 import { getPostAuthPath } from '@/lib/admin-routing'
+import { trackEvent } from '@/hooks/useAnalytics'
 
 export interface LoginInput {
   email: string
@@ -19,6 +20,7 @@ export function useLogin() {
 
   const login = async (data: LoginInput): Promise<LoginResult> => {
     const result = await apiJson<LoginResult>('/auth/login', data as unknown as Record<string, unknown>)
+    trackEvent('login')
     await queryClient.invalidateQueries({ queryKey: ['auth', 'me'] })
     navigate({ to: getPostAuthPath(result.role) })
     return result
