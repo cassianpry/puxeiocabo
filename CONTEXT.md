@@ -189,6 +189,7 @@ puxeiocabo/
 - **Cookie clearing:** Backend `clearCookie` uses same options as `setCookie` (httpOnly, sameSite, secure, path) to ensure proper removal
 - **Fighter search:** Uses `BigInt(query)` directly (not `Number()` + `BigInt()`) to avoid JavaScript precision loss for large shortIds
 - **Auth guard placement:** All `beforeLoad` auth checks live in layout routes (`_auth.tsx`, `_admin.tsx`) only — child routes never duplicate auth guards. A child `beforeLoad` using relative `fetch('/auth/me')` (vs `api` helper) caused a redirect loop that prevented `LinkFighterModal` from showing after login/register.
+- **Auth cache invalidation:** When `_auth.tsx` or `_admin.tsx` `beforeLoad` detects session invalidation, it calls `queryClient.setQueryData(['auth', 'me'], null)` before redirecting to `/login`. This clears the stale TanStack Query cache so `__root.tsx`'s `useAuth()` returns `null` immediately — navbar never flashes logged-in menus after session death.
 - **Login/register redirect:** Both routes have `beforeLoad` that redirect authenticated users to `/dashboard`. The `redirect()` throw MUST be outside the `try/catch` — otherwise the `catch` silently swallows it and no redirect occurs.
 - **Navbar link visibility:** `AuthNav` receives `isLinked` prop. When authenticated but `!isLinked`, only "Sair" is shown — private links (Painel, Nova Denúncia, Perfil) are hidden until the user links a fighter.
 - **Test accounts:** Only `test@teste.test` (pass: `123456`, linked to fake fighter `9999999`) — no other test accounts. Rule documented in `AGENTS.md`.
