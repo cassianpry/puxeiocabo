@@ -6,6 +6,9 @@ export class RegisterDto {
 
   @ApiProperty({ example: 'SecurePass123!', description: 'Password (min 8 chars)' })
   password: string;
+
+  @ApiProperty({ example: true, description: 'Consent to privacy policy' })
+  consent: boolean;
 }
 
 export class LoginDto {

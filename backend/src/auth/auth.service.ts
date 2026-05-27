@@ -16,7 +16,11 @@ export class AuthService {
     this.jwtRefreshSecret = process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-change-me';
   }
 
-  async register(email: string, password: string) {
+  async register(email: string, password: string, consent: boolean) {
+    if (!consent) {
+      throw new Error('Você precisa aceitar a Política de Privacidade');
+    }
+
     const existing = await this.prisma.account.findUnique({ where: { email } });
     if (existing) {
       throw new Error('Email já cadastrado');
@@ -25,7 +29,7 @@ export class AuthService {
     const passwordHash = await bcrypt.hash(password, 10);
 
     const account = await this.prisma.account.create({
-      data: { email, passwordHash },
+      data: { email, passwordHash, consentGivenAt: new Date() },
     });
 
     const tokens = await this.generateTokens(account.id, account.role);
@@ -123,6 +127,73 @@ export class AuthService {
       fighter: account.fighter,
       role: account.role,
       createdAt: account.createdAt,
+    };
+  }
+
+  async deleteAccount(accountId: number) {
+    const account = await this.prisma.account.findUnique({ where: { id: accountId } });
+    if (!account) {
+      throw new Error('Conta não encontrada');
+    }
+
+    if (account.shortId) {
+      await this.prisma.report.updateMany({
+        where: { reporterId: account.shortId },
+        data: {
+          exifData: null,
+          aiSuspicious: false,
+          aiReason: null,
+        },
+      });
+    }
+
+    await this.prisma.account.update({
+      where: { id: accountId },
+      data: {
+        email: `deleted-${accountId}@removed`,
+        passwordHash: 'DELETED',
+        refreshToken: null,
+        shortId: null,
+      },
+    });
+  }
+
+  async exportData(accountId: number) {
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      include: { fighter: true },
+    });
+    if (!account) {
+      throw new Error('Conta não encontrada');
+    }
+
+    const reports = account.shortId
+      ? await this.prisma.report.findMany({
+          where: { reporterId: account.shortId, status: { not: 'deleted' } },
+          include: { reported: true },
+        })
+      : [];
+
+    return {
+      email: account.email,
+      role: account.role,
+      createdAt: account.createdAt,
+      fighter: account.fighter
+        ? {
+            shortId: account.fighter.shortId.toString(),
+            fighterId: account.fighter.fighterId,
+            platformName: account.fighter.platformName,
+            circleName: account.fighter.circleName,
+          }
+        : null,
+      reports: reports.map((r) => ({
+        id: r.id,
+        reportedFighterId: r.reported.fighterId,
+        reportedPlatformName: r.reported.platformName,
+        comment: r.comment,
+        status: r.status,
+        createdAt: r.createdAt,
+      })),
     };
   }
 

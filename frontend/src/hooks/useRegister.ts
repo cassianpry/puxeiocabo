@@ -5,6 +5,7 @@ import { queryClient } from '@/lib/queryClient'
 export interface RegisterInput {
   email: string
   password: string
+  consent: boolean
 }
 
 export interface RegisterResult {

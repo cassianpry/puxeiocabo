@@ -1,0 +1,3 @@
+# 0001 — LGPD account deletion: anonymization over hard delete
+
+Account deletion uses PII replacement (email → `deleted-{id}@removed`, hash → `DELETED`, shortId → null, EXIF cleared) instead of hard row deletion. FK constraints from Account.shortId → Fighter.shortId would block raw deletion, but more importantly the community blocklist loses integrity if report author records vanish — the anonymized reports remain visible without identifying the author. Hard delete also loses the audit trail of who reported whom. Rejected alternative: hard delete with cascade (loses report integrity), or no deletion at all (LGPD non-compliant).

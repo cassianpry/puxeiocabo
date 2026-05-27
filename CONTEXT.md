@@ -14,7 +14,8 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
 | **Report** | A player-submitted report of a rage-quit (leaving mid-match). Includes proof image, comment, and status. |
 | **CFN** | Capcom Fighters Network — the in-game social/ranking system. |
 | **Buckler's Boot Camp** | Capcom's web portal for SF6 player stats and rankings. |
-| **__NEXT_DATA__** | Embedded JSON in Next.js SSR HTML pages, contains ranking data. |
+| **consentGivenAt** | Timestamp when the user consented to the Privacy Policy at registration. Stored on Account. |
+| **LGPD** | Lei Geral de Proteção de Dados Pessoais (Law 13.709/2018) — Brazil's data protection regulation governing collection, storage, and processing of personal data. |
 
 ## Project Phases
 
@@ -35,12 +36,15 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
   - `GET /fighters?q=...` — Search fighters by name or shortId (public) — uses BigInt(query) for precision
   - `GET /fighters/:shortId` — Get fighter details + reports (public)
   - `GET /fighters/:shortId/reports` — Get reports for a fighter (public)
-  - `POST /auth/register` — Create account (email + password) (public)
-  - `POST /auth/login` — Authenticate, returns access + refresh tokens (public)
-  - `POST /auth/refresh` — Refresh access token (JWT required)
-  - `POST /auth/logout` — Invalidate refresh token + clear cookies (JWT required)
-  - `POST /auth/link` — Link account to fighter (JWT required)
-  - `GET /auth/me` — Get current user profile (JWT required, returns role + createdAt)
+   - `POST /auth/register` — Create account (email + password + consent) (public)
+   - `POST /auth/login` — Authenticate, returns access + refresh tokens (public)
+   - `POST /auth/refresh` — Refresh access token (JWT required)
+   - `POST /auth/logout` — Invalidate refresh token + clear cookies (JWT required)
+   - `POST /auth/link` — Link account to fighter (JWT required)
+   - `POST /auth/change-password` — Change password (JWT required, validates current + new + confirm, issues new tokens, invalidates other sessions)
+   - `POST /auth/delete-account` — Delete account + anonymize reports (JWT required, clears PII, clears EXIF data from user's reports)
+   - `GET /auth/export` — Export personal data (JWT required, returns JSON with account info + reports)
+   - `GET /auth/me` — Get current user profile (JWT required, returns role + createdAt, consentGivenAt)
   - `POST /reports` — Submit report (JWT required, JPEG-only proof image)
   - `GET /reports` — List approved reports (pagination, public homepage feed) (public)
   - `GET /reports/my` — List own reports (JWT required)
@@ -65,7 +69,7 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
   - Project setup with Vite + TypeScript + Tailwind dark theme
   - 20 shadcn/ui components installed (button, input, card, badge, label, form, alert, dialog, table, pagination, dropdown-menu, separator, sheet, popover, command, select, textarea, avatar, skeleton, sonner)
   - Auth system: login/register pages with react-hook-form + zod, `_auth`/`_admin` route guards
-    - Smart hooks: `useAuth`, `useLogin`, `useRegister`, `useLogout`, `useDebounce`, `useFighterSearch`, `useLinkShortId`, `useFlaggedReports`, `useAdminStats`, `useMyReports`, `useUpdateReport`
+    - Smart hooks: `useAuth`, `useLogin`, `useRegister`, `useLogout`, `useDebounce`, `useFighterSearch`, `useLinkShortId`, `useFlaggedReports`, `useAdminStats`, `useMyReports`, `useUpdateReport`, `useExportData`, `useDeleteAccount`
     - Dumb components: `AuthNav`, `AppHeader`, `LinkFighterModal`, `AdminStatCard`, `EXIFViewer`, `ReportActions`, `EditReportDialog`, `ReportCard`
     - Public homepage (`/`) with recent reports feed — NFT-style report cards in grid layout (4 cols lg)
       - Image at top with hover overlay (eye icon), click opens Dialog lightbox (max-w-7xl!)
@@ -109,7 +113,14 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
     - Login/register: email icon (`Mail`) inside input field (right side), password eye toggle (`Eye`/`EyeOff`) inside password field
     - Register: "Confirmar senha" field with own eye toggle; client-side validation (min 6 chars + passwords must match) before submit
     - Logo (`logo.png`) as favicon in `index.html` + displayed next to title in AppHeader
-    - New report page: added instruction text specifying proof image must show player name, opponent name, and disconnection message
+     - New report page: added instruction text specifying proof image must show player name, opponent name, and disconnection message
+     - LGPD compliance (Standard tier):
+       - Privacy Policy page (`/privacidade`) with data inventory, legal bases, user rights, DPO contact
+       - Consent checkbox on registration (required, linked to Privacy Policy)
+       - `consentGivenAt` timestamp stored on Account
+       - Account deletion endpoint + UI: clears email/hash/refreshToken/shortId, anonymizes reports (clears EXIF), keeps proof images
+       - Data export endpoint + UI: JSON download with account info + fighter + reports
+       - "Privacidade" link in AppHeader (visible to all visitors)
     - `.opencode/rules/shadcn-never-edit.mdc` — rule file covering shadcn/ui + TanStack routeTree.gen.ts
 
 ## Project Structure
@@ -154,7 +165,8 @@ puxeiocabo/
 │   │   │   ├── __root.tsx     # Root layout with QueryClientProvider
 │   │   │   ├── index.tsx      # Public homepage + recent reports
 │   │   │   ├── login.tsx      # Login page (shadcn form + zod)
-│   │   │   ├── register.tsx   # Register page (shadcn form + zod)
+│   │   │   ├── register.tsx   # Register page (shadcn form + zod + consent)
+│   │   │   ├── privacidade.tsx # LGPD privacy policy
 │   │   │   ├── _auth.tsx      # Auth guard layout
 │   │   │   ├── _auth/         # Protected pages (dashboard, reports, fighters, profile)
 │   │   │   ├── _admin.tsx     # Admin guard layout
@@ -199,6 +211,7 @@ puxeiocabo/
 - **ESLint react-refresh:** `allowExportNames: ['Route']` instead of `allowConstantExport` — `createFileRoute()` is a `CallExpression` not a literal constant
 - **Build discipline:** No automatic builds — only when user explicitly says "build" or "build it"; verify via manual/Playwright testing first
 - **shadcn/ui rule enforced:** `cursor-pointer` applied globally via `globals.css` (`button:not(:disabled), [role="button"]:not(:disabled), [data-slot="button"]:not(:disabled)`) — shadcn Button component never edited directly; previously reverted a direct edit to `button.tsx`
+- **LGPD compliance:** Standard tier implemented. Consent collected at registration with timestamp. Account deletion replaces PII with placeholders (`deleted-{id}@removed`, `DELETED` hash) rather than hard delete — preserves FK integrity and report records for community blocklist. Report EXIF data is cleared on account deletion (potential GPS/camera metadata). Proof images are preserved (evidence of reported player behavior). Data export returns JSON with account info, fighter data, and report history. See `docs/adr/0001-lgpd-anonymization-strategy.md`.
 
 ## Swagger Documentation
 - **URL:** `http://localhost:3000/api`
