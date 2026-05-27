@@ -12,7 +12,17 @@ import type { Response } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { RegisterDto, LoginDto, LinkShortIdDto, ChangePasswordDto, AuthResponseDto } from './dto';
+import {
+  RegisterDto,
+  LoginDto,
+  LinkShortIdDto,
+  ChangePasswordDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+  ChangeEmailDto,
+  VerifyEmailChangeDto,
+  AuthResponseDto,
+} from './dto';
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -80,6 +90,59 @@ export class AuthController {
       const result = await this.authService.login(body.email, body.password);
       this.setCookies(res, result.accessToken, result.refreshToken);
       return { accountId: result.accountId, shortId: result.shortId, role: result.role };
+    } catch (error) {
+      throw new BadRequestException((error as Error).message);
+    }
+  }
+
+  @Post('forgot-password')
+  @ApiOperation({ summary: 'Request password reset email' })
+  @ApiResponse({ status: 201, description: 'If the email exists, a reset link was sent' })
+  async forgotPassword(@Body() body: ForgotPasswordDto) {
+    if (!body.email) {
+      throw new BadRequestException('Email é obrigatório');
+    }
+    await this.authService.forgotPassword(body.email);
+    return { message: 'Se o email existir, você receberá um link de redefinição' };
+  }
+
+  @Post('reset-password')
+  @ApiOperation({ summary: 'Reset password with token' })
+  @ApiResponse({ status: 200, description: 'Password reset successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid or expired token' })
+  async resetPassword(@Body() body: ResetPasswordDto) {
+    try {
+      await this.authService.resetPassword(body.token, body.newPassword);
+      return { message: 'Senha redefinida com sucesso' };
+    } catch (error) {
+      throw new BadRequestException((error as Error).message);
+    }
+  }
+
+  @Post('change-email')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Request email change' })
+  @ApiBearerAuth('access-token')
+  @ApiResponse({ status: 200, description: 'Verification email sent' })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async changeEmail(@Req() req: any, @Body() body: ChangeEmailDto) {
+    try {
+      await this.authService.changeEmail(req.user.id, body.newEmail, body.currentPassword);
+      return { message: 'Verifique seu novo email para confirmar a alteração' };
+    } catch (error) {
+      throw new BadRequestException((error as Error).message);
+    }
+  }
+
+  @Post('verify-email-change')
+  @ApiOperation({ summary: 'Confirm email change with token' })
+  @ApiResponse({ status: 200, description: 'Email changed successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid or expired token' })
+  async verifyEmailChange(@Body() body: VerifyEmailChangeDto) {
+    try {
+      await this.authService.verifyEmailChange(body.token);
+      return { message: 'Email alterado com sucesso' };
     } catch (error) {
       throw new BadRequestException((error as Error).message);
     }

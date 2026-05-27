@@ -107,15 +107,25 @@ function LoginPage() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-muted-foreground">
-          Não tem uma conta?{" "}
-          <Link
-            to="/register"
-            className="text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors duration-150"
-          >
-            Criar conta
-          </Link>
-        </p>
+        <div className="text-center text-sm text-muted-foreground space-y-2">
+          <p>
+            <Link
+              to="/auth/forgot-password"
+              className="underline underline-offset-4 hover:text-foreground transition-colors"
+            >
+              Esqueceu a senha?
+            </Link>
+          </p>
+          <p>
+            Não tem uma conta?{" "}
+            <Link
+              to="/register"
+              className="underline underline-offset-4 hover:text-foreground transition-colors"
+            >
+              Criar conta
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

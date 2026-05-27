@@ -13,11 +13,15 @@ import { Route as TermosDeServicoRouteImport } from './routes/termos-de-servico'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as ComoUsarRouteImport } from './routes/como-usar'
 import { Route as BugReportRouteImport } from './routes/bug-report'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthVerifyEmailRouteImport } from './routes/auth/verify-email'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AuthProfileRouteImport } from './routes/_auth/profile'
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
 import { Route as AuthFightersIndexRouteImport } from './routes/_auth/fighters/index'
@@ -26,6 +30,7 @@ import { Route as AuthReportsNewRouteImport } from './routes/_auth/reports/new'
 import { Route as AuthReportsIdRouteImport } from './routes/_auth/reports/$id'
 import { Route as AuthFightersIdRouteImport } from './routes/_auth/fighters/$id'
 import { Route as AdminAdminFlaggedRouteImport } from './routes/_admin/admin/flagged'
+import { Route as AdminAdminContactRouteImport } from './routes/_admin/admin/contact'
 
 const TermosDeServicoRoute = TermosDeServicoRouteImport.update({
   id: '/termos-de-servico',
@@ -45,6 +50,11 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComoUsarRoute = ComoUsarRouteImport.update({
@@ -68,6 +78,21 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthVerifyEmailRoute = AuthVerifyEmailRouteImport.update({
+  id: '/auth/verify-email',
+  path: '/auth/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/auth/reset-password',
+  path: '/auth/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/auth/forgot-password',
+  path: '/auth/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthProfileRoute = AuthProfileRouteImport.update({
@@ -110,17 +135,27 @@ const AdminAdminFlaggedRoute = AdminAdminFlaggedRouteImport.update({
   path: '/admin/flagged',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminContactRoute = AdminAdminContactRouteImport.update({
+  id: '/admin/contact',
+  path: '/admin/contact',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bug-report': typeof BugReportRoute
   '/como-usar': typeof ComoUsarRoute
+  '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
   '/termos-de-servico': typeof TermosDeServicoRoute
   '/dashboard': typeof AuthDashboardRoute
   '/profile': typeof AuthProfileRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
+  '/admin/contact': typeof AdminAdminContactRoute
   '/admin/flagged': typeof AdminAdminFlaggedRoute
   '/fighters/$id': typeof AuthFightersIdRoute
   '/reports/$id': typeof AuthReportsIdRoute
@@ -132,12 +167,17 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bug-report': typeof BugReportRoute
   '/como-usar': typeof ComoUsarRoute
+  '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
   '/termos-de-servico': typeof TermosDeServicoRoute
   '/dashboard': typeof AuthDashboardRoute
   '/profile': typeof AuthProfileRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
+  '/admin/contact': typeof AdminAdminContactRoute
   '/admin/flagged': typeof AdminAdminFlaggedRoute
   '/fighters/$id': typeof AuthFightersIdRoute
   '/reports/$id': typeof AuthReportsIdRoute
@@ -152,12 +192,17 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/bug-report': typeof BugReportRoute
   '/como-usar': typeof ComoUsarRoute
+  '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
   '/termos-de-servico': typeof TermosDeServicoRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
   '/_auth/profile': typeof AuthProfileRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
+  '/_admin/admin/contact': typeof AdminAdminContactRoute
   '/_admin/admin/flagged': typeof AdminAdminFlaggedRoute
   '/_auth/fighters/$id': typeof AuthFightersIdRoute
   '/_auth/reports/$id': typeof AuthReportsIdRoute
@@ -171,12 +216,17 @@ export interface FileRouteTypes {
     | '/'
     | '/bug-report'
     | '/como-usar'
+    | '/contato'
     | '/login'
     | '/privacidade'
     | '/register'
     | '/termos-de-servico'
     | '/dashboard'
     | '/profile'
+    | '/auth/forgot-password'
+    | '/auth/reset-password'
+    | '/auth/verify-email'
+    | '/admin/contact'
     | '/admin/flagged'
     | '/fighters/$id'
     | '/reports/$id'
@@ -188,12 +238,17 @@ export interface FileRouteTypes {
     | '/'
     | '/bug-report'
     | '/como-usar'
+    | '/contato'
     | '/login'
     | '/privacidade'
     | '/register'
     | '/termos-de-servico'
     | '/dashboard'
     | '/profile'
+    | '/auth/forgot-password'
+    | '/auth/reset-password'
+    | '/auth/verify-email'
+    | '/admin/contact'
     | '/admin/flagged'
     | '/fighters/$id'
     | '/reports/$id'
@@ -207,12 +262,17 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/bug-report'
     | '/como-usar'
+    | '/contato'
     | '/login'
     | '/privacidade'
     | '/register'
     | '/termos-de-servico'
     | '/_auth/dashboard'
     | '/_auth/profile'
+    | '/auth/forgot-password'
+    | '/auth/reset-password'
+    | '/auth/verify-email'
+    | '/_admin/admin/contact'
     | '/_admin/admin/flagged'
     | '/_auth/fighters/$id'
     | '/_auth/reports/$id'
@@ -227,10 +287,14 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   BugReportRoute: typeof BugReportRoute
   ComoUsarRoute: typeof ComoUsarRoute
+  ContatoRoute: typeof ContatoRoute
   LoginRoute: typeof LoginRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   RegisterRoute: typeof RegisterRoute
   TermosDeServicoRoute: typeof TermosDeServicoRoute
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -261,6 +325,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/como-usar': {
@@ -296,6 +367,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/verify-email': {
+      id: '/auth/verify-email'
+      path: '/auth/verify-email'
+      fullPath: '/auth/verify-email'
+      preLoaderRoute: typeof AuthVerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/auth/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/auth/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/profile': {
@@ -354,15 +446,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminFlaggedRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/contact': {
+      id: '/_admin/admin/contact'
+      path: '/admin/contact'
+      fullPath: '/admin/contact'
+      preLoaderRoute: typeof AdminAdminContactRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAdminContactRoute: typeof AdminAdminContactRoute
   AdminAdminFlaggedRoute: typeof AdminAdminFlaggedRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminContactRoute: AdminAdminContactRoute,
   AdminAdminFlaggedRoute: AdminAdminFlaggedRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
 }
@@ -395,10 +496,14 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   BugReportRoute: BugReportRoute,
   ComoUsarRoute: ComoUsarRoute,
+  ContatoRoute: ContatoRoute,
   LoginRoute: LoginRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   RegisterRoute: RegisterRoute,
   TermosDeServicoRoute: TermosDeServicoRoute,
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthVerifyEmailRoute: AuthVerifyEmailRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

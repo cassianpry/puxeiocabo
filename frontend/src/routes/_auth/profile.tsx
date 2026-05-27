@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Mail } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useChangePassword } from '@/hooks/useChangePassword'
 import { useExportData } from '@/hooks/useExportData'
@@ -114,6 +114,70 @@ function ProfilePage() {
               {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('pt-BR') : '—'}
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Alterar email</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Seu email atual: <strong>{user?.email || '—'}</strong>
+          </p>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault()
+              const form = e.target as HTMLFormElement
+              const formData = new FormData(form)
+              const newEmail = formData.get('newEmail') as string
+              const currentPassword = formData.get('currentPassword') as string
+
+              try {
+                const res = await fetch('http://localhost:3000/auth/change-email', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({ newEmail, currentPassword }),
+                })
+                if (!res.ok) {
+                  const data = await res.json()
+                  throw new Error(data.message || 'Erro ao alterar email')
+                }
+                toast.success('Verifique seu novo email para confirmar a alteração')
+                form.reset()
+              } catch (err) {
+                toast.error(err instanceof Error ? err.message : 'Erro ao alterar email')
+              }
+            }}
+            className="space-y-3"
+          >
+            <div className="space-y-2">
+              <Label htmlFor="newEmail">Novo email</Label>
+              <div className="relative">
+                <Input
+                  id="newEmail"
+                  name="newEmail"
+                  type="email"
+                  placeholder="novo@email.com"
+                  className="pr-10"
+                  required
+                />
+                <Mail className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="emailChangePassword">Senha atual</Label>
+              <Input
+                id="emailChangePassword"
+                name="currentPassword"
+                type="password"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            <Button type="submit">Solicitar alteração</Button>
+          </form>
         </CardContent>
       </Card>
 

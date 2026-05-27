@@ -35,6 +35,32 @@ export class ChangePasswordDto {
   confirmNewPassword: string;
 }
 
+export class ForgotPasswordDto {
+  @ApiProperty({ example: 'user@example.com', description: 'Registered email address' })
+  email: string;
+}
+
+export class ResetPasswordDto {
+  @ApiProperty({ description: 'Reset token received by email' })
+  token: string;
+
+  @ApiProperty({ example: 'newPass456', description: 'New password (min 6 chars)' })
+  newPassword: string;
+}
+
+export class ChangeEmailDto {
+  @ApiProperty({ example: 'novo@email.com', description: 'New email address' })
+  newEmail: string;
+
+  @ApiProperty({ description: 'Current password for confirmation' })
+  currentPassword: string;
+}
+
+export class VerifyEmailChangeDto {
+  @ApiProperty({ description: 'Verification token received by email' })
+  token: string;
+}
+
 export class AuthResponseDto {
   @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
   accessToken: string;

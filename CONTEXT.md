@@ -17,6 +17,10 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
 | **consentGivenAt** | Timestamp when the user consented to the Privacy Policy at registration. Stored on Account. |
 | **LGPD** | Lei Geral de Proteção de Dados Pessoais (Law 13.709/2018) — Brazil's data protection regulation governing collection, storage, and processing of personal data. |
 | **GA4** | Google Analytics 4 — web analytics service that tracks page views and user events. Loaded client-side via gtag.js only after user consents via banner. Three tiers: `refused` (no GA), `essential` (page views only), `full` (page views + custom events). |
+| **EmailJS** | Transactional email service provider. Integrated via `@emailjs/nodejs` npm package. Used for password reset, email change verification, and admin contact notifications. Uses dashboard templates with template params (service + template IDs configured via env vars). Server-side API requires enabling "API requests for non-browser applications" in EmailJS dashboard (Account → Security). |
+| **EmailJS generic template** | Single dashboard template (`template_d0b10gp`) with `{{to_email}}`, `{{subject}}`, `{{html}}` variables. Backend builds full HTML inline for each email type and sends through this one template. |
+| **VerificationToken** | Prisma model storing one-time tokens for password reset (`password_reset`) and email change (`email_change`). Token expires in 1 hour. Cascades on account deletion. Metadata field stores JSON (e.g., `{ newEmail }` for email changes). |
+| **ContactInquiry** | Prisma model storing general contact form submissions (name, email, subject, message). Shown in admin panel. Each submission triggers an admin notification email via EmailJS. |
 
 ## Project Phases
 

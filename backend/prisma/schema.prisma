@@ -8,15 +8,40 @@ datasource db {
 }
 
 model Account {
-  id              Int      @id @default(autoincrement())
-  email           String   @unique
+  id              Int                 @id @default(autoincrement())
+  email           String              @unique
   passwordHash    String
-  shortId         BigInt?  @unique
-  fighter         Fighter? @relation(fields: [shortId], references: [shortId])
+  shortId         BigInt?             @unique
+  fighter         Fighter?            @relation(fields: [shortId], references: [shortId])
   refreshToken    String?
-  role            String   @default("user")
-  createdAt       DateTime @default(now())
+  role            String              @default("user")
+  createdAt       DateTime            @default(now())
   consentGivenAt  DateTime?
+  verificationTokens VerificationToken[]
+}
+
+model VerificationToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  type      String
+  accountId Int
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  metadata  String?
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([accountId])
+}
+
+model ContactInquiry {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
 }
 
 model Fighter {

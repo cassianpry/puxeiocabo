@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailJsService } from '../emailjs/emailjs.service';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +13,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private emailJs: EmailJsService,
   ) {
     this.jwtSecret = process.env.JWT_SECRET || 'dev-secret-change-me';
     this.jwtRefreshSecret = process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-change-me';
@@ -170,6 +173,119 @@ export class AuthService {
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
     };
+  }
+
+  async forgotPassword(email: string) {
+    const account = await this.prisma.account.findUnique({ where: { email } });
+    if (!account) {
+      return;
+    }
+
+    const token = crypto.randomUUID();
+    await this.prisma.verificationToken.create({
+      data: {
+        token,
+        type: 'password_reset',
+        accountId: account.id,
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      },
+    });
+
+    try {
+      await this.emailJs.sendPasswordReset(email, token);
+    } catch {
+    }
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    if (newPassword.length < 6) {
+      throw new Error('A senha deve ter no mínimo 6 caracteres');
+    }
+
+    const vt = await this.prisma.verificationToken.findUnique({ where: { token } });
+    if (!vt || vt.type !== 'password_reset' || vt.usedAt || vt.expiresAt < new Date()) {
+      throw new Error('Token inválido ou expirado');
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+
+    await this.prisma.$transaction([
+      this.prisma.account.update({
+        where: { id: vt.accountId },
+        data: { passwordHash, refreshToken: null },
+      }),
+      this.prisma.verificationToken.update({
+        where: { id: vt.id },
+        data: { usedAt: new Date() },
+      }),
+    ]);
+
+  }
+
+  async changeEmail(accountId: number, newEmail: string, currentPassword: string) {
+    const account = await this.prisma.account.findUnique({ where: { id: accountId } });
+    if (!account) {
+      throw new Error('Conta não encontrada');
+    }
+
+    const passwordMatch = await bcrypt.compare(currentPassword, account.passwordHash);
+    if (!passwordMatch) {
+      throw new Error('Senha atual incorreta');
+    }
+
+    if (newEmail === account.email) {
+      throw new Error('O novo email é igual ao atual');
+    }
+
+    const existing = await this.prisma.account.findUnique({ where: { email: newEmail } });
+    if (existing) {
+      throw new Error('Este email já está em uso');
+    }
+
+    const token = crypto.randomUUID();
+    await this.prisma.verificationToken.create({
+      data: {
+        token,
+        type: 'email_change',
+        accountId,
+        metadata: JSON.stringify({ newEmail }),
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      },
+    });
+
+    try {
+      await this.emailJs.sendEmailChangeVerification(newEmail, token);
+    } catch {
+    }
+  }
+
+  async verifyEmailChange(token: string) {
+    const vt = await this.prisma.verificationToken.findUnique({ where: { token } });
+    if (!vt || vt.type !== 'email_change' || vt.usedAt || vt.expiresAt < new Date()) {
+      throw new Error('Token inválido ou expirado');
+    }
+
+    const metadata = JSON.parse(vt.metadata || '{}');
+    const newEmail = metadata.newEmail;
+    if (!newEmail) {
+      throw new Error('Token inválido');
+    }
+
+    const existing = await this.prisma.account.findUnique({ where: { email: newEmail } });
+    if (existing && existing.id !== vt.accountId) {
+      throw new Error('Este email já está em uso');
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.account.update({
+        where: { id: vt.accountId },
+        data: { email: newEmail },
+      }),
+      this.prisma.verificationToken.update({
+        where: { id: vt.id },
+        data: { usedAt: new Date() },
+      }),
+    ]);
   }
 
   async deleteAccount(accountId: number) {
