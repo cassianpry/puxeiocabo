@@ -3,7 +3,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useAdminStats } from '@/hooks/useAdminStats'
 import { AdminStatCard } from '@/components/app/AdminStatCard'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Users, FileText, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
+import { Users, FileText, CheckCircle2, XCircle, AlertTriangle, Bug } from 'lucide-react'
 
 export const Route = createFileRoute('/_admin/admin/')({
   component: AdminDashboardPage,
@@ -24,6 +24,8 @@ function AdminDashboardPage() {
     { label: 'Rejeitadas', value: stats?.rejected ?? '—', icon: <XCircle className="h-4 w-4" />, iconColor: 'text-destructive' },
     { label: 'Sinalizadas pela IA', value: stats?.flagged ?? '—', icon: <AlertTriangle className="h-4 w-4" />, iconColor: 'text-warning' },
     { label: 'Lutadores Cadastrados', value: stats?.fighterCount ?? '—', icon: <Users className="h-4 w-4" />, iconColor: 'text-primary' },
+    { label: 'Bug Reports (Abertos)', value: stats?.openBugReports ?? '—', icon: <Bug className="h-4 w-4" />, iconColor: 'text-destructive' },
+    { label: 'Bug Reports (Resolvidos)', value: stats?.resolvedBugReports ?? '—', icon: <Bug className="h-4 w-4" />, iconColor: 'text-success' },
   ]
 
   return (
@@ -35,7 +37,7 @@ function AdminDashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading
-          ? Array.from({ length: 6 }).map((_, i) => (
+          ? Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="space-y-3 rounded-lg border p-6">
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-8 w-16" />

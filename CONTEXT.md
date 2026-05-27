@@ -21,6 +21,9 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
 | **EmailJS generic template** | Single dashboard template (`template_d0b10gp`) with `{{to_email}}`, `{{subject}}`, `{{{html}}}` variables (triple brackets = unescaped HTML). Backend builds full HTML inline for each email type and sends through this one template. |
 | **VerificationToken** | Prisma model storing one-time tokens for password reset (`password_reset`) and email change (`email_change`). Token expires in 1 hour. Cascades on account deletion. Metadata field stores JSON (e.g., `{ newEmail }` for email changes). |
 | **ContactInquiry** | Prisma model storing general contact form submissions (name, email, subject, message). Shown in admin panel. Each submission triggers an admin notification email via EmailJS. |
+| **BugReport** | Prisma model for user-submitted bug reports (subject, description, status, createdAt). Status can be `open` or `resolved`. Admins can view, filter by status, and mark as resolved. Paginated in admin panel. |
+| **AppPagination** | Reusable React component (`components/app/Pagination.tsx`) wrapping shadcn Pagination. Provides numbered pages with ellipsis, "Anterior"/"Próximo" labels in Portuguese, and `cursor-pointer` on clickable pages. Accepts `page`, `totalPages`, `onPageChange`, and optional `className`. |
+| **Report search** | Public endpoint `GET /reports?search=` filters approved reports by the reported fighter's `fighterId` (contains) or `shortId` (exact match if input is numeric). Frontend has a debounced (300ms) input with "Limpar busca" button and a limit selector (10/20/50 items per page). |
 
 ## Project Phases
 

@@ -61,8 +61,18 @@ export class ReportService {
     });
   }
 
-  async findAll(page = 1, limit = 20) {
-    const where = { status: 'approved' };
+  async findAll(page = 1, limit = 20, search?: string) {
+    const reportedFilter = search
+      ? {
+          reported: {
+            OR: [
+              { fighterId: { contains: search } },
+              ...(isNaN(Number(search)) ? [] : [{ shortId: BigInt(search) }]),
+            ],
+          },
+        }
+      : {};
+    const where = { status: 'approved', ...reportedFilter };
     const skip = (page - 1) * limit;
 
     const [reports, total] = await Promise.all([
@@ -202,16 +212,17 @@ export class ReportService {
   }
 
   async getStats() {
-    const [total, pending, approved, rejected, flagged] = await Promise.all([
+    const [total, pending, approved, rejected, flagged, fighterCount, openBugReports, resolvedBugReports] = await Promise.all([
       this.prisma.report.count({ where: { status: { not: 'deleted' } } }),
       this.prisma.report.count({ where: { status: 'pending' } }),
       this.prisma.report.count({ where: { status: 'approved' } }),
       this.prisma.report.count({ where: { status: 'rejected' } }),
       this.prisma.report.count({ where: { aiSuspicious: true, status: { not: 'deleted' } } }),
+      this.prisma.fighter.count(),
+      this.prisma.bugReport.count({ where: { status: 'open' } }),
+      this.prisma.bugReport.count({ where: { status: 'resolved' } }),
     ]);
 
-    const fighterCount = await this.prisma.fighter.count();
-
-    return { total, pending, approved, rejected, flagged, fighterCount };
+    return { total, pending, approved, rejected, flagged, fighterCount, openBugReports, resolvedBugReports };
   }
 }

@@ -60,6 +60,7 @@ model BugReport {
   id          Int      @id @default(autoincrement())
   subject     String
   description String
+  status      String   @default("open")
   createdAt   DateTime @default(now())
 }
 

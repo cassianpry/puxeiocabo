@@ -8,6 +8,8 @@ export interface AdminStats {
   rejected: number
   flagged: number
   fighterCount: number
+  openBugReports: number
+  resolvedBugReports: number
 }
 
 export function useAdminStats() {

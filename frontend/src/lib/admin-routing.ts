@@ -39,6 +39,7 @@ export function getAuthNavItems({ isAuthenticated, isLinked, isAdmin }: AuthNavS
     return [
       { to: '/admin', label: 'Painel Admin' },
       { to: '/admin/flagged', label: 'Denúncias Sinalizadas' },
+      { to: '/admin/bug-reports', label: 'Relatórios de Bug' },
       { to: '/admin/contact', label: 'Contatos' },
       { action: 'logout', label: 'Sair' },
     ]

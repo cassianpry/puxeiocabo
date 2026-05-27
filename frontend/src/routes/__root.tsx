@@ -19,7 +19,7 @@ function RootComponent() {
   useAnalytics()
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <AppHeader
         title="Puxei o Cabo"
         isAuthenticated={isAuthenticated}
@@ -27,7 +27,7 @@ function RootComponent() {
         role={user?.role ?? null}
         onLogout={logout}
       />
-      <main className="mx-auto max-w-7xl px-6 py-8">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-8">
         <div className={animationClass}>
           <Outlet />
         </div>

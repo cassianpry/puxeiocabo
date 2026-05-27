@@ -44,8 +44,16 @@ export class ReportController {
   @Get()
   @ApiOperation({ summary: 'List all reports (public)' })
   @ApiResponse({ status: 200, description: 'Reports retrieved', type: PaginatedResponseDto })
-  async findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
-    return this.reportService.findAll(page ? Number(page) : 1, limit ? Number(limit) : 20);
+  async findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+  ) {
+    return this.reportService.findAll(
+      page ? Number(page) : 1,
+      limit ? Number(limit) : 20,
+      search,
+    );
   }
 
   @Get('flagged')
