@@ -56,8 +56,11 @@ export class AuthController {
     if (body.password.length < 6) {
       throw new BadRequestException('Senha deve ter pelo menos 6 caracteres');
     }
+    if (!body.consent) {
+      throw new BadRequestException('Você precisa aceitar a Política de Privacidade');
+    }
     try {
-      const result = await this.authService.register(body.email, body.password);
+      const result = await this.authService.register(body.email, body.password, body.consent);
       this.setCookies(res, result.accessToken, result.refreshToken);
       return { accountId: result.accountId, shortId: result.shortId };
     } catch (error) {
@@ -155,5 +158,31 @@ export class AuthController {
     } catch (error) {
       throw new BadRequestException((error as Error).message);
     }
+  }
+
+  @Post('delete-account')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Delete account and anonymize reports' })
+  @ApiBearerAuth('access-token')
+  @ApiResponse({ status: 200, description: 'Account deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async deleteAccount(@Req() req: any, @Res({ passthrough: true }) res: Response) {
+    try {
+      await this.authService.deleteAccount(req.user.id);
+      this.clearCookies(res);
+      return { message: 'Conta excluída com sucesso' };
+    } catch (error) {
+      throw new BadRequestException((error as Error).message);
+    }
+  }
+
+  @Get('export')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Export personal data' })
+  @ApiBearerAuth('access-token')
+  @ApiResponse({ status: 200, description: 'Personal data exported' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async exportData(@Req() req: any) {
+    return this.authService.exportData(req.user.id);
   }
 }

@@ -31,6 +31,12 @@ export function AppHeader({
           >
             Como usar
           </Link>
+          <Link
+            to="/privacidade"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors duration-150"
+          >
+            Privacidade
+          </Link>
         </div>
         <AuthNav
           isAuthenticated={isAuthenticated}

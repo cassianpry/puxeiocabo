@@ -1,15 +1,26 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useChangePassword } from '@/hooks/useChangePassword'
+import { useExportData } from '@/hooks/useExportData'
+import { useDeleteAccount } from '@/hooks/useDeleteAccount'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 export const Route = createFileRoute('/_auth/profile')({
   component: ProfilePage,
@@ -18,26 +29,30 @@ export const Route = createFileRoute('/_auth/profile')({
 function ProfilePage() {
   const { user, isLoading } = useAuth()
   const changePasswordMutation = useChangePassword()
+  const exportMutation = useExportData()
+  const deleteMutation = useDeleteAccount()
+  const router = useRouter()
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [formError, setFormError] = useState<string | null>(null)
+  const [showConfirmPass, setShowConfirmPass] = useState(false)
+  const [passwordFormError, setPasswordFormError] = useState<string | null>(null)
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault()
-    setFormError(null)
+    setPasswordFormError(null)
 
     if (newPassword.length < 6) {
-      setFormError('A senha deve ter no mínimo 6 caracteres.')
+      setPasswordFormError('A senha deve ter no mínimo 6 caracteres.')
       return
     }
 
     if (newPassword !== confirmNewPassword) {
-      setFormError('As senhas não conferem.')
+      setPasswordFormError('As senhas não conferem.')
       return
     }
 
@@ -53,7 +68,7 @@ function ProfilePage() {
       setConfirmNewPassword('')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Erro ao alterar senha')
-      setFormError(err instanceof Error ? err.message : 'Erro ao alterar senha')
+      setPasswordFormError(err instanceof Error ? err.message : 'Erro ao alterar senha')
     }
   }
 
@@ -69,6 +84,12 @@ function ProfilePage() {
         </div>
       </div>
     )
+  }
+
+  async function handleDelete() {
+    setShowDeleteDialog(false)
+    await deleteMutation.mutateAsync()
+    router.invalidate()
   }
 
   return (
@@ -161,7 +182,7 @@ function ProfilePage() {
               <div className="relative">
                 <Input
                   id="confirmNewPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPass ? 'text' : 'password'}
                   placeholder="Repita a nova senha"
                   value={confirmNewPassword}
                   onChange={(e) => setConfirmNewPassword(e.target.value)}
@@ -170,11 +191,11 @@ function ProfilePage() {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  onClick={() => setShowConfirmPass(!showConfirmPass)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   tabIndex={-1}
                 >
-                  {showConfirmPassword ? (
+                  {showConfirmPass ? (
                     <EyeOff className="h-4 w-4" />
                   ) : (
                     <Eye className="h-4 w-4" />
@@ -183,9 +204,9 @@ function ProfilePage() {
               </div>
             </div>
 
-            {formError && (
+            {passwordFormError && (
               <Alert variant="destructive">
-                <AlertDescription>{formError}</AlertDescription>
+                <AlertDescription>{passwordFormError}</AlertDescription>
               </Alert>
             )}
 
@@ -195,6 +216,7 @@ function ProfilePage() {
           </form>
         </CardContent>
       </Card>
+
     </div>
   )
 }

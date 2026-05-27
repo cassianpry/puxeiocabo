@@ -29,6 +29,7 @@ function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,9 +45,14 @@ function RegisterPage() {
       return;
     }
 
+    if (!consent) {
+      setError("Você precisa aceitar a Política de Privacidade.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      await register({ email, password });
+      await register({ email, password, consent: true });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erro ao criar conta");
       setError(err instanceof Error ? err.message : "Erro ao criar conta");
@@ -134,6 +140,26 @@ function RegisterPage() {
                 )}
               </button>
             </div>
+          </div>
+
+          <div className="flex items-start gap-2">
+            <input
+              id="consent"
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-muted-foreground bg-background text-primary focus:ring-primary"
+              required
+            />
+            <Label htmlFor="consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+              Li e aceito a{" "}
+              <Link
+                to="/privacidade"
+                className="text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors duration-150"
+              >
+                Política de Privacidade
+              </Link>
+            </Label>
           </div>
 
           {error && (

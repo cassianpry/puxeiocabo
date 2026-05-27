@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ComoUsarRouteImport } from './routes/como-usar'
 import { Route as AuthRouteImport } from './routes/_auth'
@@ -27,6 +28,11 @@ import { Route as AdminAdminFlaggedRouteImport } from './routes/_admin/admin/fla
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/como-usar': typeof ComoUsarRoute
   '/login': typeof LoginRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
   '/dashboard': typeof AuthDashboardRoute
   '/profile': typeof AuthProfileRoute
@@ -111,6 +118,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/como-usar': typeof ComoUsarRoute
   '/login': typeof LoginRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
   '/dashboard': typeof AuthDashboardRoute
   '/profile': typeof AuthProfileRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/como-usar': typeof ComoUsarRoute
   '/login': typeof LoginRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/register': typeof RegisterRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
   '/_auth/profile': typeof AuthProfileRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/'
     | '/como-usar'
     | '/login'
+    | '/privacidade'
     | '/register'
     | '/dashboard'
     | '/profile'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/'
     | '/como-usar'
     | '/login'
+    | '/privacidade'
     | '/register'
     | '/dashboard'
     | '/profile'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/como-usar'
     | '/login'
+    | '/privacidade'
     | '/register'
     | '/_auth/dashboard'
     | '/_auth/profile'
@@ -191,6 +203,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   ComoUsarRoute: typeof ComoUsarRoute
   LoginRoute: typeof LoginRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
   RegisterRoute: typeof RegisterRoute
 }
 
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -335,6 +355,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   ComoUsarRoute: ComoUsarRoute,
   LoginRoute: LoginRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
   RegisterRoute: RegisterRoute,
 }
 export const routeTree = rootRouteImport
