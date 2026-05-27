@@ -18,7 +18,7 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
 | **LGPD** | Lei Geral de Proteção de Dados Pessoais (Law 13.709/2018) — Brazil's data protection regulation governing collection, storage, and processing of personal data. |
 | **GA4** | Google Analytics 4 — web analytics service that tracks page views and user events. Loaded client-side via gtag.js only after user consents via banner. Three tiers: `refused` (no GA), `essential` (page views only), `full` (page views + custom events). |
 | **EmailJS** | Transactional email service provider. Integrated via `@emailjs/nodejs` npm package. Used for password reset, email change verification, and admin contact notifications. Uses dashboard templates with template params (service + template IDs configured via env vars). Server-side API requires enabling "API requests for non-browser applications" in EmailJS dashboard (Account → Security). |
-| **EmailJS generic template** | Single dashboard template (`template_d0b10gp`) with `{{to_email}}`, `{{subject}}`, `{{html}}` variables. Backend builds full HTML inline for each email type and sends through this one template. |
+| **EmailJS generic template** | Single dashboard template (`template_d0b10gp`) with `{{to_email}}`, `{{subject}}`, `{{{html}}}` variables (triple brackets = unescaped HTML). Backend builds full HTML inline for each email type and sends through this one template. |
 | **VerificationToken** | Prisma model storing one-time tokens for password reset (`password_reset`) and email change (`email_change`). Token expires in 1 hour. Cascades on account deletion. Metadata field stores JSON (e.g., `{ newEmail }` for email changes). |
 | **ContactInquiry** | Prisma model storing general contact form submissions (name, email, subject, message). Shown in admin panel. Each submission triggers an admin notification email via EmailJS. |
 
@@ -46,10 +46,16 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
   - `POST /auth/refresh` — Refresh access token (JWT required)
   - `POST /auth/logout` — Invalidate refresh token + clear cookies (JWT required)
   - `POST /auth/link` — Link account to fighter (JWT required)
+  - `POST /auth/forgot-password` — Request password reset email (public, always returns success to prevent email enumeration)
+  - `POST /auth/reset-password` — Reset password with token (public, validates token + expiry, invalidates existing sessions)
+  - `POST /auth/change-email` — Request email change (JWT required, validates current password, sends verification to new email)
+  - `POST /auth/verify-email-change` — Confirm email change with token (public, validates token + expiry, updates email)
   - `POST /auth/change-password` — Change password (JWT required, validates current + new + confirm, issues new tokens, invalidates other sessions)
   - `POST /auth/delete-account` — Delete account + anonymize reports (JWT required, clears PII, clears EXIF data from user's reports)
   - `GET /auth/export` — Export personal data (JWT required, returns JSON with account info + reports)
   - `GET /auth/me` — Get current user profile (JWT required, returns role + createdAt, consentGivenAt)
+  - `POST /contact/send` — Submit contact inquiry (public, saves to DB + notifies admin via EmailJS)
+  - `GET /contact/inquiries` — List contact inquiries (JWT + Admin required)
   - `POST /reports` — Submit report (JWT required, JPEG-only proof image)
   - `GET /reports` — List approved reports (pagination, public homepage feed) (public)
   - `GET /reports/my` — List own reports (JWT required)
@@ -61,7 +67,7 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
 - **Image Upload:** Stored in `backend/uploads/`, served as static assets at `/uploads/`
 - **AI Detection:** EXIF analysis via `exifr` — auto-rejects if AI keywords found (Midjourney, DALL-E, etc.), flags if missing camera metadata or date/time, stores EXIF as JSON in `exifData`
 
-### Phase 3: Frontend (Vite + React SPA) — In Progress
+### Phase 3: Frontend (Vite + React SPA)
 - **Stack:** Vite 5 + React 18 + TypeScript, TanStack Router (file-based), TanStack Query, shadcn/ui + Tailwind (dark only)
 - **Language:** pt-BR throughout
 - **Auth:** httpOnly cookies via backend CORS (`credentials: 'include'`), auto token refresh
@@ -119,7 +125,8 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
     - Register: "Confirmar senha" field with own eye toggle; client-side validation (min 6 chars + passwords must match) before submit
     - Logo (`logo.png`) as favicon in `index.html` + displayed next to title in AppHeader
      - New report page: added instruction text specifying proof image must show player name, opponent name, and disconnection message
-     - Profile page: change password form with current/new/confirm fields, eye toggle, client+server validation, issues new tokens on success
+      - Profile page: change password form with current/new/confirm fields, eye toggle, client+server validation, issues new tokens on success
+      - Profile page: "Alterar email" card (new email + current password), sends verification to new email
      - LGPD compliance (Standard tier):
        - Privacy Policy page (`/privacidade`) with data inventory, legal bases, user rights, DPO contact
        - Consent checkbox on registration (required, linked to Privacy Policy)
@@ -153,12 +160,19 @@ puxeiocabo/
 │   │   └── import-fighters.ts # Data import script
 │   └── src/
 │       ├── prisma/            # Prisma service
-│       ├── auth/              # Auth module (JWT, refresh, roles, cookies)
-│       │   ├── dto.ts         # RegisterDto, LoginDto, LinkShortIdDto
+│       ├── emailjs/           # EmailJS module (global, transactional emails)
+│       │   ├── emailjs.module.ts
+│       │   └── emailjs.service.ts
+│       ├── auth/              # Auth module (JWT, refresh, roles, cookies, email flows)
+│       │   ├── dto.ts         # +ForgotPasswordDto, ResetPasswordDto, ChangeEmailDto, VerifyEmailChangeDto
 │       │   ├── auth.controller.ts
 │       │   └── auth.service.ts
 │       ├── fighter/           # Fighter module
 │       │   └── fighter.controller.ts
+│       ├── contact/           # Contact module (form + admin inquiries)
+│       │   ├── dto.ts         # ContactDto, BugReportDto
+│       │   ├── contact.controller.ts
+│       │   └── contact.service.ts
 │       ├── report/            # Report module + EXIF analysis
 │       │   ├── dto.ts         # CreateReportDto, UpdateReportDto, ReportResponseDto
 │       │   ├── exif-analysis.service.ts
@@ -170,13 +184,18 @@ puxeiocabo/
 │   │   ├── routes/            # TanStack Router file-based routes
 │   │   │   ├── __root.tsx     # Root layout with QueryClientProvider
 │   │   │   ├── index.tsx      # Public homepage + recent reports
-│   │   │   ├── login.tsx      # Login page (shadcn form + zod)
+│   │   │   ├── login.tsx      # Login page + "Esqueceu a senha?" link
 │   │   │   ├── register.tsx   # Register page (shadcn form + zod + consent)
 │   │   │   ├── privacidade.tsx # LGPD privacy policy
+│   │   │   ├── contato.tsx    # Contact form (name, email, subject, message)
+│   │   │   ├── auth/          # Email-related pages
+│   │   │   │   ├── forgot-password.tsx  # Email form → success
+│   │   │   │   ├── reset-password.tsx   # Token + new password
+│   │   │   │   └── verify-email.tsx     # Auto-verify on mount
 │   │   │   ├── _auth.tsx      # Auth guard layout
 │   │   │   ├── _auth/         # Protected pages (dashboard, reports, fighters, profile)
 │   │   │   ├── _admin.tsx     # Admin guard layout
-│   │   │   └── _admin/admin/  # Admin pages (dashboard, flagged)
+│   │   │   └── _admin/admin/  # Admin pages (dashboard, flagged, contact)
 │   │   ├── components/
 │   │   │   ├── ui/            # shadcn/ui (never edited)
 │   │   │   ├── app/           # Domain dumb components
@@ -210,19 +229,24 @@ puxeiocabo/
 - **Auth cache invalidation:** When `_auth.tsx` or `_admin.tsx` `beforeLoad` detects session invalidation, it calls `queryClient.setQueryData(['auth', 'me'], null)` before redirecting to `/login`. This clears the stale TanStack Query cache so `__root.tsx`'s `useAuth()` returns `null` immediately — navbar never flashes logged-in menus after session death.
 - **Login/register redirect:** Both routes have `beforeLoad` that redirect authenticated users to `/dashboard`. The `redirect()` throw MUST be outside the `try/catch` — otherwise the `catch` silently swallows it and no redirect occurs.
 - **Navbar link visibility:** `AuthNav` receives `isLinked` prop. When authenticated but `!isLinked`, only "Sair" is shown — private links (Painel, Nova Denúncia, Perfil) are hidden until the user links a fighter.
-- **Test accounts:** Only `test@teste.test` (pass: `123456`, linked to fake fighter `9999999`) — no other test accounts. Rule documented in `AGENTS.md`.
+- **Test accounts:** Only `test@teste.test` (pass: `123456`, linked to fake fighter `9999999`) — no other test accounts. Rule documented in `AGENTS.md`. Email temporarily changed to `cassianpry@gmail.com` for testing EmailJS delivery.
 - **File dialog:** ImageUpload uses `className="hidden"` + `inputRef.current?.click()` — explicit click handlers on both drop zone and button
 - **EXIF analysis:** Removed from frontend ImageUpload to simplify code; backend EXIF analysis remains in `exif-analysis.service.ts` for admin review
 - **fighterId display:** Dashboard, detail page, and fighter search show `fighterId` (nullable display name) instead of `platformName`, with `(shortId)` fallback when null
 - **Report card design:** NFT Preview Card style (image + hover overlay + centered metadata + dialog lightbox), grid layout with `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`
 - **ESLint react-refresh:** `allowExportNames: ['Route']` instead of `allowConstantExport` — `createFileRoute()` is a `CallExpression` not a literal constant
 - **Build discipline:** No automatic builds — only when user explicitly says "build" or "build it"; verify via manual/Playwright testing first
-- **Footer:** `AppFooter` in `__root.tsx` — 2px arcade-blue top border, `bg-background`. Links: Privacidade (`/privacidade`), Termos de Serviço (`/termos-de-servico`), Reportar um bug (`/bug-report`), Contato (external `cassiano-portfolio.onrender.com`). Copyright `© 2026 cassianpry`. "Privacidade" link removed from `AppHeader`, moved to footer.
+- **Footer:** `AppFooter` in `__root.tsx` — 2px arcade-blue top border, `bg-background`. Links: Privacidade (`/privacidade`), Termos de Serviço (`/termos-de-servico`), Reportar um bug (`/bug-report`), Contato (`/contato`). Copyright `© 2026 cassianpry`. "Privacidade" link removed from `AppHeader`, moved to footer.
 - **Bug report:** `POST /contact/bug-report` — public endpoint, stores in `BugReport` table (subject + description). Frontend form at `/bug-report`.
 - **Terms of service:** Static page at `/termos-de-servico` — 7 sections (aceitação, uso aceitável, denúncias, propriedade intelectual, isenção, limitação, alterações). Same layout pattern as `privacidade.tsx`.
 - **shadcn/ui rule enforced:** `cursor-pointer` applied globally via `globals.css` (`button:not(:disabled), [role="button"]:not(:disabled), [data-slot="button"]:not(:disabled)`) — shadcn Button component never edited directly; previously reverted a direct edit to `button.tsx`
 - **LGPD compliance:** Standard tier implemented. Consent collected at registration with timestamp. Account deletion replaces PII with placeholders (`deleted-{id}@removed`, `DELETED` hash) rather than hard delete — preserves FK integrity and report records for community blocklist. Report EXIF data is cleared on account deletion (potential GPS/camera metadata). Proof images are preserved (evidence of reported player behavior). Data export returns JSON with account info, fighter data, and report history. See `docs/adr/0001-lgpd-anonymization-strategy.md`.
 - **Google Analytics:** GA4 loaded via gtag.js with three-tier consent gate. Bottom banner (`LgpdConsentBanner`) on first visit offers "Recusar" (`refused`), "Apenas Essenciais" (`essential`), or "Aceitar Completo" (`full`) — stored in localStorage (`ga-consent`). GA initializes for both `essential` and `full` (both need page views). Custom events only fire when `full`. Page views tracked via TanStack Router's `useLocation`. Custom events on `register`, `login`, `report_submitted`, `password_changed`, `account_deleted` — all guarded centrally in `trackEvent()`. Measurement ID via `VITE_GA_MEASUREMENT_ID` env var. Privacy policy updated to list GA cookie with tier descriptions.
+
+- **EmailJS generic template:** Single dashboard template (`template_d0b10gp`) with `{{{html}}}` (triple brackets = unescaped HTML), `{{subject}}`, and `{{to_email}}`. Backend builds full inline HTML for each email type (password reset, email change, admin contact) and sends through this one template. This avoids needing multiple template slots on EmailJS free plan (limited to 2 templates).
+- **VerificationToken:** One-time tokens for `password_reset` and `email_change`, expires in 1 hour, cascading delete on account removal. Metadata field stores JSON payloads (e.g., `{ newEmail }`).
+- **Contact flow:** Form submission at `POST /contact/send` saves to `ContactInquiry` table + notifies admin via EmailJS. Admin reviews at `GET /contact/inquiries` (JWT + Admin). No user authentication required for submission.
+- **Forgot-password security:** Always returns success regardless of whether the email exists (prevents email enumeration). Token created + email sent only if account found.
 
 ## Swagger Documentation
 - **URL:** `http://localhost:3000/api`
