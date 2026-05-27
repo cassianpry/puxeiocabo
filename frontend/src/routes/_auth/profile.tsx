@@ -1,8 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
+import { useChangePassword } from '@/hooks/useChangePassword'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export const Route = createFileRoute('/_auth/profile')({
   component: ProfilePage,
@@ -10,6 +17,45 @@ export const Route = createFileRoute('/_auth/profile')({
 
 function ProfilePage() {
   const { user, isLoading } = useAuth()
+  const changePasswordMutation = useChangePassword()
+
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmNewPassword, setConfirmNewPassword] = useState('')
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
+
+  async function handleChangePassword(e: React.FormEvent) {
+    e.preventDefault()
+    setFormError(null)
+
+    if (newPassword.length < 6) {
+      setFormError('A senha deve ter no mínimo 6 caracteres.')
+      return
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      setFormError('As senhas não conferem.')
+      return
+    }
+
+    try {
+      await changePasswordMutation.mutateAsync({
+        currentPassword,
+        newPassword,
+        confirmNewPassword,
+      })
+      toast.success('Senha alterada com sucesso.')
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmNewPassword('')
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erro ao alterar senha')
+      setFormError(err instanceof Error ? err.message : 'Erro ao alterar senha')
+    }
+  }
 
   if (isLoading) {
     return (
@@ -47,6 +93,106 @@ function ProfilePage() {
               {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('pt-BR') : '—'}
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Alterar senha</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleChangePassword} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="currentPassword">Senha atual</Label>
+              <div className="relative">
+                <Input
+                  id="currentPassword"
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="pr-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showCurrentPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">Nova senha</Label>
+              <div className="relative">
+                <Input
+                  id="newPassword"
+                  type={showNewPassword ? 'text' : 'password'}
+                  placeholder="Mínimo de 6 caracteres"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="pr-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showNewPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmNewPassword">Confirmar nova senha</Label>
+              <div className="relative">
+                <Input
+                  id="confirmNewPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder="Repita a nova senha"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  className="pr-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {formError && (
+              <Alert variant="destructive">
+                <AlertDescription>{formError}</AlertDescription>
+              </Alert>
+            )}
+
+            <Button type="submit" disabled={changePasswordMutation.isPending}>
+              {changePasswordMutation.isPending ? 'Salvando...' : 'Salvar'}
+            </Button>
+          </form>
         </CardContent>
       </Card>
     </div>

@@ -126,6 +126,48 @@ export class AuthService {
     };
   }
 
+  async changePassword(
+    accountId: number,
+    currentPassword: string,
+    newPassword: string,
+    confirmNewPassword: string,
+  ) {
+    const account = await this.prisma.account.findUnique({ where: { id: accountId } });
+    if (!account) {
+      throw new Error('Conta não encontrada');
+    }
+
+    const passwordMatch = await bcrypt.compare(currentPassword, account.passwordHash);
+    if (!passwordMatch) {
+      throw new Error('Senha atual incorreta');
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      throw new Error('As senhas não conferem');
+    }
+
+    if (newPassword.length < 6) {
+      throw new Error('A senha deve ter no mínimo 6 caracteres');
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    const tokens = await this.generateTokens(account.id, account.role);
+    const hashedRefresh = await bcrypt.hash(tokens.refreshToken, 10);
+
+    await this.prisma.account.update({
+      where: { id: accountId },
+      data: {
+        passwordHash,
+        refreshToken: hashedRefresh,
+      },
+    });
+
+    return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    };
+  }
+
   async logout(accountId: number) {
     await this.prisma.account.update({
       where: { id: accountId },

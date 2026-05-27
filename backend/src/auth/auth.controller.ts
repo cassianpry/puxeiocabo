@@ -12,7 +12,7 @@ import type { Response } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { RegisterDto, LoginDto, LinkShortIdDto, AuthResponseDto } from './dto';
+import { RegisterDto, LoginDto, LinkShortIdDto, ChangePasswordDto, AuthResponseDto } from './dto';
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -133,5 +133,27 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async me(@Req() req: any) {
     return this.authService.getProfile(req.user.id);
+  }
+
+  @Post('change-password')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Change account password' })
+  @ApiBearerAuth('access-token')
+  @ApiResponse({ status: 200, description: 'Password changed successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid current password or validation error' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async changePassword(@Req() req: any, @Body() body: ChangePasswordDto, @Res({ passthrough: true }) res: Response) {
+    try {
+      const result = await this.authService.changePassword(
+        req.user.id,
+        body.currentPassword,
+        body.newPassword,
+        body.confirmNewPassword,
+      );
+      this.setCookies(res, result.accessToken, result.refreshToken);
+      return { message: 'Senha alterada com sucesso' };
+    } catch (error) {
+      throw new BadRequestException((error as Error).message);
+    }
   }
 }

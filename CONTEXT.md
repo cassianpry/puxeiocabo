@@ -39,8 +39,9 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
   - `POST /auth/login` — Authenticate, returns access + refresh tokens (public)
   - `POST /auth/refresh` — Refresh access token (JWT required)
   - `POST /auth/logout` — Invalidate refresh token + clear cookies (JWT required)
-  - `POST /auth/link` — Link account to fighter (JWT required)
-  - `GET /auth/me` — Get current user profile (JWT required, returns role + createdAt)
+   - `POST /auth/link` — Link account to fighter (JWT required)
+   - `POST /auth/change-password` — Change password (JWT required, validates current + new + confirm, issues new tokens, invalidates other sessions)
+   - `GET /auth/me` — Get current user profile (JWT required, returns role + createdAt)
   - `POST /reports` — Submit report (JWT required, JPEG-only proof image)
   - `GET /reports` — List approved reports (pagination, public homepage feed) (public)
   - `GET /reports/my` — List own reports (JWT required)
@@ -65,7 +66,7 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
   - Project setup with Vite + TypeScript + Tailwind dark theme
   - 20 shadcn/ui components installed (button, input, card, badge, label, form, alert, dialog, table, pagination, dropdown-menu, separator, sheet, popover, command, select, textarea, avatar, skeleton, sonner)
   - Auth system: login/register pages with react-hook-form + zod, `_auth`/`_admin` route guards
-    - Smart hooks: `useAuth`, `useLogin`, `useRegister`, `useLogout`, `useDebounce`, `useFighterSearch`, `useLinkShortId`, `useFlaggedReports`, `useAdminStats`, `useMyReports`, `useUpdateReport`
+    - Smart hooks: `useAuth`, `useLogin`, `useRegister`, `useLogout`, `useDebounce`, `useFighterSearch`, `useLinkShortId`, `useChangePassword`, `useFlaggedReports`, `useAdminStats`, `useMyReports`, `useUpdateReport`
     - Dumb components: `AuthNav`, `AppHeader`, `LinkFighterModal`, `AdminStatCard`, `EXIFViewer`, `ReportActions`, `EditReportDialog`, `ReportCard`
     - Public homepage (`/`) with recent reports feed — NFT-style report cards in grid layout (4 cols lg)
       - Image at top with hover overlay (eye icon), click opens Dialog lightbox (max-w-7xl!)
@@ -109,7 +110,8 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
     - Login/register: email icon (`Mail`) inside input field (right side), password eye toggle (`Eye`/`EyeOff`) inside password field
     - Register: "Confirmar senha" field with own eye toggle; client-side validation (min 6 chars + passwords must match) before submit
     - Logo (`logo.png`) as favicon in `index.html` + displayed next to title in AppHeader
-    - New report page: added instruction text specifying proof image must show player name, opponent name, and disconnection message
+     - New report page: added instruction text specifying proof image must show player name, opponent name, and disconnection message
+     - Profile page: change password form with current/new/confirm fields, eye toggle, client+server validation, issues new tokens on success
     - `.opencode/rules/shadcn-never-edit.mdc` — rule file covering shadcn/ui + TanStack routeTree.gen.ts
 
 ## Project Structure

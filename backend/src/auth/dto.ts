@@ -21,6 +21,17 @@ export class LinkShortIdDto {
   shortId: string;
 }
 
+export class ChangePasswordDto {
+  @ApiProperty({ example: 'currentPass123', description: 'Current password' })
+  currentPassword: string;
+
+  @ApiProperty({ example: 'newPass456', description: 'New password (min 6 chars)' })
+  newPassword: string;
+
+  @ApiProperty({ example: 'newPass456', description: 'Confirm new password' })
+  confirmNewPassword: string;
+}
+
 export class AuthResponseDto {
   @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
   accessToken: string;
