@@ -209,41 +209,139 @@ function PrivacyPage() {
       <section className="space-y-4">
         <h2 className="text-xl font-semibold">7. Cookies</h2>
         <p className="text-muted-foreground leading-relaxed">
-          Utilizamos exclusivamente cookies essenciais para o funcionamento da
-          plataforma:
+          Utilizamos cookies para autenticação e, com seu consentimento,
+          análise de audiência. Cookies são pequenos arquivos de texto
+          armazenados no seu navegador pelo servidor. Abaixo, detalhamos cada
+          cookie utilizado:
         </p>
-        <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-          <li>
-            <strong>accessToken:</strong> cookie httpOnly para autenticação.
-            Expira em 15 minutos.
-          </li>
-          <li>
-            <strong>refreshToken:</strong> cookie httpOnly para renovação de
-            sessão. Expira em 7 dias.
-          </li>
-          <li>
-            <strong>_ga (Google Analytics):</strong> cookie de análise de
-            audiência. Coleta dados anônimos de navegação. Você pode escolher
-            entre dois níveis: <strong>Apenas Essenciais</strong> (apenas
-            páginas visitadas) ou <strong>Completo</strong> (páginas visitadas
-            + interações como login, cadastro e denúncias). Ativado somente
-            mediante seu aceite no banner de cookies. Dados armazenados nos
-            servidores do Google (EUA).
-          </li>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-muted-foreground">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-2 pr-4 font-medium">Cookie</th>
+                <th className="text-left py-2 pr-4 font-medium">Finalidade</th>
+                <th className="text-left py-2 pr-4 font-medium">Duração</th>
+                <th className="text-left py-2 font-medium">Tipo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-border">
+                <td className="py-2 pr-4"><strong>accessToken</strong></td>
+                <td className="py-2 pr-4">Autenticação. Contém um JWT assinado que
+                identifica o usuário nas requisições à API.</td>
+                <td className="py-2 pr-4">15 minutos</td>
+                <td className="py-2">Essencial</td>
+              </tr>
+              <tr className="border-b border-border">
+                <td className="py-2 pr-4"><strong>refreshToken</strong></td>
+                <td className="py-2 pr-4">Renovação automática do accessToken
+                sem necessidade de novo login.</td>
+                <td className="py-2 pr-4">7 dias</td>
+                <td className="py-2">Essencial</td>
+              </tr>
+              <tr className="border-b border-border">
+                <td className="py-2 pr-4"><strong>_ga / _ga_CL8EGVEYVH</strong></td>
+                <td className="py-2 pr-4">Análise de audiência pelo Google
+                Analytics 4 (GA4). Coleta dados anônimos de navegação:
+                páginas visitadas, tempo no site, origem do tráfego.</td>
+                <td className="py-2 pr-4">2 anos</td>
+                <td className="py-2">Análise (mediante consentimento)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="text-muted-foreground leading-relaxed">
+          Todos os cookies de autenticação são do tipo <strong>httpOnly</strong>
+          (inacessíveis via JavaScript) e utilizam a flag{" "}
+          <strong>SameSite=Lax</strong> para proteção contra ataques CSRF. Em
+          produção, também utilizam a flag <strong>Secure</strong> (enviados
+          apenas via HTTPS).
+        </p>
+        <p className="text-muted-foreground leading-relaxed">
+          O cookie do Google Analytics é carregado dinamicamente via gtag.js
+          <strong> apenas </strong> após seu aceite explícito no banner de
+          cookies, com três níveis de consentimento:
+        </p>
+        <ul className="list-disc pl-6 space-y-1 text-muted-foreground text-sm">
+          <li><strong>Recusar:</strong> nenhum cookie de análise é carregado</li>
+          <li><strong>Apenas Essenciais:</strong> apenas páginas visitadas são registradas</li>
+          <li><strong>Completo:</strong> páginas visitadas + interações (login, cadastro, denúncias, alteração de senha, exclusão de conta)</li>
         </ul>
+        <p className="text-muted-foreground leading-relaxed">
+          Os dados do Google Analytics são armazenados nos servidores do Google
+          (Estados Unidos) sob a conta do Measurement ID{" "}
+          <code>G-CL8EGVEYVH</code>. Para mais informações, consulte a{" "}
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-4 hover:text-primary/80 transition-colors duration-150"
+          >
+            Política de Privacidade do Google
+          </a>.
+        </p>
       </section>
 
       <section className="space-y-4">
         <h2 className="text-xl font-semibold">8. Segurança</h2>
         <p className="text-muted-foreground leading-relaxed">
-          Adotamos as seguintes medidas de segurança para proteger seus dados:
+          Adotamos as seguintes medidas de segurança para proteger seus dados
+          pessoais:
+        </p>
+
+        <h3 className="text-lg font-semibold mt-6">Senhas</h3>
+        <p className="text-muted-foreground leading-relaxed">
+          Sua senha <strong>nunca é armazenada em texto puro</strong>. Antes de
+          ser salva no banco de dados, a senha passa pelo algoritmo
+          <strong> bcrypt </strong> com fator de custo 10, que aplica uma
+          função de hash lenta e salting automático. Isso significa que mesmo
+          que o banco de dados seja comprometido, as senhas não podem ser
+          revertidas para o valor original.
+        </p>
+
+        <h3 className="text-lg font-semibold mt-6">Tokens de autenticação (JWT)</h3>
+        <p className="text-muted-foreground leading-relaxed">
+          Utilizamos <strong>JSON Web Tokens (JWT)</strong> assinados com
+          <strong> HMAC-SHA256 </strong> para autenticação. O sistema funciona
+          com dois tokens:
         </p>
         <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-          <li>Senhas armazenadas com hash bcrypt</li>
-          <li>Tokens JWT com expiração curta (15 min) e refresh tokens renováveis</li>
-          <li>Cookies httpOnly para prevenir acesso via JavaScript</li>
-          <li>Conexão HTTPS em produção</li>
-          <li>Apenas imagens JPEG são aceitas como prova (validação de tipo MIME)</li>
+          <li>
+            <strong>Access Token:</strong> válido por 15 minutos. É enviado em
+            cada requisição à API para identificar o usuário. Por ter curta
+            duração, minimiza o risco em caso de vazamento.
+          </li>
+          <li>
+            <strong>Refresh Token:</strong> válido por 7 dias. Permite obter
+            um novo access token automaticamente sem exigir que o usuário faça
+            login novamente. O refresh token é armazenado com hash bcrypt no
+            banco de dados.
+          </li>
+        </ul>
+        <p className="text-muted-foreground leading-relaxed">
+          Ao alterar a senha, um novo par de tokens é gerado e os tokens das
+          demais sessões são invalidados automaticamente. Ao fazer logout, o
+          refresh token é removido do banco de dados.
+        </p>
+
+        <h3 className="text-lg font-semibold mt-6">Cookies de autenticação</h3>
+        <p className="text-muted-foreground leading-relaxed">
+          Ambos os tokens são armazenados em <strong>cookies httpOnly</strong>,
+          o que impede que scripts JavaScript no navegador tenham acesso ao
+          conteúdo do token. Isso protege contra ataques XSS (cross-site
+          scripting). Os cookies utilizam a flag{" "}
+          <strong>SameSite=Lax</strong> para prevenir ataques CSRF
+          (cross-site request forgery). Em produção, a flag{" "}
+          <strong>Secure</strong> é ativada, garantindo que os cookies só
+          sejam enviados em conexões HTTPS.
+        </p>
+
+        <h3 className="text-lg font-semibold mt-6">Conexão e armazenamento</h3>
+        <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
+          <li>Conexão HTTPS em produção (criptografia em trânsito)</li>
+          <li>Banco de dados SQLite local no servidor</li>
+          <li>Apenas imagens JPEG são aceitas como prova (validação de tipo MIME no servidor)</li>
+          <li>Metadados EXIF das imagens são analisados por heurística para detectar possíveis fraudes (imagens geradas por IA)</li>
         </ul>
       </section>
 
