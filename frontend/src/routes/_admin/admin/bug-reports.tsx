@@ -60,10 +60,7 @@ function AdminBugReportsPage() {
   const totalPages = data?.totalPages ?? 1
 
   function handleStatusChange(value: string) {
-    navigate({
-      search: value === 'all' ? {} : { status: value },
-      replace: true,
-    })
+    navigate({ from: '/admin/bug-reports', search: value === 'all' ? { status: undefined } : { status: value as 'open' | 'resolved' }, replace: true })
     setPage(1)
     setExpanded(null)
   }

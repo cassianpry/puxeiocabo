@@ -15,6 +15,7 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as ComoUsarRouteImport } from './routes/como-usar'
+import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as BugReportRouteImport } from './routes/bug-report'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AdminRouteImport } from './routes/_admin'
@@ -31,6 +32,7 @@ import { Route as AuthReportsIdRouteImport } from './routes/_auth/reports/$id'
 import { Route as AuthFightersIdRouteImport } from './routes/_auth/fighters/$id'
 import { Route as AdminAdminFlaggedRouteImport } from './routes/_admin/admin/flagged'
 import { Route as AdminAdminContactRouteImport } from './routes/_admin/admin/contact'
+import { Route as AdminAdminBugReportsRouteImport } from './routes/_admin/admin/bug-reports'
 
 const TermosDeServicoRoute = TermosDeServicoRouteImport.update({
   id: '/termos-de-servico',
@@ -60,6 +62,11 @@ const ContatoRoute = ContatoRouteImport.update({
 const ComoUsarRoute = ComoUsarRouteImport.update({
   id: '/como-usar',
   path: '/como-usar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangelogRoute = ChangelogRouteImport.update({
+  id: '/changelog',
+  path: '/changelog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BugReportRoute = BugReportRouteImport.update({
@@ -140,10 +147,16 @@ const AdminAdminContactRoute = AdminAdminContactRouteImport.update({
   path: '/admin/contact',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminBugReportsRoute = AdminAdminBugReportsRouteImport.update({
+  id: '/admin/bug-reports',
+  path: '/admin/bug-reports',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bug-report': typeof BugReportRoute
+  '/changelog': typeof ChangelogRoute
   '/como-usar': typeof ComoUsarRoute
   '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
@@ -155,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/verify-email': typeof AuthVerifyEmailRoute
+  '/admin/bug-reports': typeof AdminAdminBugReportsRoute
   '/admin/contact': typeof AdminAdminContactRoute
   '/admin/flagged': typeof AdminAdminFlaggedRoute
   '/fighters/$id': typeof AuthFightersIdRoute
@@ -166,6 +180,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bug-report': typeof BugReportRoute
+  '/changelog': typeof ChangelogRoute
   '/como-usar': typeof ComoUsarRoute
   '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
@@ -177,6 +192,7 @@ export interface FileRoutesByTo {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/verify-email': typeof AuthVerifyEmailRoute
+  '/admin/bug-reports': typeof AdminAdminBugReportsRoute
   '/admin/contact': typeof AdminAdminContactRoute
   '/admin/flagged': typeof AdminAdminFlaggedRoute
   '/fighters/$id': typeof AuthFightersIdRoute
@@ -191,6 +207,7 @@ export interface FileRoutesById {
   '/_admin': typeof AdminRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
   '/bug-report': typeof BugReportRoute
+  '/changelog': typeof ChangelogRoute
   '/como-usar': typeof ComoUsarRoute
   '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
@@ -202,6 +219,7 @@ export interface FileRoutesById {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/verify-email': typeof AuthVerifyEmailRoute
+  '/_admin/admin/bug-reports': typeof AdminAdminBugReportsRoute
   '/_admin/admin/contact': typeof AdminAdminContactRoute
   '/_admin/admin/flagged': typeof AdminAdminFlaggedRoute
   '/_auth/fighters/$id': typeof AuthFightersIdRoute
@@ -215,6 +233,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/bug-report'
+    | '/changelog'
     | '/como-usar'
     | '/contato'
     | '/login'
@@ -226,6 +245,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/reset-password'
     | '/auth/verify-email'
+    | '/admin/bug-reports'
     | '/admin/contact'
     | '/admin/flagged'
     | '/fighters/$id'
@@ -237,6 +257,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/bug-report'
+    | '/changelog'
     | '/como-usar'
     | '/contato'
     | '/login'
@@ -248,6 +269,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/reset-password'
     | '/auth/verify-email'
+    | '/admin/bug-reports'
     | '/admin/contact'
     | '/admin/flagged'
     | '/fighters/$id'
@@ -261,6 +283,7 @@ export interface FileRouteTypes {
     | '/_admin'
     | '/_auth'
     | '/bug-report'
+    | '/changelog'
     | '/como-usar'
     | '/contato'
     | '/login'
@@ -272,6 +295,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/reset-password'
     | '/auth/verify-email'
+    | '/_admin/admin/bug-reports'
     | '/_admin/admin/contact'
     | '/_admin/admin/flagged'
     | '/_auth/fighters/$id'
@@ -286,6 +310,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   BugReportRoute: typeof BugReportRoute
+  ChangelogRoute: typeof ChangelogRoute
   ComoUsarRoute: typeof ComoUsarRoute
   ContatoRoute: typeof ContatoRoute
   LoginRoute: typeof LoginRoute
@@ -339,6 +364,13 @@ declare module '@tanstack/react-router' {
       path: '/como-usar'
       fullPath: '/como-usar'
       preLoaderRoute: typeof ComoUsarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/changelog': {
+      id: '/changelog'
+      path: '/changelog'
+      fullPath: '/changelog'
+      preLoaderRoute: typeof ChangelogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bug-report': {
@@ -453,16 +485,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminContactRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/bug-reports': {
+      id: '/_admin/admin/bug-reports'
+      path: '/admin/bug-reports'
+      fullPath: '/admin/bug-reports'
+      preLoaderRoute: typeof AdminAdminBugReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAdminBugReportsRoute: typeof AdminAdminBugReportsRoute
   AdminAdminContactRoute: typeof AdminAdminContactRoute
   AdminAdminFlaggedRoute: typeof AdminAdminFlaggedRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminBugReportsRoute: AdminAdminBugReportsRoute,
   AdminAdminContactRoute: AdminAdminContactRoute,
   AdminAdminFlaggedRoute: AdminAdminFlaggedRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
@@ -495,6 +536,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   BugReportRoute: BugReportRoute,
+  ChangelogRoute: ChangelogRoute,
   ComoUsarRoute: ComoUsarRoute,
   ContatoRoute: ContatoRoute,
   LoginRoute: LoginRoute,

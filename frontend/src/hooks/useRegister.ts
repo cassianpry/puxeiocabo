@@ -30,20 +30,4 @@ export function useRegister() {
   return { register }
 }
 
-export interface RegisterResult {
-  accountId: number
-  shortId: string | null
-}
 
-export function useRegister() {
-  const navigate = useNavigate()
-
-  const register = async (data: RegisterInput): Promise<RegisterResult> => {
-    const result = await apiJson<RegisterResult>('/auth/register', data as unknown as Record<string, unknown>)
-    await queryClient.invalidateQueries({ queryKey: ['auth', 'me'] })
-    navigate({ to: '/dashboard' })
-    return result
-  }
-
-  return { register }
-}

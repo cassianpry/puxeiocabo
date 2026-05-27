@@ -28,6 +28,12 @@ export function AppFooter() {
             Reportar um bug
           </Link>
           <Link
+            to="/changelog"
+            className="text-muted-foreground hover:text-primary transition-colors duration-150"
+          >
+            Novidades
+          </Link>
+          <Link
             to="/contato"
             className="text-muted-foreground hover:text-primary transition-colors duration-150"
           >

@@ -56,6 +56,17 @@ function HomePage() {
         </h1>
       </section>
 
+      <section className="text-center max-w-2xl mx-auto space-y-4 pb-8">
+        <p>
+          O Puxei o Cabo é um sistema colaborativo para denunciar jogadores
+          que abandonam partidas (rage-quit) no Street Fighter 6.
+        </p>
+        <p>
+          Pesquise pelo ID ou nome do quiter, veja as denúncias mais recentes
+          e ajude a comunidade a identificar quem sai no meio da luta.
+        </p>
+      </section>
+
       <section>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Denúncias Recentes</h2>
