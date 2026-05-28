@@ -6,8 +6,9 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Command, CommandGroup, CommandItem, CommandList, CommandInput } from '@/components/ui/command'
+import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useFighterSearch } from '@/hooks/useFighterSearch'
 import { toast } from 'sonner'
@@ -70,19 +71,24 @@ export function LinkFighterModal({ open, onLink, onLogout }: LinkFighterModalPro
                   : "Buscar pelo nome ou código de usuário..."}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-              <Command shouldFilter={false}>
-                <CommandInput
+            <PopoverContent
+              className="w-[var(--radix-popover-trigger-width)] p-0 max-h-[320px] overflow-y-auto"
+              align="start"
+              onOpenAutoFocus={(e) => e.preventDefault()}
+            >
+              <div className="sticky top-0 z-10 bg-popover p-2">
+                <Input
                   placeholder="Buscar pelo nome ou código de usuário..."
                   value={search}
-                  onValueChange={(value) => {
-                    setSearch(value)
+                  onChange={(e) => {
+                    setSearch(e.target.value)
                     setSelected(null)
                   }}
-                  className="bg-background"
                   autoFocus
                 />
-                <CommandList>
+              </div>
+              <Command shouldFilter={false}>
+                <CommandList className="max-h-none overflow-visible">
                   {isFetching && (
                     <div className="py-6 text-center text-sm text-muted-foreground">
                       Buscando...
