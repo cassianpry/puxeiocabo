@@ -7,9 +7,10 @@ import { ReportModule } from './report/report.module';
 import { AuthModule } from './auth/auth.module';
 import { ContactModule } from './contact/contact.module';
 import { EmailJsModule } from './emailjs/emailjs.module';
+import { SupabaseModule } from './supabase/supabase.module';
 
 @Module({
-  imports: [PrismaModule, FighterModule, ReportModule, AuthModule, ContactModule, EmailJsModule],
+  imports: [PrismaModule, FighterModule, ReportModule, AuthModule, ContactModule, EmailJsModule, SupabaseModule],
   controllers: [AppController],
   providers: [AppService],
 })

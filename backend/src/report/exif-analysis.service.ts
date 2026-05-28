@@ -21,9 +21,9 @@ export interface ExifResult {
 
 @Injectable()
 export class ExifAnalysisService {
-  async analyze(filePath: string): Promise<ExifResult> {
+  async analyze(fileBuffer: Buffer): Promise<ExifResult> {
     try {
-      const exif = await exifr.parse(filePath);
+      const exif = await exifr.parse(fileBuffer);
 
       const exifData = exif ? JSON.stringify(exif, this.bigintReplacer) : null;
 

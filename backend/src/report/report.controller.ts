@@ -23,15 +23,18 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname, join } from 'path';
+import { memoryStorage } from 'multer';
+import { extname } from 'path';
 import { ReportService } from './report.service';
 import { ExifAnalysisService } from './exif-analysis.service';
+import { SupabaseService } from '../supabase/supabase.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../common/roles.guard';
 import { Roles } from '../common/roles.decorator';
 import { CreateReportDto, UpdateReportDto, ReportResponseDto, PaginatedResponseDto, UpdateReportStatusDto } from './dto';
 import type { UpdateReportDto as UpdateReportDtoInternal } from './report.service';
+
+const BUCKET = 'reports';
 
 @ApiTags('reports')
 @Controller('reports')
@@ -39,6 +42,7 @@ export class ReportController {
   constructor(
     private readonly reportService: ReportService,
     private readonly exifAnalysisService: ExifAnalysisService,
+    private readonly supabaseService: SupabaseService,
   ) {}
 
   @Get()
@@ -111,13 +115,7 @@ export class ReportController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @UseInterceptors(
     FileInterceptor('proof', {
-      storage: diskStorage({
-        destination: join(process.cwd(), 'uploads'),
-        filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          cb(null, `report-${uniqueSuffix}.jpg`);
-        },
-      }),
+      storage: memoryStorage(),
       fileFilter: (req, file, cb) => {
         if (file.mimetype !== 'image/jpeg') {
           return cb(new BadRequestException('Apenas imagens JPEG são aceitas'), false);
@@ -142,12 +140,16 @@ export class ReportController {
       throw new BadRequestException('ID do denunciado e comentário são obrigatórios');
     }
 
-    const exifResult = await this.exifAnalysisService.analyze(file.path);
+    const filename = `report-${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+    const exifResult = await this.exifAnalysisService.analyze(file.buffer);
+
+    const imageUrl = await this.supabaseService.uploadFile(BUCKET, filename, file.buffer, 'image/jpeg');
 
     try {
-      const report = await this.reportService.create(req.user.id, body, `/uploads/${file.filename}`, exifResult);
+      const report = await this.reportService.create(req.user.id, body, imageUrl, exifResult);
       return { message: 'Report submitted successfully', report };
     } catch (error) {
+      await this.supabaseService.deleteFile(BUCKET, filename).catch(() => {});
       throw new BadRequestException((error as Error).message);
     }
   }
@@ -173,13 +175,7 @@ export class ReportController {
   @ApiResponse({ status: 403, description: 'Not your report' })
   @UseInterceptors(
     FileInterceptor('proof', {
-      storage: diskStorage({
-        destination: join(process.cwd(), 'uploads'),
-        filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          cb(null, `report-${uniqueSuffix}.jpg`);
-        },
-      }),
+      storage: memoryStorage(),
       fileFilter: (req, file, cb) => {
         if (file.mimetype !== 'image/jpeg') {
           return cb(new BadRequestException('Apenas imagens JPEG são aceitas'), false);
@@ -204,8 +200,10 @@ export class ReportController {
     try {
       const dto: UpdateReportDtoInternal = { comment: body.comment };
       if (file) {
-        const exifResult = await this.exifAnalysisService.analyze(file.path);
-        dto.proofImagePath = `/uploads/${file.filename}`;
+        const filename = `report-${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+        const exifResult = await this.exifAnalysisService.analyze(file.buffer);
+        const imageUrl = await this.supabaseService.uploadFile(BUCKET, filename, file.buffer, 'image/jpeg');
+        dto.proofImagePath = imageUrl;
         dto.exifData = exifResult.exifData;
         dto.aiSuspicious = exifResult.aiSuspicious;
         dto.aiReason = exifResult.aiReason;

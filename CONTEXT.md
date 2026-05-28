@@ -251,6 +251,33 @@ puxeiocabo/
 - **Contact flow:** Form submission at `POST /contact/send` saves to `ContactInquiry` table + notifies admin via EmailJS. Admin reviews at `GET /contact/inquiries` (JWT + Admin). No user authentication required for submission.
 - **Forgot-password security:** Always returns success regardless of whether the email exists (prevents email enumeration). Token created + email sent only if account found.
 
+## Key Infrastructure Changes
+
+### Database: SQLite → Neon PostgreSQL
+- Prisma datasource: `provider = "postgresql"` with connection via `DATABASE_URL` env var
+- Migrations versioned via `prisma migrate` (migration files in `backend/prisma/migrations/`)
+- Local dev requires PostgreSQL: `docker run --name pg -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`
+- Migration script `scripts/migrate-to-pg.ts` copies data from existing SQLite to PostgreSQL
+
+### Image Storage: local disk → Supabase Storage
+- `SupabaseService` (`backend/src/supabase/supabase.service.ts`) wraps Supabase client
+- Uploads go to Supabase Storage bucket (`reports`) using service role key
+- `proofImagePath` stores the Supabase public URL (not local `/uploads/...`)
+- Multer uses `memoryStorage` — file buffer is analyzed for EXIF, then uploaded to Supabase
+- On creation failure, the uploaded file is cleaned up from Supabase
+
+### Deployment: Docker image on Render
+- **Dockerfile**: multi-stage (frontend build → backend build → runtime)
+- Backend serves built frontend as static assets when `NODE_ENV=production`
+- SPA catch-all: all non-API routes return `index.html`
+- **`render.yaml`**: Web Service with Docker runtime, health check at `/api`
+- Local dev unchanged: `npm run dev` runs both backend + frontend via concurrently
+
+### Frontend API URL
+- `BACKEND_URL` default changed to `''` (same-origin in production)
+- Local dev: `VITE_BACKEND_URL=http://localhost:3000` in `frontend/.env`
+- No more Vite proxy for `/uploads` (images served directly from Supabase)
+
 ## Swagger Documentation
 - **URL:** `http://localhost:3000/api`
 - **Auth:** Click "Authorize" → enter JWT access token (without "Bearer " prefix)

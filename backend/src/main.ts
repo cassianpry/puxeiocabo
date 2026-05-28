@@ -19,7 +19,21 @@ async function bootstrap() {
     credentials: true,
     exposedHeaders: ['Authorization'],
   });
-  app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
+
+  if (process.env.NODE_ENV === 'production') {
+    const frontendDist = join(process.cwd(), 'frontend', 'dist');
+    app.useStaticAssets(frontendDist);
+
+    const { readFileSync } = await import('fs');
+    const indexHtml = readFileSync(join(frontendDist, 'index.html'), 'utf-8');
+
+    app.use((req, res, next) => {
+      if (req.path.startsWith('/api') || req.path.startsWith('/uploads') || req.path.startsWith('/.well-known')) {
+        return next();
+      }
+      res.type('html').send(indexHtml);
+    });
+  }
 
   const config = new DocumentBuilder()
     .setTitle('Puxei o Cabo API')
