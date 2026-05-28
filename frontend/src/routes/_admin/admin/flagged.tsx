@@ -19,6 +19,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import {
   ChevronDown,
@@ -28,6 +34,7 @@ import {
   Trash2,
   User,
   Camera,
+  Eye,
   AlertTriangle,
 } from "lucide-react";
 
@@ -250,11 +257,30 @@ function AdminFlaggedPage() {
                           <Camera className="h-3.5 w-3.5" />
                           Imagem de prova
                         </h4>
-                        <img
-                          src={report.proofImagePath}
-                          alt="Prova"
-                          className="w-full max-h-[300px] object-contain rounded-md border bg-muted/30"
-                        />
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="relative cursor-pointer overflow-hidden rounded-md border bg-muted/30">
+                              <img
+                                src={report.proofImagePath}
+                                alt="Prova"
+                                className="w-full max-h-[300px] object-contain"
+                              />
+                              <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-primary/60 opacity-0 transition-opacity hover:opacity-100">
+                                <Eye className="size-8 text-white" />
+                              </div>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-7xl! *:data-[slot=dialog-close]:bg-black/80 *:data-[slot=dialog-close]:backdrop-blur-sm">
+                            <DialogTitle className="sr-only">
+                              Imagem de prova
+                            </DialogTitle>
+                            <img
+                              src={report.proofImagePath}
+                              alt="Prova"
+                              className="w-full max-h-[80vh] object-contain"
+                            />
+                          </DialogContent>
+                        </Dialog>
                       </div>
 
                       {report.aiSuspicious && (
