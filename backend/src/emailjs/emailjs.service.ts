@@ -92,6 +92,20 @@ export class EmailJsService {
     this.logger.log(`Email change verification sent to ${email}`);
   }
 
+  async sendEmailVerification(email: string, token: string) {
+    const appUrl = process.env.APP_URL || 'http://localhost:5173';
+    const verifyUrl = `${appUrl}/auth/verify-email?token=${token}`;
+    const html = wrapHtml(`
+      <h2 style="font-family:'Archivo Black',sans-serif;font-size:18px;text-transform:uppercase;letter-spacing:0.02em;color:#e0e0ff;margin:0 0 16px 0">Confirme seu e-mail</h2>
+      <p style="color:#94a3b8;font-size:15px;line-height:1.6;margin:0 0 8px 0">Obrigado por criar sua conta no <strong style="color:#e0e0ff">Puxei o Cabo</strong>!</p>
+      <p style="color:#94a3b8;font-size:15px;line-height:1.6;margin:0 0 8px 0">Clique no bot&atilde;o abaixo para confirmar seu e-mail <strong style="color:#e0e0ff">${email}</strong> e ativar sua conta.</p>
+      ${buttonHtml(verifyUrl, 'Confirmar e-mail')}
+      <p style="color:#64748b;font-size:13px;line-height:1.5;margin:16px 0 0 0">Este link expira em <strong style="color:#94a3b8">1 hora</strong>. Se voc&ecirc; n&atilde;o criou esta conta, ignore este email.</p>
+    `);
+    await this.send(process.env.EMAILJS_TEMPLATE_GENERIC || '', { to_email: email, subject: 'Confirme seu e-mail — Puxei o Cabo', html });
+    this.logger.log(`Verification email sent to ${email}`);
+  }
+
   async sendAdminContactNotification(data: { name: string; email: string; subject: string; message: string }) {
     const adminEmail = process.env.ADMIN_EMAIL;
     if (!adminEmail) {

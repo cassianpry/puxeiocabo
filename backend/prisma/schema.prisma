@@ -11,6 +11,7 @@ model Account {
   id              Int                 @id @default(autoincrement())
   email           String              @unique
   passwordHash    String
+  emailVerifiedAt DateTime?
   shortId         BigInt?             @unique
   fighter         Fighter?            @relation(fields: [shortId], references: [shortId])
   refreshToken    String?

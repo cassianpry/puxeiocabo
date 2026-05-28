@@ -48,7 +48,7 @@ const steps = [
     image: "/playerSearch.png",
     title: "Busque o jogador",
     description:
-      'Pesquise pelo nome ou short ID do oponente que desconectou. O sistema consulta o ranking oficial da Capcom e retorna o perfil do lutador. O short ID único garante que não haja confusão entre jogadores com nomes parecidos.',
+      'Pesquise pelo nome ou código de usuário do oponente que desconectou. O sistema consulta o ranking oficial da Capcom e retorna o perfil do lutador. O código de usuário único garante que não haja confusão entre jogadores com nomes parecidos.',
   },
   {
     icon: Upload,
@@ -111,7 +111,7 @@ const trustPoints = [
     icon: Search,
     title: "Dados oficiais da Capcom",
     description:
-      "A base de jogadores vem do ranking oficial da Capcom. Todo short ID é verificado contra os dados do Buckler's Boot Camp. Sem perfis falsos, sem contas duplicadas.",
+      "A base de jogadores vem do ranking oficial da Capcom. Todo código de usuário é verificado contra os dados do Buckler's Boot Camp. Sem perfis falsos, sem contas duplicadas.",
   },
 ];
 
@@ -281,7 +281,7 @@ function ComoUsarPage() {
           </h2>
           <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
             Crie sua conta em segundos. É gratis, não pedimos seu CPF nem seu
-            email verdadeiro. Só um email válido e o short ID do seu lutador na
+            email verdadeiro. Só um email válido e o código de usuário do seu lutador na
             Capcom.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">

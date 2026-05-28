@@ -21,14 +21,14 @@ function FightersPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Lutadores</h1>
-        <p className="mt-1 text-muted-foreground">Busque lutadores por nome ou short_id.</p>
+        <p className="mt-1 text-muted-foreground">Busque lutadores por nome ou código de usuário.</p>
       </div>
 
       <div className="max-w-md space-y-2">
         <Label htmlFor="search">Buscar lutador</Label>
         <Input
           id="search"
-          placeholder="Nome ou short_id..."
+          placeholder="Nome ou código de usuário..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

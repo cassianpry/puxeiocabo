@@ -20,7 +20,7 @@ function VerifyEmailPage() {
       return;
     }
 
-    fetch("http://localhost:3000/auth/verify-email-change", {
+    fetch("/auth/verify-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token }),
@@ -29,10 +29,10 @@ function VerifyEmailPage() {
         const data = await res.json();
         if (res.ok) {
           setStatus("success");
-          setMessage("Email alterado com sucesso!");
+          setMessage("E-mail verificado com sucesso!");
         } else {
           setStatus("error");
-          setMessage(data.message || "Erro ao confirmar email.");
+          setMessage(data.message || "Erro ao confirmar e-mail.");
         }
       })
       .catch(() => {
@@ -46,8 +46,8 @@ function VerifyEmailPage() {
       <div className="w-full max-w-sm text-center space-y-4">
         <h1 className="text-2xl font-bold">
           {status === "loading" && "Confirmando..."}
-          {status === "success" && "Email confirmado"}
-          {status === "error" && "Falha na confirmação"}
+          {status === "success" && "E-mail verificado"}
+          {status === "error" && "Falha na verificação"}
         </h1>
         <p className="text-muted-foreground">{message}</p>
         {status !== "loading" && (
@@ -55,7 +55,7 @@ function VerifyEmailPage() {
             to="/login"
             className="inline-block text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
           >
-            Voltar para o login
+            {status === "success" ? "Ir para o login" : "Voltar para o login"}
           </Link>
         )}
       </div>

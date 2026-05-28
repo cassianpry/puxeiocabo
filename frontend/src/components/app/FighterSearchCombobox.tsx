@@ -29,7 +29,7 @@ export function FighterSearchCombobox({ value, onSelect }: FighterSearchCombobox
     <div className="space-y-4">
       <div className="relative">
         <Input
-          placeholder="Buscar lutador por nome ou short_id..."
+          placeholder="Buscar lutador por nome ou código de usuário..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value)
@@ -56,6 +56,7 @@ export function FighterSearchCombobox({ value, onSelect }: FighterSearchCombobox
                   <CommandItem
                     key={fighter.shortId}
                     value={fighter.shortId}
+                    className="bg-background"
                     onSelect={() => handleSelect(fighter)}
                   >
                     <div className="flex flex-col">
@@ -76,7 +77,7 @@ export function FighterSearchCombobox({ value, onSelect }: FighterSearchCombobox
         <div className="rounded-md border bg-muted/50 p-3 text-sm">
           <div className="font-medium">{selected.fighterId ?? `(${selected.shortId})`}</div>
           <div className="text-muted-foreground">
-            Short ID: {selected.shortId} · Console: {selected.platformTool}
+            Código de usuário: {selected.shortId} · Console: {selected.platformTool}
           </div>
         </div>
       )}

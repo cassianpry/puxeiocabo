@@ -86,7 +86,7 @@ function PrivacyPage() {
                 <td className="py-2">Consentimento</td>
               </tr>
               <tr className="border-b border-border">
-                <td className="py-2 pr-4">Short ID do SF6</td>
+                <td className="py-2 pr-4">Código de usuário do SF6</td>
                 <td className="py-2 pr-4">Vinculação do perfil do jogador</td>
                 <td className="py-2">Consentimento</td>
               </tr>

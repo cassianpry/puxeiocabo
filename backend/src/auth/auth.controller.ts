@@ -59,7 +59,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Register a new account' })
   @ApiResponse({ status: 201, description: 'Account created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid input or email already exists' })
-  async register(@Body() body: RegisterDto, @Res({ passthrough: true }) res: Response) {
+  async register(@Body() body: RegisterDto) {
     if (!body.email || !body.password) {
       throw new BadRequestException('Email e senha são obrigatórios');
     }
@@ -71,8 +71,7 @@ export class AuthController {
     }
     try {
       const result = await this.authService.register(body.email, body.password, body.consent);
-      this.setCookies(res, result.accessToken, result.refreshToken);
-      return { accountId: result.accountId, shortId: result.shortId };
+      return { accountId: result.accountId, email: result.email, message: 'Verifique seu e-mail para ativar sua conta' };
     } catch (error) {
       throw new BadRequestException((error as Error).message);
     }
@@ -90,6 +89,19 @@ export class AuthController {
       const result = await this.authService.login(body.email, body.password);
       this.setCookies(res, result.accessToken, result.refreshToken);
       return { accountId: result.accountId, shortId: result.shortId, role: result.role };
+    } catch (error) {
+      throw new BadRequestException((error as Error).message);
+    }
+  }
+
+  @Post('verify-email')
+  @ApiOperation({ summary: 'Verify email with token' })
+  @ApiResponse({ status: 200, description: 'Email verified successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid or expired token' })
+  async verifyEmail(@Body() body: VerifyEmailChangeDto) {
+    try {
+      await this.authService.verifyEmail(body.token);
+      return { message: 'E-mail verificado com sucesso' };
     } catch (error) {
       throw new BadRequestException((error as Error).message);
     }

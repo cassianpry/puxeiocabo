@@ -35,13 +35,24 @@ export class AuthService {
       data: { email, passwordHash, consentGivenAt: new Date() },
     });
 
-    const tokens = await this.generateTokens(account.id, account.role);
-    await this.updateRefreshToken(account.id, tokens.refreshToken);
+    const token = crypto.randomUUID();
+    await this.prisma.verificationToken.create({
+      data: {
+        token,
+        type: 'email_verification',
+        accountId: account.id,
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      },
+    });
+
+    try {
+      await this.emailJs.sendEmailVerification(email, token);
+    } catch {
+    }
 
     return {
       accountId: account.id,
-      shortId: account.shortId?.toString() || null,
-      ...tokens,
+      email: account.email,
     };
   }
 
@@ -55,6 +66,10 @@ export class AuthService {
     const passwordMatch = await bcrypt.compare(password, account.passwordHash);
     if (!passwordMatch) {
       throw new Error('Credenciais inválidas');
+    }
+
+    if (!account.emailVerifiedAt) {
+      throw new Error('E-mail não verificado. Verifique sua caixa de entrada.');
     }
 
     const tokens = await this.generateTokens(account.id, account.role);
@@ -220,6 +235,24 @@ export class AuthService {
       }),
     ]);
 
+  }
+
+  async verifyEmail(token: string) {
+    const vt = await this.prisma.verificationToken.findUnique({ where: { token } });
+    if (!vt || vt.type !== 'email_verification' || vt.usedAt || vt.expiresAt < new Date()) {
+      throw new Error('Token inválido ou expirado');
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.account.update({
+        where: { id: vt.accountId },
+        data: { emailVerifiedAt: new Date() },
+      }),
+      this.prisma.verificationToken.update({
+        where: { id: vt.id },
+        data: { usedAt: new Date() },
+      }),
+    ]);
   }
 
   async changeEmail(accountId: number, newEmail: string, currentPassword: string) {

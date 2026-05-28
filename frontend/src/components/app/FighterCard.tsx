@@ -14,7 +14,7 @@ export function FighterCard({ fighter, onClick }: FighterCardProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-1 text-sm text-muted-foreground">
-          <div>Short ID: {fighter.shortId}</div>
+          <div>Código de usuário: {fighter.shortId}</div>
           <div>Plataforma: {fighter.platformTool}</div>
           {fighter.fighterId && <div>Nome: {fighter.fighterId}</div>}
         </div>

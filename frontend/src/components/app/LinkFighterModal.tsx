@@ -68,13 +68,13 @@ export function LinkFighterModal({ open, onLink, onLogout }: LinkFighterModalPro
               >
                 {selected
                   ? `${selected.platformName} (${selected.shortId})`
-                  : "Buscar pelo nome ou short_id..."}
+                  : "Buscar pelo nome ou código de usuário..."}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
               <div className="p-2">
                 <Input
-                  placeholder="Buscar pelo nome ou short_id..."
+                  placeholder="Buscar pelo nome ou código de usuário..."
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value)
@@ -100,6 +100,7 @@ export function LinkFighterModal({ open, onLink, onLogout }: LinkFighterModalPro
                       <CommandItem
                         key={fighter.shortId}
                         value={fighter.shortId}
+                        className="bg-background"
                         onSelect={() => {
                           setSelected(fighter)
                           setSearch(`${fighter.platformName} (${fighter.shortId})`)
@@ -124,7 +125,7 @@ export function LinkFighterModal({ open, onLink, onLogout }: LinkFighterModalPro
             <div className="rounded-md border bg-muted/50 p-3 text-sm">
               <div className="font-medium">{selected.platformName}</div>
               <div className="text-muted-foreground">
-                Short ID: {selected.shortId} · Plataforma: {selected.platformTool}
+                Código de usuário: {selected.shortId} · Plataforma: {selected.platformTool}
               </div>
             </div>
           )}

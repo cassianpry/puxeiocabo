@@ -1,14 +1,12 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
-import { api } from "@/lib/api";
+import { api, apiJson } from "@/lib/api";
 import { getPostAuthPath } from "@/lib/admin-routing";
-import { useRegister } from "@/hooks/useRegister";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
-import { toast } from "sonner";
-import { Mail, Eye, EyeOff } from "lucide-react";
+import { Mail, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/register")({
   beforeLoad: async () => {
@@ -21,7 +19,6 @@ export const Route = createFileRoute("/register")({
 });
 
 function RegisterPage() {
-  const { register } = useRegister();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -30,6 +27,7 @@ function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [consent, setConsent] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -52,13 +50,45 @@ function RegisterPage() {
 
     setIsSubmitting(true);
     try {
-      await register({ email, password, consent: true });
+      const result = await apiJson<{ email: string }>("/auth/register", { email, password, consent: true });
+      setRegisteredEmail(result.email);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erro ao criar conta");
       setError(err instanceof Error ? err.message : "Erro ao criar conta");
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (registeredEmail) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center bg-background px-4">
+        <div className="w-full max-w-sm text-center space-y-6">
+          <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto" />
+          <h1 className="text-2xl font-bold">Conta criada!</h1>
+          <p className="text-muted-foreground">
+            Enviamos um e-mail de confirmação para{" "}
+            <strong className="text-foreground">{registeredEmail}</strong>.
+            Verifique sua caixa de entrada e clique no link para ativar sua conta.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Não recebeu?{" "}
+            <button
+              type="button"
+              onClick={() => setRegisteredEmail(null)}
+              className="underline underline-offset-4 hover:text-foreground transition-colors"
+            >
+              Tentar novamente
+            </button>
+          </p>
+          <Link
+            to="/login"
+            className="inline-block text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
+          >
+            Ir para o login
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
