@@ -108,12 +108,12 @@ function AdminFlaggedPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Denúncias Sinalizadas</h1>
+          <h1 className="text-2xl font-bold">Revisão de Denúncias</h1>
           <p className="mt-1 text-muted-foreground">
-            Denúncias marcadas pela IA para revisão.
+            Denúncias pendentes de revisão.
             {stats && (
               <span className="ml-2 inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-500">
-                {stats.flagged} sinalizada{stats.flagged !== 1 ? "s" : ""}
+                {stats.pending} pendente{stats.pending !== 1 ? "s" : ""}
               </span>
             )}
           </p>

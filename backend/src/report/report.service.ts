@@ -92,7 +92,7 @@ export class ReportService {
   }
 
   async findFlagged(page = 1, limit = 20) {
-    const where = { aiSuspicious: true, status: { not: 'deleted' } };
+    const where = { status: 'pending' };
     const skip = (page - 1) * limit;
 
     const [reports, total] = await Promise.all([

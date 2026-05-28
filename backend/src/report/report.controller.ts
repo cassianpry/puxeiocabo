@@ -63,9 +63,9 @@ export class ReportController {
   @Get('flagged')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('admin')
-  @ApiOperation({ summary: 'List AI-flagged reports (admin only)' })
+  @ApiOperation({ summary: 'List pending reports for admin review' })
   @ApiBearerAuth('access-token')
-  @ApiResponse({ status: 200, description: 'Flagged reports retrieved', type: PaginatedResponseDto })
+  @ApiResponse({ status: 200, description: 'Pending reports retrieved', type: PaginatedResponseDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Admin access required' })
   async findFlagged(@Query('page') page?: string, @Query('limit') limit?: string) {
