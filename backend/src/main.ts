@@ -47,6 +47,9 @@ async function bootstrap() {
     app.use((req, res, next) => {
       if (API_PREFIXES.some(p => req.path.startsWith(p))) {
         if (req.path === '/reports/new') return res.type('html').send(indexHtml);
+        if (req.path.startsWith('/auth/verify-email') && req.headers.accept?.includes('text/html')) {
+          return res.type('html').send(indexHtml);
+        }
         if (req.path.startsWith('/reports/') && req.headers.accept?.includes('text/html')) {
           return res.type('html').send(indexHtml);
         }
