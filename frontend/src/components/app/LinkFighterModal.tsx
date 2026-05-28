@@ -67,7 +67,7 @@ export function LinkFighterModal({ open, onLink, onLogout }: LinkFighterModalPro
                 className="w-full justify-start font-normal"
               >
                 {selected
-                  ? `${selected.platformName} (${selected.shortId})`
+                  ? `${selected.fighterId ?? selected.shortId} (${selected.shortId})`
                   : "Buscar pelo nome ou código de usuário..."}
               </Button>
             </PopoverTrigger>
@@ -84,46 +84,48 @@ export function LinkFighterModal({ open, onLink, onLogout }: LinkFighterModalPro
                   autoFocus
                 />
               </div>
-              <Command shouldFilter={false}>
-                <CommandList>
-                  {isFetching && (
-                    <CommandEmpty>Buscando...</CommandEmpty>
-                  )}
-                  {!isFetching && fighters.length === 0 && search.length > 1 && (
-                    <CommandEmpty>Nenhum lutador encontrado.</CommandEmpty>
-                  )}
-                  {search.length <= 1 && (
-                    <CommandEmpty>Digite pelo menos 2 caracteres.</CommandEmpty>
-                  )}
-                  <CommandGroup>
-                    {fighters.map((fighter) => (
-                      <CommandItem
-                        key={fighter.shortId}
-                        value={fighter.shortId}
-                        className="bg-background"
-                        onSelect={() => {
-                          setSelected(fighter)
-                          setSearch(`${fighter.platformName} (${fighter.shortId})`)
-                          setOpenPopover(false)
-                        }}
-                      >
-                        <div className="flex flex-col">
-                          <span>{fighter.platformName}</span>
-                          <span className="text-xs text-muted-foreground">
-                            ID: {fighter.shortId} · {fighter.platformTool}
-                          </span>
-                        </div>
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
+              <div className="max-h-[260px] overflow-y-auto">
+                <Command shouldFilter={false}>
+                  <CommandList className="max-h-none overflow-y-visible">
+                    {isFetching && (
+                      <CommandEmpty>Buscando...</CommandEmpty>
+                    )}
+                    {!isFetching && fighters.length === 0 && search.length > 1 && (
+                      <CommandEmpty>Nenhum lutador encontrado.</CommandEmpty>
+                    )}
+                    {search.length <= 1 && (
+                      <CommandEmpty>Digite pelo menos 2 caracteres.</CommandEmpty>
+                    )}
+                    <CommandGroup>
+                      {fighters.map((fighter) => (
+                        <CommandItem
+                          key={fighter.shortId}
+                          value={fighter.shortId}
+                          className="bg-background"
+                          onSelect={() => {
+                            setSelected(fighter)
+                            setSearch(`${fighter.fighterId ?? fighter.shortId} (${fighter.shortId})`)
+                            setOpenPopover(false)
+                          }}
+                        >
+                          <div className="flex flex-col">
+                            <span>{fighter.fighterId ?? `(${fighter.shortId})`}</span>
+                            <span className="text-xs text-muted-foreground">
+                              Código de usuário: {fighter.shortId} · {fighter.platformTool}
+                            </span>
+                          </div>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </div>
             </PopoverContent>
           </Popover>
 
           {selected && (
             <div className="rounded-md border bg-muted/50 p-3 text-sm">
-              <div className="font-medium">{selected.platformName}</div>
+              <div className="font-medium">{selected.fighterId ?? selected.shortId}</div>
               <div className="text-muted-foreground">
                 Código de usuário: {selected.shortId} · Plataforma: {selected.platformTool}
               </div>
