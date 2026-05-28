@@ -62,19 +62,28 @@ export function LinkFighterModal({ open, onLink, onLogout }: LinkFighterModalPro
         <div className="space-y-4">
           <Popover open={openPopover} onOpenChange={setOpenPopover}>
             <PopoverTrigger asChild>
-              <div className="relative">
+              <Button
+                variant="outline"
+                className="w-full justify-start font-normal"
+              >
+                {selected
+                  ? `${selected.platformName} (${selected.shortId})`
+                  : "Buscar pelo nome ou short_id..."}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+              <div className="p-2">
                 <Input
                   placeholder="Buscar pelo nome ou short_id..."
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value)
                     setSelected(null)
-                    setOpenPopover(true)
                   }}
+                  className="bg-background"
+                  autoFocus
                 />
               </div>
-            </PopoverTrigger>
-            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
               <Command shouldFilter={false}>
                 <CommandList>
                   {isFetching && (

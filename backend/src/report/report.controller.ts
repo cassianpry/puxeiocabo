@@ -140,13 +140,20 @@ export class ReportController {
       throw new BadRequestException('ID do denunciado e comentário são obrigatórios');
     }
 
-    const filename = `report-${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+    const reporterId = await this.reportService.getReporterId(req.user.id);
+
     const exifResult = await this.exifAnalysisService.analyze(file.buffer);
 
-    const imageUrl = await this.supabaseService.uploadFile(BUCKET, filename, file.buffer, 'image/jpeg');
+    const filename = `report-${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+    let imageUrl: string;
+    try {
+      imageUrl = await this.supabaseService.uploadFile(BUCKET, filename, file.buffer, 'image/jpeg');
+    } catch {
+      throw new BadRequestException('Falha ao fazer upload da imagem');
+    }
 
     try {
-      const report = await this.reportService.create(req.user.id, body, imageUrl, exifResult);
+      const report = await this.reportService.create(reporterId, body, imageUrl, exifResult);
       return { message: 'Report submitted successfully', report };
     } catch (error) {
       await this.supabaseService.deleteFile(BUCKET, filename).catch(() => {});
@@ -239,7 +246,11 @@ export class ReportController {
   @ApiResponse({ status: 200, description: 'Report retrieved', type: ReportResponseDto })
   @ApiResponse({ status: 404, description: 'Report not found or deleted' })
   async findOne(@Param('id') id: string) {
-    const report = await this.reportService.findOne(Number(id));
+    const reportId = Number(id);
+    if (isNaN(reportId)) {
+      throw new NotFoundException(`Denúncia ${id} não encontrada`);
+    }
+    const report = await this.reportService.findOne(reportId);
     if (!report || report.status === 'deleted') {
       throw new NotFoundException(`Denúncia ${id} não encontrada`);
     }

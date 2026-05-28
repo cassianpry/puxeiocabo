@@ -20,16 +20,15 @@ export interface UpdateReportDto {
 export class ReportService {
   constructor(private prisma: PrismaService) {}
 
-  async create(accountId: number, dto: CreateReportDto, proofImagePath: string, exifResult: ExifResult) {
-    const account = await this.prisma.account.findUnique({
-      where: { id: accountId },
-    });
+  async getReporterId(accountId: number): Promise<bigint> {
+    const account = await this.prisma.account.findUnique({ where: { id: accountId } });
     if (!account?.shortId) {
       throw new Error('Conta não vinculada a um lutador. Vincule seu shortId primeiro.');
     }
+    return account.shortId;
+  }
 
-    const reporterId = account.shortId;
-
+  async create(reporterId: bigint, dto: CreateReportDto, proofImagePath: string, exifResult: ExifResult) {
     const reported = await this.prisma.fighter.findUnique({
       where: { shortId: BigInt(dto.reportedId) },
     });

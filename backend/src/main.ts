@@ -45,7 +45,13 @@ async function bootstrap() {
 
     const indexHtml = readFileSync(join(frontendDist, 'index.html'), 'utf-8');
     app.use((req, res, next) => {
-      if (API_PREFIXES.some(p => req.path.startsWith(p))) return next();
+      if (API_PREFIXES.some(p => req.path.startsWith(p))) {
+        if (req.path === '/reports/new') return res.type('html').send(indexHtml);
+        if (req.path.startsWith('/reports/') && req.headers.accept?.includes('text/html')) {
+          return res.type('html').send(indexHtml);
+        }
+        return next();
+      }
       res.type('html').send(indexHtml);
     });
   }
