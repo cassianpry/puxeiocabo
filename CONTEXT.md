@@ -34,8 +34,8 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
 - Concurrency: 2 workers, 1s delay with jitter, 5 retries with exponential backoff
 - **Result:** 19,620 pages, 392,400 total entries, 112,379 unique fighters
 
-### Phase 2: Backend (NestJS + Prisma + SQLite)
-- **Database:** SQLite with Prisma ORM, 112,379 unique fighters
+### Phase 2: Backend (NestJS + Prisma + PostgreSQL)
+- **Database:** PostgreSQL via Neon (originally SQLite, migrated per ADR 0002)
 - **Schema:** `Account` (auth), `Fighter` (shortId BigInt PK), `Report` (relations + EXIF fields)
 - **Import Script:** `backend/scripts/import-fighters.ts` — reads all JSON pages, upserts by short_id
 - **Auth Module:** Email/password registration, JWT access (15m) + refresh (7d), bcrypt passwords, role-based access (user/admin). Email stored as plaintext with `@unique` constraint (AES-256-GCM encryption removed — caused undetectable duplicate registrations since ciphertext differs per encryption, and forced full-table scan on login)

@@ -21,18 +21,7 @@ async function bootstrap() {
   });
 
   if (process.env.NODE_ENV === 'production') {
-    const frontendDist = join(process.cwd(), 'frontend', 'dist');
-    app.useStaticAssets(frontendDist);
-
-    const { readFileSync } = await import('fs');
-    const indexHtml = readFileSync(join(frontendDist, 'index.html'), 'utf-8');
-
-    app.use((req, res, next) => {
-      if (req.path.startsWith('/api') || req.path.startsWith('/uploads') || req.path.startsWith('/.well-known')) {
-        return next();
-      }
-      res.type('html').send(indexHtml);
-    });
+    app.useStaticAssets(join(process.cwd(), 'frontend', 'dist'));
   }
 
   const config = new DocumentBuilder()
