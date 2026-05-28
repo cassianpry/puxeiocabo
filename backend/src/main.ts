@@ -4,11 +4,14 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import { readFileSync } from 'fs';
 import { join } from 'path';
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
 };
+
+const API_PREFIXES = ['/api', '/auth', '/fighters', '/reports', '/contact'];
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -40,14 +43,16 @@ async function bootstrap() {
     const frontendDist = join(process.cwd(), 'frontend', 'dist');
     app.useStaticAssets(frontendDist);
 
-    const expressApp = app.getHttpAdapter().getInstance();
-    expressApp.get('*', (req: any, res: any) => {
-      res.sendFile(join(frontendDist, 'index.html'));
+    const indexHtml = readFileSync(join(frontendDist, 'index.html'), 'utf-8');
+    app.use((req, res, next) => {
+      if (API_PREFIXES.some(p => req.path.startsWith(p))) return next();
+      res.type('html').send(indexHtml);
     });
   }
 
-  await app.listen(process.env.PORT ?? 3000);
-  console.log(`Server running on http://localhost:${process.env.PORT ?? 3000}`);
-  console.log(`Swagger UI available at http://localhost:${process.env.PORT ?? 3000}/api`);
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Swagger UI available at http://localhost:${port}/api`);
 }
 bootstrap();
