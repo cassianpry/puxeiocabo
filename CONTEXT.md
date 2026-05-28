@@ -62,12 +62,12 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
   - `POST /reports` — Submit report (JWT required, JPEG-only proof image)
   - `GET /reports` — List approved reports (pagination, public homepage feed) (public)
   - `GET /reports/my` — List own reports (JWT required)
-  - `GET /reports/flagged` — List AI-flagged reports (JWT + Admin required)
+   - `GET /reports/flagged` — List all pending reports for admin review (JWT + Admin required, returns all pending, not just AI-flagged)
   - `GET /reports/:id` — Get single report (public)
   - `PATCH /reports/:id` — Update own rejected report (JWT required, JPEG-only re-upload)
   - `PATCH /reports/:id/status` — Update status (JWT + Admin required)
   - `DELETE /reports/:id` — Soft delete (JWT + Admin required)
-- **Image Upload:** Stored in `backend/uploads/`, served as static assets at `/uploads/`
+- **Image Upload:** Stored in Supabase Storage (`reports` bucket, public), served via Supabase CDN
 - **AI Detection:** EXIF analysis via `exifr` — auto-rejects if AI keywords found (Midjourney, DALL-E, etc.), flags if missing camera metadata or date/time, stores EXIF as JSON in `exifData`
 
 ### Phase 3: Frontend (Vite + React SPA)
@@ -96,12 +96,14 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
   - Backend CORS updated for `credentials: true` + cookie-based JWT strategies
   - Backend `GET /reports/stats` endpoint (admin only) for dashboard statistics
   - Admin dashboard (`/_admin/admin/`) with stat cards grid
-  - Admin flagged reports page (`/_admin/admin/flagged`) with expandable inline review panels
-      - Click "Ver detalhes" or chevron icon to expand each row (one at a time)
-      - Expanded panel shows: reporter, reported, comment, proof image (clickable fullscreen modal), AI signal, EXIF data
-      - Moderation form inside expanded panel: textarea + Approve / Reject / Delete buttons
-      - Reject requires adminComment (validated client-side); approve may omit it
-      - adminComment cleared when collapsing or switching rows
+   - Admin flagged reports page (`/_admin/admin/flagged`) with expandable inline review panels
+       - Lists all pending reports (not just AI-flagged since May 2026)
+       - Title: "Revisão de Denúncias", count badge shows `stats.pending`
+       - Click "Ver detalhes" or chevron icon to expand each row (one at a time)
+       - Expanded panel shows: reporter, reported, comment, proof image (clickable Dialog lightbox — full size modal), AI signal, EXIF data
+       - Moderation form inside expanded panel: textarea + Approve / Reject / Delete buttons
+       - Reject requires adminComment (validated client-side); approve may omit it
+       - adminComment cleared when collapsing or switching rows
   - `adminComment` field on Report (string | null) — shown in:
       - Dashboard: rejection reason below rejected rows
       - Report detail page: "Comentário do admin" card
@@ -183,22 +185,24 @@ puxeiocabo/
 │       │   └── report.service.ts
 │       └── common/            # RolesGuard, @Roles decorator
 ├── frontend/                   # Phase 3: Vite + React SPA (pt-BR)
-│   ├── src/
-│   │   ├── routes/            # TanStack Router file-based routes
-│   │   │   ├── __root.tsx     # Root layout with QueryClientProvider
-│   │   │   ├── index.tsx      # Public homepage + recent reports
-│   │   │   ├── login.tsx      # Login page + "Esqueceu a senha?" link
-│   │   │   ├── register.tsx   # Register page (shadcn form + zod + consent)
-│   │   │   ├── privacidade.tsx # LGPD privacy policy
-│   │   │   ├── contato.tsx    # Contact form (name, email, subject, message)
-│   │   │   ├── auth/          # Email-related pages
-│   │   │   │   ├── forgot-password.tsx  # Email form → success
-│   │   │   │   ├── reset-password.tsx   # Token + new password
-│   │   │   │   └── verify-email.tsx     # Auto-verify on mount
-│   │   │   ├── _auth.tsx      # Auth guard layout
-│   │   │   ├── _auth/         # Protected pages (dashboard, reports, fighters, profile)
-│   │   │   ├── _admin.tsx     # Admin guard layout
-│   │   │   └── _admin/admin/  # Admin pages (dashboard, flagged, contact)
+│   ├── public/               # Static assets (logo.png, icons, SEO images)
+│   ├── .env                  # VITE_BACKEND_URL, VITE_GA_MEASUREMENT_ID
+│   └── src/
+│       ├── routes/            # TanStack Router file-based routes
+│       │   ├── __root.tsx
+│       │   ├── index.tsx
+│       │   ├── login.tsx
+│       │   ├── register.tsx
+│       │   ├── privacidade.tsx
+│       │   ├── contato.tsx
+│       │   ├── auth/
+│       │   │   ├── forgot-password.tsx
+│       │   │   ├── reset-password.tsx
+│       │   │   └── verify-email.tsx
+│       │   ├── _auth.tsx
+│       │   ├── _auth/
+│       │   ├── _admin.tsx
+│       │   └── _admin/admin/
 │   │   ├── components/
 │   │   │   ├── ui/            # shadcn/ui (never edited)
 │   │   │   ├── app/           # Domain dumb components
@@ -242,6 +246,8 @@ puxeiocabo/
 - **Footer:** `AppFooter` in `__root.tsx` — 2px arcade-blue top border, `bg-background`. Links: Privacidade (`/privacidade`), Termos de Serviço (`/termos-de-servico`), Reportar um bug (`/bug-report`), Contato (`/contato`). Copyright `© 2026 cassianpry`. "Privacidade" link removed from `AppHeader`, moved to footer.
 - **Bug report:** `POST /contact/bug-report` — public endpoint, stores in `BugReport` table (subject + description). Frontend form at `/bug-report`.
 - **Terms of service:** Static page at `/termos-de-servico` — 7 sections (aceitação, uso aceitável, denúncias, propriedade intelectual, isenção, limitação, alterações). Same layout pattern as `privacidade.tsx`.
+- **POST /reports error handling:** Account validation (`getReporterId`) runs before EXIF analysis and Supabase upload to fail fast. Supabase upload wrapped in try/catch returning 400 "Falha ao fazer upload da imagem" instead of unhandled 500.
+- **SPA routing for /reports/new:** NestJS `@Get(':id')` catches `/reports/new` unless explicitly excluded in middleware. Fixed by routing `/reports/new` to SPA HTML and adding `isNaN` guard in `findOne()` for non-numeric IDs.
 - **shadcn/ui rule enforced:** `cursor-pointer` applied globally via `globals.css` (`button:not(:disabled), [role="button"]:not(:disabled), [data-slot="button"]:not(:disabled)`) — shadcn Button component never edited directly; previously reverted a direct edit to `button.tsx`
 - **LGPD compliance:** Standard tier implemented. Consent collected at registration with timestamp. Account deletion replaces PII with placeholders (`deleted-{id}@removed`, `DELETED` hash) rather than hard delete — preserves FK integrity and report records for community blocklist. Report EXIF data is cleared on account deletion (potential GPS/camera metadata). Proof images are preserved (evidence of reported player behavior). Data export returns JSON with account info, fighter data, and report history. See `docs/adr/0001-lgpd-anonymization-strategy.md`.
 - **Google Analytics:** GA4 loaded via gtag.js with three-tier consent gate. Bottom banner (`LgpdConsentBanner`) on first visit offers "Recusar" (`refused`), "Apenas Essenciais" (`essential`), or "Aceitar Completo" (`full`) — stored in localStorage (`ga-consent`). GA initializes for both `essential` and `full` (both need page views). Custom events only fire when `full`. Page views tracked via TanStack Router's `useLocation`. Custom events on `register`, `login`, `report_submitted`, `password_changed`, `account_deleted` — all guarded centrally in `trackEvent()`. Measurement ID via `VITE_GA_MEASUREMENT_ID` env var. Privacy policy updated to list GA cookie with tier descriptions.
@@ -261,22 +267,25 @@ puxeiocabo/
 
 ### Image Storage: local disk → Supabase Storage
 - `SupabaseService` (`backend/src/supabase/supabase.service.ts`) wraps Supabase client
-- Uploads go to Supabase Storage bucket (`reports`) using service role key
+- Uploads go to Supabase Storage bucket (`reports`, made public in May 2026) using service role key (JWT from Supabase dashboard Settings → API → Legacy service_role key)
 - `proofImagePath` stores the Supabase public URL (not local `/uploads/...`)
 - Multer uses `memoryStorage` — file buffer is analyzed for EXIF, then uploaded to Supabase
 - On creation failure, the uploaded file is cleaned up from Supabase
+- **S3 service key note:** The old `#wdcvq7R@2lgTQ` value was not a valid Supabase key (expected JWT format, `eyJ...`). Fixed by using the correct `service_role` JWT from Supabase dashboard.
 
 ### Deployment: Docker image on Render
 - **Dockerfile**: multi-stage (frontend build → backend build → runtime)
 - Backend serves built frontend as static assets when `NODE_ENV=production`
-- SPA catch-all: all non-API routes return `index.html`
+- SPA catch-all (`backend/src/main.ts`): Express `app.use()` middleware with explicit API prefix exclusions. `/reports/new` and `/reports/:id` (numeric) served as SPA HTML via `Accept: text/html` check. `app.use()` was chosen over `app.get('*')` because newer path-to-regexp throws `PathError` on wildcard.
 - **`render.yaml`**: Web Service with Docker runtime, health check at `/api`
 - Local dev unchanged: `npm run dev` runs both backend + frontend via concurrently
+- Env vars set via Render dashboard (sync: false in render.yaml): DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET, SUPABASE_URL, SUPABASE_SERVICE_KEY, EMAILJS_*, etc.
 
 ### Frontend API URL
 - `BACKEND_URL` default changed to `''` (same-origin in production)
 - Local dev: `VITE_BACKEND_URL=http://localhost:3000` in `frontend/.env`
 - No more Vite proxy for `/uploads` (images served directly from Supabase)
+- Image lightbox: Dialog modal for full-size image preview in admin flagged page (same pattern as ReportCard home page)
 
 ## Swagger Documentation
 - **URL:** `http://localhost:3000/api`
