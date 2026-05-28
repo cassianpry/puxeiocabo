@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { EmailJsService } from '../emailjs/emailjs.service';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+import { JwtPayload } from '../common/authenticated-request';
 
 @Injectable()
 export class AuthService {
@@ -395,7 +396,7 @@ export class AuthService {
     });
   }
 
-  async validateJwtPayload(payload: any) {
+  async validateJwtPayload(payload: JwtPayload) {
     const account = await this.prisma.account.findUnique({
       where: { id: payload.sub },
       include: { fighter: true },

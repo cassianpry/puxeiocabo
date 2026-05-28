@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-(BigInt.prototype as any).toJSON = function () {
+(BigInt.prototype as unknown as { toJSON: () => string }).toJSON = function () {
   return this.toString();
 };
 

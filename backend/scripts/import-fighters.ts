@@ -32,7 +32,7 @@ async function importFighters() {
   for (const file of files) {
     const filePath = path.join(pagesDir, file);
     const content = fs.readFileSync(filePath, 'utf-8');
-    const fighters: any[] = JSON.parse(content);
+    const fighters: { fighter_banner_info?: { personal_info?: { short_id?: number; fighter_id?: string; platform_id: number; platform_name: string; platform_tool_name: string }; main_circle?: { circle_name?: string } } }[] = JSON.parse(content);
     
     for (const entry of fighters) {
       const pi = entry.fighter_banner_info?.personal_info;

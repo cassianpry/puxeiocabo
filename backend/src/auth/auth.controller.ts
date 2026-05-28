@@ -12,6 +12,7 @@ import type { Response } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import type { AuthenticatedRequest } from '../common/authenticated-request';
 import {
   RegisterDto,
   LoginDto,
@@ -138,7 +139,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Verification email sent' })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async changeEmail(@Req() req: any, @Body() body: ChangeEmailDto) {
+  async changeEmail(@Req() req: AuthenticatedRequest, @Body() body: ChangeEmailDto) {
     try {
       await this.authService.changeEmail(req.user.id, body.newEmail, body.currentPassword);
       return { message: 'Verifique seu novo email para confirmar a alteração' };
@@ -166,7 +167,7 @@ export class AuthController {
   @ApiBearerAuth('access-token')
   @ApiResponse({ status: 200, description: 'Token refreshed successfully' })
   @ApiResponse({ status: 401, description: 'Invalid or expired refresh token' })
-  async refresh(@Req() req: any, @Res({ passthrough: true }) res: Response) {
+  async refresh(@Req() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies?.refreshToken || req.headers.authorization?.replace('Bearer ', '');
     const result = await this.authService.refreshToken(refreshToken);
     this.setCookies(res, result.accessToken, result.refreshToken);
@@ -179,7 +180,7 @@ export class AuthController {
   @ApiBearerAuth('access-token')
   @ApiResponse({ status: 200, description: 'Logged out successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async logout(@Req() req: any, @Res({ passthrough: true }) res: Response) {
+  async logout(@Req() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response) {
     await this.authService.logout(req.user.id);
     this.clearCookies(res);
     return { message: 'Logged out successfully' };
@@ -192,7 +193,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'short_id linked successfully' })
   @ApiResponse({ status: 400, description: 'Invalid short_id or already linked' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async link(@Req() req: any, @Body() body: LinkShortIdDto) {
+  async link(@Req() req: AuthenticatedRequest, @Body() body: LinkShortIdDto) {
     if (!body.shortId) {
       throw new BadRequestException('shortId é obrigatório');
     }
@@ -209,7 +210,7 @@ export class AuthController {
   @ApiBearerAuth('access-token')
   @ApiResponse({ status: 200, description: 'User profile retrieved' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async me(@Req() req: any) {
+  async me(@Req() req: AuthenticatedRequest) {
     return this.authService.getProfile(req.user.id);
   }
 
@@ -220,7 +221,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Password changed successfully' })
   @ApiResponse({ status: 400, description: 'Invalid current password or validation error' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async changePassword(@Req() req: any, @Body() body: ChangePasswordDto, @Res({ passthrough: true }) res: Response) {
+  async changePassword(@Req() req: AuthenticatedRequest, @Body() body: ChangePasswordDto, @Res({ passthrough: true }) res: Response) {
     try {
       const result = await this.authService.changePassword(
         req.user.id,
@@ -241,7 +242,7 @@ export class AuthController {
   @ApiBearerAuth('access-token')
   @ApiResponse({ status: 200, description: 'Account deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async deleteAccount(@Req() req: any, @Res({ passthrough: true }) res: Response) {
+  async deleteAccount(@Req() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response) {
     try {
       await this.authService.deleteAccount(req.user.id);
       this.clearCookies(res);
@@ -257,7 +258,7 @@ export class AuthController {
   @ApiBearerAuth('access-token')
   @ApiResponse({ status: 200, description: 'Personal data exported' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async exportData(@Req() req: any) {
+  async exportData(@Req() req: AuthenticatedRequest) {
     return this.authService.exportData(req.user.id);
   }
 }

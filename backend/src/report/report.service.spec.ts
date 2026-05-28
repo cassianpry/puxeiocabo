@@ -1,24 +1,59 @@
 import { ReportService } from './report.service';
+import type { PrismaService } from '../prisma/prisma.service';
+
+type MockPrisma = {
+  [K in keyof PrismaService]: PrismaService[K] extends (...args: infer A) => infer R
+    ? jest.Mock<R, A>
+    : {
+        [K2 in keyof PrismaService[K]]: jest.Mock;
+      };
+};
 
 describe('ReportService moderation comments', () => {
   let service: ReportService;
-  let prisma: {
-    report: { update: jest.Mock; findUnique: jest.Mock };
-    account: { findUnique: jest.Mock };
-  };
+  let prisma: MockPrisma & PrismaService;
 
   beforeEach(() => {
     prisma = {
       report: {
         update: jest.fn(),
         findUnique: jest.fn(),
+        findMany: jest.fn(),
+        findFirst: jest.fn(),
+        create: jest.fn(),
+        count: jest.fn(),
       },
       account: {
         findUnique: jest.fn(),
+        findFirst: jest.fn(),
+        update: jest.fn(),
+        create: jest.fn(),
+        findMany: jest.fn(),
+        count: jest.fn(),
       },
-    };
+      fighter: {
+        findUnique: jest.fn(),
+        findMany: jest.fn(),
+        findFirst: jest.fn(),
+        count: jest.fn(),
+      },
+      verificationToken: {
+        findUnique: jest.fn(),
+        create: jest.fn(),
+        update: jest.fn(),
+      },
+      contactInquiry: {
+        findMany: jest.fn(),
+        count: jest.fn(),
+      },
+      bugReport: {
+        findMany: jest.fn(),
+        count: jest.fn(),
+      },
+      $transaction: jest.fn(),
+    } as unknown as MockPrisma & PrismaService;
 
-    service = new ReportService(prisma as any);
+    service = new ReportService(prisma as unknown as PrismaService);
   });
 
   it('persists admin comment when moderation status changes', async () => {

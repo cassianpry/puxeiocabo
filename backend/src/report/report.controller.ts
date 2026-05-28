@@ -30,6 +30,7 @@ import { ExifAnalysisService } from './exif-analysis.service';
 import { SupabaseService } from '../supabase/supabase.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../common/roles.guard';
+import type { AuthenticatedRequest } from '../common/authenticated-request';
 import { Roles } from '../common/roles.decorator';
 import { CreateReportDto, UpdateReportDto, ReportResponseDto, PaginatedResponseDto, UpdateReportStatusDto } from './dto';
 import type { UpdateReportDto as UpdateReportDtoInternal } from './report.service';
@@ -90,7 +91,7 @@ export class ReportController {
   @ApiBearerAuth('access-token')
   @ApiResponse({ status: 200, description: 'Own reports retrieved', type: PaginatedResponseDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async findMyReports(@Req() req: any, @Query('page') page?: string, @Query('limit') limit?: string) {
+  async findMyReports(@Req() req: AuthenticatedRequest, @Query('page') page?: string, @Query('limit') limit?: string) {
     return this.reportService.findByUser(req.user.id, page ? Number(page) : 1, limit ? Number(limit) : 20);
   }
 
@@ -129,7 +130,7 @@ export class ReportController {
     }),
   )
   async create(
-    @Req() req: any,
+    @Req() req: AuthenticatedRequest,
     @Body() body: CreateReportDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
@@ -196,7 +197,7 @@ export class ReportController {
     }),
   )
   async update(
-    @Req() req: any,
+    @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
     @Body() body: UpdateReportDto,
     @UploadedFile() file: Express.Multer.File,

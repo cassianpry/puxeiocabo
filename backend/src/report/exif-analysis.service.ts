@@ -50,7 +50,8 @@ export class ExifAnalysisService {
         }
       }
 
-      const softwareValue = (exif as any).Software || (exif as any).software || '';
+      const exifRecord = exif as Record<string, unknown>;
+      const softwareValue = (exifRecord.Software as string) || (exifRecord.software as string) || '';
       if (softwareValue && typeof softwareValue === 'string') {
         const softwareLower = softwareValue.toLowerCase();
         if (softwareLower.includes('photoshop') || softwareLower.includes('gimp') || softwareLower.includes('paint')) {

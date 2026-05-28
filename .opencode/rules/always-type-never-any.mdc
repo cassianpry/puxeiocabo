@@ -1,0 +1,33 @@
+---
+description: Always use explicit types and never use `any` in the backend
+globs: backend/src/**/*.ts
+---
+
+# Type Safety — Always Type, Never `any`
+
+**Every symbol must have an explicit, meaningful type.** The `any` type is forbidden across the entire backend source.
+
+## Allowed patterns
+
+- **`unknown`** — safe counterpart for values with an unknown shape (requires narrowing before use)
+- **`Record<K, V>`** — dynamic key access (e.g., `exif as Record<string, unknown>`)
+- **`jest.Mock` / `jest.Mocked<T>`** — test mocks
+- **Interfaces / types** — prefer creating a shared type over casting
+- **`as unknown as T`** — acceptable only when crossing a type-system gap that cannot be expressed otherwise (e.g., runtime prototype patching, Prisma mock casts)
+
+## Forbidden
+
+- **`as any`** — erases all type safety entirely
+- **`: any`** — parameter, return, or variable typed as `any`
+- **`as unknown as any`** — any workaround that reintroduces `any`
+
+## How to fix common cases
+
+| Pattern | Fix |
+|---------|-----|
+| `req: any` in NestJS controllers | `req: AuthenticatedRequest` (import from `common/authenticated-request.ts`) |
+| `payload: any` in JWT strategies | `payload: JwtPayload` (import from `common/authenticated-request.ts`) |
+| `JSON.parse(...)` returning `any[]` | Define a `interface FighterEntry { ... }` and cast via `as FighterEntry[]` |
+| `(obj as any).prop` accessing dynamic keys | `(obj as Record<string, unknown>).prop` |
+| Prototype patching (`BigInt.prototype`) | `as unknown as { toJSON: () => string }` |
+| Prisma mocks in tests | `MockPrisma & PrismaService` with `jest.fn()` on each method |
