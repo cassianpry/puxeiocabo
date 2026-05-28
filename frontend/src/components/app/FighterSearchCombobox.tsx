@@ -44,8 +44,8 @@ export function FighterSearchCombobox({ value, onSelect }: FighterSearchCombobox
           <div />
         </PopoverTrigger>
         <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start" onOpenAutoFocus={(e) => e.preventDefault()}>
-          <Command shouldFilter={false} className="max-h-[300px] overflow-y-auto">
-            <CommandList className="max-h-none overflow-y-visible">
+          <Command shouldFilter={false}>
+            <CommandList>
               {isFetching && <CommandEmpty>Buscando...</CommandEmpty>}
               {!isFetching && fighters.length === 0 && search.length > 1 && (
                 <CommandEmpty>Nenhum lutador encontrado.</CommandEmpty>

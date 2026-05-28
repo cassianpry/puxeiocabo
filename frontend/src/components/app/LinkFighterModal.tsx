@@ -6,9 +6,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
+import { Command, CommandGroup, CommandItem, CommandList, CommandInput } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useFighterSearch } from '@/hooks/useFighterSearch'
 import { toast } from 'sonner'
@@ -72,28 +71,32 @@ export function LinkFighterModal({ open, onLink, onLogout }: LinkFighterModalPro
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-              <div className="p-2">
-                <Input
+              <Command shouldFilter={false}>
+                <CommandInput
                   placeholder="Buscar pelo nome ou código de usuário..."
                   value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value)
+                  onValueChange={(value) => {
+                    setSearch(value)
                     setSelected(null)
                   }}
                   className="bg-background"
                   autoFocus
                 />
-              </div>
-              <Command shouldFilter={false} className="max-h-[260px] overflow-y-auto">
-                <CommandList className="max-h-none overflow-y-visible">
+                <CommandList>
                   {isFetching && (
-                    <CommandEmpty>Buscando...</CommandEmpty>
+                    <div className="py-6 text-center text-sm text-muted-foreground">
+                      Buscando...
+                    </div>
                   )}
-                  {!isFetching && fighters.length === 0 && search.length > 1 && (
-                    <CommandEmpty>Nenhum lutador encontrado.</CommandEmpty>
+                  {!isFetching && search.length > 1 && fighters.length === 0 && (
+                    <div className="py-6 text-center text-sm text-muted-foreground">
+                      Nenhum lutador encontrado.
+                    </div>
                   )}
                   {search.length <= 1 && (
-                    <CommandEmpty>Digite pelo menos 2 caracteres.</CommandEmpty>
+                    <div className="py-6 text-center text-sm text-muted-foreground">
+                      Digite pelo menos 2 caracteres.
+                    </div>
                   )}
                   <CommandGroup>
                     {fighters.map((fighter) => (
@@ -108,7 +111,7 @@ export function LinkFighterModal({ open, onLink, onLogout }: LinkFighterModalPro
                         }}
                       >
                         <div className="flex flex-col">
-                          <span>{fighter.fighterId ?? `(${fighter.shortId})`}</span>
+                          <span>{fighter.fighterId ?? fighter.shortId}</span>
                           <span className="text-xs text-muted-foreground">
                             Código de usuário: {fighter.shortId} · {fighter.platformTool}
                           </span>
