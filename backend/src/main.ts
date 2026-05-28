@@ -20,10 +20,6 @@ async function bootstrap() {
     exposedHeaders: ['Authorization'],
   });
 
-  if (process.env.NODE_ENV === 'production') {
-    app.useStaticAssets(join(process.cwd(), 'frontend', 'dist'));
-  }
-
   const config = new DocumentBuilder()
     .setTitle('Puxei o Cabo API')
     .setDescription('SF6 rage-quit reporting system with EXIF-based AI detection')
@@ -39,6 +35,16 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  if (process.env.NODE_ENV === 'production') {
+    const frontendDist = join(process.cwd(), 'frontend', 'dist');
+    app.useStaticAssets(frontendDist);
+
+    const expressApp = app.getHttpAdapter().getInstance();
+    expressApp.get('*', (req: any, res: any) => {
+      res.sendFile(join(frontendDist, 'index.html'));
+    });
+  }
 
   await app.listen(process.env.PORT ?? 3000);
   console.log(`Server running on http://localhost:${process.env.PORT ?? 3000}`);
