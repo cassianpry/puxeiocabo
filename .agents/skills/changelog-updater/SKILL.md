@@ -28,7 +28,7 @@ Atualiza a página estática de changelog com commits do último mês.
 
 ## Workflow
 
-1. Buscar commits com `github_list_commits(owner: "cassianpry", repo: "puxeiocabo", since: <30 dias atrás>, perPage: 100)`
+1. Buscar commits com `github_list_commits(owner: "cassianpry", repo: "puxeiocabo", sha: "main", since: <30 dias atrás>, perPage: 100)` — **sempre usar `sha: "main"`** pois o repositório usa `main` como branch ativa (padrão do GitHub é `master`).
 2. Filtrar merge commits (mensagem startsWith "Merge")
 3. Gerar conteúdo da rota `/changelog`
 4. Garantir link "Novidades" no footer
@@ -62,3 +62,4 @@ Adicionar em `AppFooter.tsx` antes do Contato:
 - [ ] Badges correspondem ao tipo do commit
 - [ ] Merge commits filtrados
 - [ ] Commits agrupados por data
+- [ ] Branch `main` usada na consulta (não o padrão do repositório)

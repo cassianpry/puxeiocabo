@@ -35,6 +35,53 @@ const badgeIcon: Record<CommitEntry["type"], string> = {
 
 const data: DayGroup[] = [
   {
+    label: "28 de Maio",
+    commits: [
+      {
+        sha: "bdf367f3b52aa2d80a27e362a41e417d56b8be37",
+        type: "feat",
+        message: "Nova infraestrutura: banco de dados e armazenamento em nuvem, deploy automatizado",
+        url: "https://github.com/cassianpry/puxeiocabo/commit/bdf367f3b52aa2d80a27e362a41e417d56b8be37",
+      },
+      {
+        sha: "ad6083c90471fd9277a49ddda129943c951500e6",
+        type: "feat",
+        message: "Painel admin: lista completa de denúncias pendentes e visualização ampliada de imagens",
+        url: "https://github.com/cassianpry/puxeiocabo/commit/ad6083cc6cbbeaa3a50bcf6a3e1f0ada5c5a75eb",
+      },
+      {
+        sha: "04df75c292c31ed943909ed6df9354e13ab15d8b",
+        type: "feat",
+        message: "Adiciona verificação de e-mail no cadastro",
+        url: "https://github.com/cassianpry/puxeiocabo/commit/04df75c292c31ed943909ed6df9354e13ab15d8b",
+      },
+      {
+        sha: "ca04bc9f58c055bc85d23cf37b3e1327d90d8716",
+        type: "fix",
+        message: "Corrige navegação em páginas de denúncia e verificação de e-mail",
+        url: "https://github.com/cassianpry/puxeiocabo/commit/ca04bc94debb4b81f0bcf9add323e2a1e0c5f0e9",
+      },
+      {
+        sha: "2547c233f8ed68f089ede2ee030f27b4acbbb1a7",
+        type: "fix",
+        message: "Corrige rolagem e busca de lutadores ao vincular conta",
+        url: "https://github.com/cassianpry/puxeiocabo/commit/2547c23d0e0f2524aeb1534caab6f5ec0e04a18a",
+      },
+      {
+        sha: "04df75c292c31ed943909ed6df9354e13ab15d8b",
+        type: "fix",
+        message: "Renomeia 'Short ID' para 'Código de usuário'",
+        url: "https://github.com/cassianpry/puxeiocabo/commit/04df75c292c31ed943909ed6df9354e13ab15d8b",
+      },
+      {
+        sha: "971d660ac324cf5da159f7bba9c12e85ba9e6df4",
+        type: "fix",
+        message: "Corrige reconexão com banco de dados",
+        url: "https://github.com/cassianpry/puxeiocabo/commit/971d660cdf2a7217f6e4707889f71ad2d4eeab08",
+      },
+    ],
+  },
+  {
     label: "27 de Maio",
     commits: [
       {
@@ -48,6 +95,18 @@ const data: DayGroup[] = [
         type: "docs",
         message: "Expande seções de cookies e segurança na política de privacidade",
         url: "https://github.com/cassianpry/puxeiocabo/commit/54f06acb7433f848d74b871de56f0192ae353760",
+      },
+      {
+        sha: "01275aac62bd025c7030770edd7ccfb24e3466c1",
+        type: "feat",
+        message: "Adiciona e-mail transacional (recuperar senha, alterar e-mail, contato)",
+        url: "https://github.com/cassianpry/puxeiocabo/commit/01275aac62bd025c7030770edd7ccfb24e3466c1",
+      },
+      {
+        sha: "0199c96815732e86f5435634961381acdd9899d3",
+        type: "feat",
+        message: "Adiciona paginação, busca de denúncias e painel admin com estatísticas",
+        url: "https://github.com/cassianpry/puxeiocabo/commit/0199c96815732e86f5435634961381acdd9899d3",
       },
       {
         sha: "09abbdbc95310f128207577a8cf199475cec3662",

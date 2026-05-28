@@ -46,7 +46,10 @@ export function getAuthNavItems({ isAuthenticated, isLinked, isAdmin }: AuthNavS
   }
 
   if (!isLinked) {
-    return [{ action: 'logout', label: 'Sair' }]
+    return [
+      { to: '/dashboard', label: 'Vincular Lutador' },
+      { action: 'logout', label: 'Sair' },
+    ]
   }
 
   return [

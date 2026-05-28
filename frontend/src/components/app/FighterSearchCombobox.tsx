@@ -47,20 +47,20 @@ export function FighterSearchCombobox({ value, onSelect }: FighterSearchCombobox
           <Command shouldFilter={false}>
             <CommandList>
               {isFetching && <CommandEmpty>Buscando...</CommandEmpty>}
-              {!isFetching && fighters.length === 0 && search.length > 1 && (
+              {!isFetching && fighters.length === 0 && search.length > 2 && (
                 <CommandEmpty>Nenhum lutador encontrado.</CommandEmpty>
               )}
-              {search.length <= 1 && <CommandEmpty>Digite pelo menos 2 caracteres.</CommandEmpty>}
+              {search.length <= 2 && <CommandEmpty>Digite pelo menos 3 caracteres.</CommandEmpty>}
               <CommandGroup>
                 {fighters.map((fighter) => (
                   <CommandItem
                     key={fighter.shortId}
                     value={fighter.shortId}
-                    className="bg-background"
+                    className="bg-card hover:bg-accent/10 data-[selected=true]:bg-accent/10"
                     onSelect={() => handleSelect(fighter)}
                   >
                     <div className="flex flex-col">
-                      <span>{fighter.fighterId ?? `(${fighter.shortId})`}</span>
+                      <span>{fighter.fighterId ?? fighter.shortId}</span>
                       <span className="text-xs text-muted-foreground">
                         Código de usuário: {fighter.shortId} · {fighter.platformTool}
                       </span>
@@ -75,7 +75,7 @@ export function FighterSearchCombobox({ value, onSelect }: FighterSearchCombobox
 
       {selected && (
         <div className="rounded-md border bg-muted/50 p-3 text-sm">
-          <div className="font-medium">{selected.fighterId ?? `(${selected.shortId})`}</div>
+          <div className="font-medium">{selected.fighterId ?? selected.shortId}</div>
           <div className="text-muted-foreground">
             Código de usuário: {selected.shortId} · Console: {selected.platformTool}
           </div>

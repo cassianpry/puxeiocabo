@@ -46,10 +46,15 @@ function FightersPage() {
         </div>
       )}
 
-      {!isLoading && fighters.length === 0 && search.length > 1 && (
+      {!isLoading && fighters.length === 0 && search.length > 2 && (
         <Alert>
           <AlertDescription>Nenhum lutador encontrado.</AlertDescription>
         </Alert>
+      )}
+      {search.length <= 2 && (
+        <div className="py-8 text-center text-muted-foreground">
+          Digite pelo menos 3 caracteres para pesquisar.
+        </div>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
