@@ -35,3 +35,18 @@ services:
         sync: false
       - key: APP_URL
         sync: false
+
+  - type: cron
+    name: puxei-o-cabo-scraper
+    runtime: docker
+    schedule: 0 0 * * 0
+    dockerfilePath: ./scraper/Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: BUCKLER_ID
+        sync: false
+      - key: BUCKLER_R_ID
+        sync: false
+      - key: BUCKLER_PRAISE_DATE
+        sync: false

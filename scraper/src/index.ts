@@ -3,6 +3,7 @@ import { loadConfig } from './config/index.js';
 import { Sf6Scraper } from './scraper/index.js';
 import { ensureDataDir, pageExists, savePage, addFailedPage, loadFailedPages, clearFailedPages } from './storage/index.js';
 import { validateAllPages, validatePage } from './validator/index.js';
+import { importFighters } from './db/index.js';
 import pLimit from 'p-limit';
 
 const program = new Command();
@@ -40,7 +41,6 @@ program
 
     const limit = pLimit(config.concurrency);
     let completed = 0;
-    let skipped = 0;
     let failed = 0;
     const startTime = Date.now();
 
@@ -48,12 +48,6 @@ program
 
     for (let page = startPage; page <= endPage; page++) {
       tasks.push(limit(async () => {
-        const exists = await pageExists(config.dataDir, page);
-        if (exists) {
-          skipped++;
-          return;
-        }
-
         try {
           const data = await scraper.fetchWithRetry(page, config.maxRetries);
           await savePage(config.dataDir, page, data);
@@ -62,9 +56,9 @@ program
           if (completed % 100 === 0) {
             const elapsed = (Date.now() - startTime) / 1000;
             const rate = completed / elapsed;
-            const remaining = endPage - page - skipped;
+            const remaining = endPage - startPage + 1 - completed;
             const eta = remaining / rate;
-            console.log(`Progress: ${completed + skipped}/${endPage} pages (${completed} fetched, ${skipped} skipped, ${failed} failed) - ${rate.toFixed(1)} pages/s - ETA: ${Math.ceil(eta)}s`);
+            console.log(`Progress: ${completed}/${endPage} pages - ${rate.toFixed(1)} pages/s - ETA: ${Math.ceil(eta)}s`);
           }
         } catch (error) {
           failed++;
@@ -83,13 +77,8 @@ program
     const elapsed = (Date.now() - startTime) / 1000;
     console.log(`\nScraping complete!`);
     console.log(`  Fetched: ${completed}`);
-    console.log(`  Skipped: ${skipped}`);
     console.log(`  Failed: ${failed}`);
     console.log(`  Time: ${Math.floor(elapsed / 60)}m ${Math.floor(elapsed % 60)}s`);
-
-    if (failed > 0) {
-      console.log(`\nRun 'npm run resume' to retry failed pages`);
-    }
   });
 
 program
@@ -159,6 +148,21 @@ program
         console.log('Cleared failed pages list');
       }
     }
+  });
+
+program
+  .command('import')
+  .description('Import scraped pages into PostgreSQL')
+  .action(async () => {
+    const config = loadConfig();
+
+    if (!process.env.DATABASE_URL) {
+      console.error('DATABASE_URL environment variable is required');
+      process.exit(1);
+    }
+
+    console.log('Importing fighters into database...');
+    await importFighters(config);
   });
 
 program.parse();
