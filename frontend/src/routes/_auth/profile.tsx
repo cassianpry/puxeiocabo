@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useExportData } from '@/hooks/useExportData'
 import { useDeleteAccount } from '@/hooks/useDeleteAccount'
 import { ProfileSettings } from '@/components/app/ProfileSettings'
+import { Download, Trash2 } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -91,6 +92,7 @@ function ProfilePage() {
               disabled={exportMutation.isPending}
             >
               {exportMutation.isPending ? 'Exportando...' : 'Exportar dados'}
+              {!exportMutation.isPending && <Download />}
             </Button>
             <Button
               variant="destructive"
@@ -98,6 +100,7 @@ function ProfilePage() {
               disabled={deleteMutation.isPending}
             >
               {deleteMutation.isPending ? 'Excluindo...' : 'Excluir conta'}
+              {!deleteMutation.isPending && <Trash2 />}
             </Button>
           </div>
         </CardContent>

@@ -1,22 +1,31 @@
 /* === Button Hit-Flash === */
 @keyframes hit-flash {
   0% { opacity: 0; }
-  20% { opacity: 0.4; }
+  20% { opacity: 0.35; }
   100% { opacity: 0; }
 }
 
-button[data-variant="default"]::after {
+button[data-slot="button"]::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: oklch(0.60 0.22 235);
+  background: white;
   pointer-events: none;
   opacity: 0;
 }
 
-button[data-variant="default"]:active:not(:disabled)::after {
+button[data-slot="button"]:active:not(:disabled)::after {
   animation: hit-flash 200ms ease-out;
+}
+
+/* === Button Icon Spin === */
+button[data-slot="button"] svg:last-child {
+  transition: transform 500ms ease-in-out;
+}
+
+button[data-slot="button"]:hover svg:last-child {
+  transform: rotate(360deg);
 }
 
 /* === Card Entrance === */
@@ -33,31 +42,6 @@ button[data-variant="default"]:active:not(:disabled)::after {
 
 .card-enter {
   animation: card-enter 200ms ease-out both;
-}
-
-/* === Page Transition === */
-@keyframes page-enter {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.page-enter {
-  animation: page-enter 200ms ease-out both;
-}
-
-@keyframes page-exit {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-.page-exit {
-  animation: page-exit 100ms ease-out both;
 }
 
 /* === Lightbox === */
@@ -103,13 +87,15 @@ button[data-variant="default"]:active:not(:disabled)::after {
 
 /* === Reduced Motion === */
 @media (prefers-reduced-motion: reduce) {
-  .card-enter,
-  .page-enter,
-  .page-exit {
+  .card-enter {
     animation: none;
   }
 
-  button[data-variant="default"]::after {
+button[data-slot="button"] {
+  position: relative;
+}
+
+button[data-slot="button"]::after {
     display: none;
   }
 
@@ -117,8 +103,16 @@ button[data-variant="default"]:active:not(:disabled)::after {
     animation: none;
   }
 
-  button[data-variant="default"]:active:not(:disabled) {
+  button[data-slot="button"]:active:not(:disabled) {
     transform: scale(0.97);
+  }
+
+  button[data-slot="button"] svg:last-child {
+    transition: none;
+  }
+
+  button[data-slot="button"]:hover svg:last-child {
+    transform: none;
   }
 
   [data-state="open"] > [data-slot="dialog-content"],

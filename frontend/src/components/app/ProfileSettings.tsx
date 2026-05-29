@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { Eye, EyeOff, Mail } from 'lucide-react'
+import { Eye, EyeOff, Mail, Send, Save } from 'lucide-react'
 import { useChangePassword } from '@/hooks/useChangePassword'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -114,7 +114,7 @@ export function ProfileSettings() {
                   required
                 />
               </div>
-              <Button type="submit">Solicitar alteração</Button>
+              <Button type="submit">Solicitar alteração<Send /></Button>
             </form>
           </TabsContent>
 
@@ -209,6 +209,7 @@ export function ProfileSettings() {
 
               <Button type="submit" disabled={changePasswordMutation.isPending}>
                 {changePasswordMutation.isPending ? 'Salvando...' : 'Salvar'}
+                {!changePasswordMutation.isPending && <Save />}
               </Button>
             </form>
           </TabsContent>

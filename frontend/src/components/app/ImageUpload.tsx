@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Upload } from 'lucide-react'
+import { Upload, Image } from 'lucide-react'
 import { useState, useRef } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -85,7 +85,7 @@ export function ImageUpload({ onChange }: ImageUploadProps) {
             <p className="text-sm text-muted-foreground">ou</p>
           </div>
           <Button type="button" variant="secondary" size="sm" onClick={(e) => { e.stopPropagation(); handleClickZone(); }}>
-            Selecionar
+            Selecionar<Image />
           </Button>
           <p className="text-xs text-muted-foreground">JPEG apenas</p>
         </div>

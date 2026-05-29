@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
+import { X, Save } from 'lucide-react'
 import { ImageUpload } from './ImageUpload'
 import { useUpdateReport } from '@/hooks/useUpdateReport'
 import { toast } from 'sonner'
@@ -69,10 +70,11 @@ export function EditReportDialog({ report, open, onOpenChange }: EditReportDialo
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
+              Cancelar<X />
             </Button>
             <Button type="submit" disabled={isPending}>
               {isPending ? 'Salvando...' : 'Salvar'}
+              {!isPending && <Save />}
             </Button>
           </div>
         </form>

@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiJson } from "@/lib/api";
+import { Send } from "lucide-react";
 
 export const Route = createFileRoute("/bug-report")({
   head: () => ({
@@ -101,7 +102,8 @@ function BugReportPage() {
         )}
 
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Enviando..." : "Enviar"}
+          {isSubmitting ? "Enviando..." : "Enviar"}{" "}
+          <Send />
         </Button>
       </form>
 

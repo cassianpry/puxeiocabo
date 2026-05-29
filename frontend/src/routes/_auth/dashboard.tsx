@@ -4,6 +4,7 @@ import { useMyReports } from '@/hooks/useMyReports'
 import { DataTable, TableHead, TableRow, TableHeader, TableBody, TableCell } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Link } from '@tanstack/react-router'
+import { Plus, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ReportRow } from '@/components/app/ReportRow'
 import { EditReportDialog } from '@/components/app/EditReportDialog'
@@ -25,7 +26,7 @@ function DashboardPage() {
           <p className="mt-1 text-muted-foreground">Suas denúncias recentes aparecerão aqui.</p>
         </div>
         <Link to="/reports/new">
-          <Button>Nova Denúncia</Button>
+          <Button>Nova Denúncia<Plus /></Button>
         </Link>
       </div>
 
@@ -64,7 +65,7 @@ function DashboardPage() {
                     variant="outline"
                     onClick={() => setEditingReport(report)}
                   >
-                    Editar
+                    Editar<Pencil />
                   </Button>
                 ) : (
                   <span className="text-muted-foreground text-sm">—</span>

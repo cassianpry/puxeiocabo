@@ -17,8 +17,8 @@ export function ReportActions({ reportId, onApprove, onReject, onDelete }: Repor
         className="h-8 text-green-500 border-green-500/30 hover:bg-green-500/10"
         onClick={() => onApprove(reportId)}
       >
-        <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
         Aprovar
+        <CheckCircle2 className="h-3.5 w-3.5" />
       </Button>
       <Button
         size="sm"
@@ -26,8 +26,8 @@ export function ReportActions({ reportId, onApprove, onReject, onDelete }: Repor
         className="h-8 text-red-500 border-red-500/30 hover:bg-red-500/10"
         onClick={() => onReject(reportId)}
       >
-        <XCircle className="mr-1 h-3.5 w-3.5" />
         Rejeitar
+        <XCircle className="h-3.5 w-3.5" />
       </Button>
       <Button
         size="sm"

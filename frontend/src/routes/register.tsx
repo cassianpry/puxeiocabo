@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
-import { Mail, Eye, EyeOff, CheckCircle2 } from "lucide-react";
+import { Mail, Eye, EyeOff, CheckCircle2, UserPlus } from "lucide-react";
 
 export const Route = createFileRoute("/register")({
   beforeLoad: async () => {
@@ -199,7 +199,8 @@ function RegisterPage() {
           )}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Criando..." : "Criar conta"}
+            {isSubmitting ? "Criando..." : "Criar conta"}{" "}
+            <UserPlus />
           </Button>
         </form>
 

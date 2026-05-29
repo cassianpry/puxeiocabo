@@ -2,7 +2,6 @@ import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { useAuth } from '@/hooks/useAuth'
 import { useLogout } from '@/hooks/useLogout'
-import { usePageTransition } from '@/hooks/usePageTransition'
 import { useAnalytics } from '@/hooks/useAnalytics'
 import { LgpdConsentBanner } from '@/components/app/LgpdConsentBanner'
 import { AppHeader } from '@/components/layout/AppHeader'
@@ -15,7 +14,6 @@ export const Route = createRootRoute({
 function RootComponent() {
   const { isAuthenticated, user } = useAuth()
   const { logout } = useLogout()
-  const animationClass = usePageTransition()
   useAnalytics()
 
   return (
@@ -28,9 +26,7 @@ function RootComponent() {
         onLogout={logout}
       />
       <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-8">
-        <div className={animationClass}>
           <Outlet />
-        </div>
       </main>
       <AppFooter />
       <LgpdConsentBanner />

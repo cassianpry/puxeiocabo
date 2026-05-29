@@ -12,7 +12,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useFighterSearch } from '@/hooks/useFighterSearch'
 import { toast } from 'sonner'
-import { Search } from 'lucide-react'
+import { Search, LogOut, Link } from 'lucide-react'
 import type { Fighter } from '@/types/api'
 
 interface LinkFighterModalProps {
@@ -163,10 +163,11 @@ export function LinkFighterModal({ open, onLink, onLogout }: LinkFighterModalPro
 
           <div className="flex justify-between">
             <Button variant="outline" onClick={onLogout}>
-              Sair
+              Sair<LogOut />
             </Button>
             <Button onClick={handleLink} disabled={!selected || linking}>
               {linking ? 'Vinculando...' : 'Vincular'}
+              {!linking && <Link />}
             </Button>
           </div>
         </div>

@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import {
+  ArrowLeft,
   ChevronDown,
   ChevronRight,
   CheckCircle2,
@@ -127,7 +128,8 @@ function AdminFlaggedPage() {
         </div>
         <Link to="/admin">
           <Button variant="outline" size="sm">
-            ← Voltar ao Painel
+            <ArrowLeft className="h-4 w-4" />
+            Voltar ao Painel
           </Button>
         </Link>
       </div>
@@ -211,7 +213,7 @@ function AdminFlaggedPage() {
                     variant="outline"
                     onClick={() => handleToggleExpand(report.id)}
                   >
-                    Ver detalhes
+                    Ver detalhes<Eye className="h-4 w-4" />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -341,8 +343,8 @@ function AdminFlaggedPage() {
                             }
                             disabled={moderating === report.id}
                           >
-                            <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
                             Aprovar
+                            <CheckCircle2 className="h-3.5 w-3.5" />
                           </Button>
                           <Button
                             size="sm"
@@ -353,8 +355,8 @@ function AdminFlaggedPage() {
                             }
                             disabled={moderating === report.id}
                           >
-                            <XCircle className="mr-1 h-3.5 w-3.5" />
                             Rejeitar
+                            <XCircle className="h-3.5 w-3.5" />
                           </Button>
                           <Button
                             size="sm"
@@ -363,8 +365,8 @@ function AdminFlaggedPage() {
                             onClick={() => handleDelete(report.id)}
                             disabled={moderating === report.id}
                           >
-                            <Trash2 className="h-3.5 w-3.5 mr-1" />
                             Excluir
+                            <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </div>
                       </div>

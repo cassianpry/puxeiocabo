@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, KeyRound } from "lucide-react";
 
 export const Route = createFileRoute("/auth/reset-password")({
   validateSearch: (search: Record<string, string>) => ({
@@ -158,7 +158,8 @@ function ResetPasswordPage() {
           )}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Redefinindo..." : "Redefinir senha"}
+            {isSubmitting ? "Redefinindo..." : "Redefinir senha"}{" "}
+            <KeyRound />
           </Button>
         </form>
       </div>

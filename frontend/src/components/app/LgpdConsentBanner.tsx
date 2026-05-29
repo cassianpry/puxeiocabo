@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { X, ShieldCheck, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const CONSENT_KEY = 'ga-consent'
@@ -41,13 +42,13 @@ export function LgpdConsentBanner() {
         </p>
         <div className="flex gap-2 shrink-0">
           <Button variant="outline" size="sm" onClick={refuse}>
-            Recusar
+            Recusar<X />
           </Button>
           <Button variant="outline" size="sm" onClick={acceptEssential}>
-            Apenas Essenciais
+            Apenas Essenciais<ShieldCheck />
           </Button>
           <Button size="sm" onClick={acceptFull}>
-            Aceitar Completo
+            Aceitar Completo<CheckCircle />
           </Button>
         </div>
       </div>

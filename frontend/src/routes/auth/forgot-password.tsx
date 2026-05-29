@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail } from "lucide-react";
+import { Mail, Send } from "lucide-react";
 
 export const Route = createFileRoute("/auth/forgot-password")({
   component: ForgotPasswordPage,
@@ -75,7 +75,8 @@ function ForgotPasswordPage() {
           </div>
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Enviando..." : "Enviar link"}
+            {isSubmitting ? "Enviando..." : "Enviar link"}{" "}
+            <Send />
           </Button>
         </form>
 

@@ -7,6 +7,7 @@ import {
   ShieldCheck,
   Eye,
   ArrowRight,
+  LogIn,
   Camera,
   Users,
   ScrollText,
@@ -138,14 +139,15 @@ function ComoUsarPage() {
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link to="/register">
-                <Button size="lg" className="gap-2 group">
+                <Button size="lg">
                   Começar agora{" "}
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  <ArrowRight />
                 </Button>
               </Link>
               <Link to="/">
                 <Button size="lg" variant="outline">
-                  Ver denúncias recentes
+                  Ver denúncias recentes{" "}
+                  <ArrowRight />
                 </Button>
               </Link>
             </div>
@@ -286,15 +288,16 @@ function ComoUsarPage() {
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link to="/register">
-              <Button size="lg" className="gap-2 group">
-                Criar conta{" "}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </Button>
+              <Button size="lg">
+                  Criar conta{" "}
+                  <ArrowRight />
+                </Button>
             </Link>
             <Link to="/login">
               <Button size="lg" variant="outline">
-                Já tenho conta
-              </Button>
+                  Já tenho conta{" "}
+                  <LogIn />
+                </Button>
             </Link>
           </div>
           <p className="mt-8 text-xs text-muted-foreground">

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Mail, Eye, EyeOff } from "lucide-react";
+import { Mail, Eye, EyeOff, LogIn } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
@@ -103,7 +103,8 @@ function LoginPage() {
           )}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Entrando..." : "Entrar"}
+            {isSubmitting ? "Entrando..." : "Entrar"}{" "}
+            <LogIn />
           </Button>
         </form>
 

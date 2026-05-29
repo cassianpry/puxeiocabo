@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { apiFormData } from '@/lib/api'
+import { Send } from 'lucide-react'
 import { trackEvent } from '@/hooks/useAnalytics'
 import type { Fighter } from '@/types/api'
 
@@ -94,7 +95,8 @@ function NewReportPage() {
         )}
 
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Enviando...' : 'Enviar denúncia'}
+          {isSubmitting ? 'Enviando...' : 'Enviar denúncia'}{' '}
+          <Send />
         </Button>
       </form>
     </div>

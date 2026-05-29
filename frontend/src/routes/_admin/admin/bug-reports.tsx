@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { AppPagination } from '@/components/app/Pagination'
+import { CheckCheck } from 'lucide-react'
 import { useState } from 'react'
 import type { PaginatedResponse } from '@/types/api'
 
@@ -140,6 +141,7 @@ function AdminBugReportsPage() {
                       disabled={resolveMutation.isPending}
                     >
                       {resolveMutation.isPending ? 'Resolvendo...' : 'Marcar como resolvido'}
+                      {!resolveMutation.isPending && <CheckCheck />}
                     </Button>
                   )}
                 </CardContent>
