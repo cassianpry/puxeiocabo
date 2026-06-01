@@ -18,6 +18,7 @@ program
   .description('Start or resume scraping')
   .option('-s, --start <page>', 'Start from page number', '1')
   .option('-e, --end <page>', 'End at page number (default: auto-detect)', '0')
+  .option('-k, --skip-existing', 'Skip pages that already exist on disk')
   .action(async (opts) => {
     const config = loadConfig();
     await ensureDataDir(config.dataDir);
@@ -25,6 +26,7 @@ program
     const scraper = new Sf6Scraper(config);
     const startPage = parseInt(opts.start, 10);
     let endPage = parseInt(opts.end, 10);
+    const skipExisting = opts.skipExisting || false;
 
     // Auto-detect total pages by fetching page 1
     if (endPage === 0) {
@@ -38,9 +40,13 @@ program
 
     console.log(`Scraping pages ${startPage} to ${endPage}`);
     console.log(`Concurrency: ${config.concurrency}, Delay: ${config.delayMs}ms`);
+    if (skipExisting) {
+      console.log('Skip-existing mode: pages already on disk will not be re-fetched');
+    }
 
     const limit = pLimit(config.concurrency);
     let completed = 0;
+    let skipped = 0;
     let failed = 0;
     const startTime = Date.now();
 
@@ -48,16 +54,22 @@ program
 
     for (let page = startPage; page <= endPage; page++) {
       tasks.push(limit(async () => {
+        if (skipExisting && await pageExists(config.dataDir, page)) {
+          skipped++;
+          return;
+        }
+
         try {
           const data = await scraper.fetchWithRetry(page, config.maxRetries);
           await savePage(config.dataDir, page, data);
           completed++;
 
-          if (completed % 100 === 0) {
+          if ((completed + skipped) % 100 === 0) {
             const elapsed = (Date.now() - startTime) / 1000;
+            const done = completed + skipped;
             const rate = completed / elapsed;
-            const remaining = endPage - startPage + 1 - completed;
-            const eta = remaining / rate;
+            const remaining = endPage - startPage + 1 - done;
+            const eta = remaining / Math.max(rate, 0.01);
             console.log(`Progress: ${completed}/${endPage} pages - ${rate.toFixed(1)} pages/s - ETA: ${Math.ceil(eta)}s`);
           }
         } catch (error) {
@@ -77,6 +89,7 @@ program
     const elapsed = (Date.now() - startTime) / 1000;
     console.log(`\nScraping complete!`);
     console.log(`  Fetched: ${completed}`);
+    console.log(`  Skipped: ${skipped}`);
     console.log(`  Failed: ${failed}`);
     console.log(`  Time: ${Math.floor(elapsed / 60)}m ${Math.floor(elapsed % 60)}s`);
   });

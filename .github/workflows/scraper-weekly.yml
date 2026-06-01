@@ -4,30 +4,124 @@ on:
   schedule:
     - cron: "0 0 * * 0"
   workflow_dispatch:
+    inputs:
+      start_page:
+        description: "Start page (leave empty for full weekly scrape)"
+        required: false
+        type: string
+      end_page:
+        description: "End page (leave empty for full weekly scrape)"
+        required: false
+        type: string
+      resume:
+        description: "Resume from last checkpoint (downloads previous artifacts)"
+        required: false
+        type: boolean
+        default: false
 
 defaults:
   run:
     working-directory: scraper
 
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  BUCKLER_ID: ${{ secrets.BUCKLER_ID }}
+  BUCKLER_R_ID: ${{ secrets.BUCKLER_R_ID }}
+  BUCKLER_PRAISE_DATE: ${{ secrets.BUCKLER_PRAISE_DATE }}
+
 jobs:
-  scrape-and-import:
+  scrape-range:
+    if: ${{ inputs.resume != 'true' && inputs.start_page != '' && inputs.end_page != '' }}
     runs-on: ubuntu-latest
-
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      BUCKLER_ID: ${{ secrets.BUCKLER_ID }}
-      BUCKLER_R_ID: ${{ secrets.BUCKLER_R_ID }}
-      BUCKLER_PRAISE_DATE: ${{ secrets.BUCKLER_PRAISE_DATE }}
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: "npm"
           cache-dependency-path: scraper/package-lock.json
-
       - run: npm ci
       - run: npx prisma generate
-      - run: npm run scrape-and-import
+      - run: npx tsx src/index.ts run --start ${{ inputs.start_page }} --end ${{ inputs.end_page }}
+      - run: npx tsx src/index.ts resume --failed
+      - run: npx tsx src/index.ts import
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pages
+          path: data/pages/
+
+  scrape-resume:
+    if: ${{ inputs.resume == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: scraper/package-lock.json
+      - run: npm ci
+      - run: npx prisma generate
+      - name: Download artifacts from latest failed run
+        run: |
+          LAST_RUN=$(gh run list --workflow scraper-weekly.yml --branch main --limit 1 --json databaseId --jq '.[0].databaseId')
+          if [ -n "$LAST_RUN" ] && [ "$LAST_RUN" != "null" ]; then
+            echo "Downloading artifacts from run #$LAST_RUN"
+            gh run download "$LAST_RUN" --dir "$(pwd)"
+          else
+            echo "No previous run found, starting fresh"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - run: npx tsx src/index.ts run --skip-existing
+      - run: npx tsx src/index.ts resume --failed
+      - run: npx tsx src/index.ts import
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pages
+          path: data/pages/
+
+  scrape-first-half:
+    if: ${{ inputs.resume != 'true' && (inputs.start_page == '' || inputs.end_page == '') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: scraper/package-lock.json
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npx tsx src/index.ts run --start 1 --end 9810
+      - run: npx tsx src/index.ts resume --failed
+      - run: npx tsx src/index.ts import
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pages
+          path: data/pages/
+
+  scrape-second-half:
+    needs: scrape-first-half
+    if: ${{ always() && needs.scrape-first-half.result == 'success' && inputs.resume != 'true' && (inputs.start_page == '' || inputs.end_page == '') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: scraper/package-lock.json
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npx tsx src/index.ts run --start 9811 --end 19620
+      - run: npx tsx src/index.ts resume --failed
+      - run: npx tsx src/index.ts import
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pages
+          path: data/pages/
