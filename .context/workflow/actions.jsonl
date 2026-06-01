@@ -18,3 +18,4 @@
 {"timestamp":"2026-05-28T16:02:06.533Z","tool":"workflow-advance","action":"workflow-advance","status":"success","details":{"params":{"force":true},"result":{"success":true,"message":"Advanced to Review phase","nextPhase":{"code":"R","name":"Review"}}}}
 {"timestamp":"2026-05-28T16:02:09.721Z","tool":"workflow-advance","action":"workflow-advance","status":"success","details":{"params":{"force":true},"result":{"success":true,"message":"Advanced to Execution phase","nextPhase":{"code":"E","name":"Execution"}}}}
 {"timestamp":"2026-05-28T18:28:20.241Z","tool":"explore","action":"read","status":"success","details":{"params":{"action":"read","filePath":"/run/media/cass/dev/Development/puxeiocabo/CONTEXT.md"},"result":{"success":true}}}
+{"timestamp":"2026-05-29T16:09:07.165Z","tool":"workflow-status","action":"workflow-status","status":"success","details":{"params":{},"result":{"success":true,"currentPhase":{"code":"E","name":"Execution"},"scale":"Medium"}}}

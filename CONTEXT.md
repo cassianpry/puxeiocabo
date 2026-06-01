@@ -34,6 +34,11 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
 - Saved each page as `data/pages/page_N.json`
 - Concurrency: 2 workers, 1s delay with jitter, 5 retries with exponential backoff
 - **Result:** 19,620 pages, 392,400 total entries, 112,379 unique fighters
+- **Import:** `scraper/src/db/index.ts` — reads all JSON pages from disk, deduplicates by short_id, batch upserts via Prisma (500 at a time in transactions) to shared Neon PostgreSQL
+- **DB Schema:** `scraper/prisma/schema.prisma` — Fighter-only model (shortId, fighterId, platformId, platformName, platformTool, circleName), mirrors backend's Fighter table
+- **CI/CD:** `.github/workflows/scraper-weekly.yml` — runs weekly (Sunday 00:00 UTC) via GitHub Actions; runs `npm run scrape-and-import` (scrape + import chained); supports `workflow_dispatch` for manual triggers; requires 4 secrets (`DATABASE_URL`, `BUCKLER_ID`, `BUCKLER_R_ID`, `BUCKLER_PRAISE_DATE`)
+- **Docker:** `scraper/Dockerfile` — standalone multi-stage image (unused, kept for reference; opted for GitHub Actions free tier over Render cron)
+- **Cookies:** Session cookies (`BUCKLER_ID`, `BUCKLER_R_ID`, `BUCKLER_PRAISE_DATE`) expire and require manual renewal; scraper has retry with exponential backoff for 405s
 
 ### Phase 2: Backend (NestJS + Prisma + PostgreSQL)
 - **Database:** PostgreSQL via Neon (originally SQLite, migrated per ADR 0002)
@@ -140,81 +145,120 @@ A project to scrape, store, and manage Street Fighter 6 ranking data from Capcom
        - `consentGivenAt` timestamp stored on Account
        - Account deletion endpoint + UI: clears email/hash/refreshToken/shortId, anonymizes reports (clears EXIF), keeps proof images
        - Data export endpoint + UI: JSON download with account info + fighter + reports
-       - "Privacidade" link in AppHeader (visible to all visitors)
-    - `.opencode/rules/shadcn-never-edit.mdc` — rule file covering shadcn/ui + TanStack routeTree.gen.ts
+    - "Privacidade" link in AppHeader (visible to all visitors)
+    - Changelog page (`/changelog`) — hardcoded commit history grouped by day (May 26-28, 2026), Card-based layout with Badge variants per type (feat/fix/docs/other), external links to GitHub commits. Not linked from header or footer.
+     - `.opencode/rules/shadcn-never-edit.mdc` — rule file covering shadcn/ui + TanStack routeTree.gen.ts
 
 ## Project Structure
 ```
 puxeiocabo/
+├── .github/
+│   └── workflows/
+│       └── scraper-weekly.yml  # Weekly cron + manual dispatch
 ├── scraper/                    # Phase 1: TypeScript scraper CLI
+│   ├── prisma/
+│   │   └── schema.prisma      # Fighter-only model (shared DB)
 │   ├── src/
 │   │   ├── config/            # Env loading, cookie management
 │   │   ├── scraper/           # HTTP client, retry logic
 │   │   ├── models/            # TypeScript interfaces
 │   │   ├── storage/           # JSON file I/O, dead letter queue
 │   │   ├── validator/         # Schema + integrity validation
-│   │   └── index.ts           # CLI entry (run, validate, resume)
+│   │   ├── db/                # Prisma import (batch upsert 500)
+│   │   └── index.ts           # CLI entry (run, validate, resume, import)
+│   ├── Dockerfile             # Standalone image (unused, kept for ref)
 │   ├── .env                   # Cookies + config
-│   └── package.json
+│   └── package.json           # @prisma/client, scripts (scrape-and-import)
 ├── data/
 │   └── pages/                 # page_1.json ... page_19620.json
 ├── backend/                    # Phase 2: NestJS API
 │   ├── prisma/
-│   │   ├── schema.prisma      # DB schema (Account, Fighter, Report)
-│   │   └── dev.db             # SQLite database
-│   ├── uploads/               # Proof images (JPEG only)
+│   │   ├── schema.prisma      # DB schema (Account, Fighter, Report, etc.)
+│   │   └── migrations/        # Prisma migrate versioning
 │   ├── scripts/
-│   │   └── import-fighters.ts # Data import script
+│   │   └── import-fighters.ts # Legacy import (pre-scraper-prisma)
 │   └── src/
 │       ├── prisma/            # Prisma service
-│       ├── emailjs/           # EmailJS module (global, transactional emails)
-│       │   ├── emailjs.module.ts
-│       │   └── emailjs.service.ts
-│       ├── auth/              # Auth module (JWT, refresh, roles, cookies, email flows)
-│       │   ├── dto.ts         # +ForgotPasswordDto, ResetPasswordDto, ChangeEmailDto, VerifyEmailChangeDto
+│       ├── emailjs/           # EmailJS module (transactional)
+│       ├── auth/              # Auth (JWT, refresh, roles, cookies, email)
+│       │   ├── dto.ts
 │       │   ├── auth.controller.ts
 │       │   └── auth.service.ts
 │       ├── fighter/           # Fighter module
 │       │   └── fighter.controller.ts
-│       ├── contact/           # Contact module (form + admin inquiries)
-│       │   ├── dto.ts         # ContactDto, BugReportDto
+│       ├── contact/           # Contact + bug reports
+│       │   ├── dto.ts
 │       │   ├── contact.controller.ts
 │       │   └── contact.service.ts
-│       ├── report/            # Report module + EXIF analysis
-│       │   ├── dto.ts         # CreateReportDto, UpdateReportDto, ReportResponseDto
+│       ├── report/            # Reports + EXIF analysis
+│       │   ├── dto.ts
 │       │   ├── exif-analysis.service.ts
 │       │   ├── report.controller.ts
 │       │   └── report.service.ts
+│       ├── supabase/          # Supabase Storage integration
 │       └── common/            # RolesGuard, @Roles decorator
 ├── frontend/                   # Phase 3: Vite + React SPA (pt-BR)
-│   ├── public/               # Static assets (logo.png, icons, SEO images)
-│   ├── .env                  # VITE_BACKEND_URL, VITE_GA_MEASUREMENT_ID
+│   ├── public/
+│   │   ├── logo.png           # App logo / favicon
+│   │   ├── favicon.svg
+│   │   ├── icons.svg
+│   │   ├── playerSearch.png   # SEO page illustrations
+│   │   ├── playerProof.png
+│   │   ├── descriptionReport.png
+│   │   └── moderationReview.png
+│   ├── .env                   # VITE_BACKEND_URL, VITE_GA_MEASUREMENT_ID
 │   └── src/
-│       ├── routes/            # TanStack Router file-based routes
-│       │   ├── __root.tsx
-│       │   ├── index.tsx
-│       │   ├── login.tsx
-│       │   ├── register.tsx
-│       │   ├── privacidade.tsx
-│       │   ├── contato.tsx
+│       ├── routes/
+│       │   ├── __root.tsx            # Root: AppHeader + AppFooter + LgpdConsentBanner + GA
+│       │   ├── index.tsx             # Homepage: report feed, search, pagination
+│       │   ├── login.tsx             # Login (redirects auth to /dashboard)
+│       │   ├── register.tsx          # Register (success: verify email)
+│       │   ├── privacidade.tsx       # Privacy Policy (static)
+│       │   ├── termos-de-servico.tsx # Terms of Service (static)
+│       │   ├── contato.tsx           # Contact form
+│       │   ├── bug-report.tsx        # Bug report form
+│       │   ├── como-usar.tsx         # SEO landing page
+│       │   ├── changelog.tsx         # Changelog (hardcoded commits)
 │       │   ├── auth/
 │       │   │   ├── forgot-password.tsx
 │       │   │   ├── reset-password.tsx
 │       │   │   └── verify-email.tsx
-│       │   ├── _auth.tsx
+│       │   ├── _auth.tsx                    # Auth layout + fighter link guard
 │       │   ├── _auth/
-│       │   ├── _admin.tsx
+│       │   │   ├── dashboard.tsx            # My reports + EditReportDialog
+│       │   │   ├── profile.tsx              # Change password/email, export, delete
+│       │   │   ├── fighters/
+│       │   │   │   ├── index.tsx            # Fighter search (3+ chars)
+│       │   │   │   └── $id.tsx             # Fighter detail + reports
+│       │   │   └── reports/
+│       │   │       ├── new.tsx              # Submit report (form + image upload)
+│       │   │       └── $id.tsx             # Report detail
+│       │   ├── _admin.tsx                   # Admin layout guard
 │       │   └── _admin/admin/
-│   │   ├── components/
-│   │   │   ├── ui/            # shadcn/ui (never edited)
-│   │   │   ├── app/           # Domain dumb components
-│   │   │   └── layout/        # AuthNav, AppHeader
-│   │   ├── hooks/             # Smart hooks (useAuth, useLogin, etc.)
-│   │   ├── lib/               # api.ts, queryClient.ts, utils.ts
-│   │   ├── styles/            # globals.css (dark theme tokens)
-│   │   └── types/             # API types (Fighter, Report, User)
-│   └── components.json        # shadcn/ui config
-└── CONTEXT.md
+│       │       ├── index.tsx                # Admin dashboard (stats cards)
+│       │       ├── flagged.tsx              # Flagged reports review (expandable)
+│       │       ├── bug-reports.tsx          # Bug reports (filter by status)
+│       │       └── contact.tsx              # Contact inquiries
+│       │   ├── components/
+│       │   │   ├── ui/            # shadcn/ui (never edited)
+│       │   │   ├── app/           # Domain components
+│       │   │   └── layout/        # AuthNav, AppHeader
+│       │   ├── hooks/             # useAuth, useLogin, etc.
+│       │   ├── lib/               # api.ts, queryClient.ts, utils.ts
+│       │   ├── styles/            # globals.css (dark theme tokens)
+│       │   └── types/             # API types
+├── docs/
+│   ├── adr/
+│   │   ├── 0001-lgpd-anonymization-strategy.md
+│   │   └── 0002-postgresql-supabase-storage-docker.md
+│   └── plans/                   # Design/plan docs (arcade, motion, admin)
+├── .context/                    # AI context (docs, agents, plans, skills, workflow)
+├── AGENTS.md                    # Agent instructions (test, build, PR discipline)
+├── CONTEXT.md                   # This file
+├── DESIGN.md                    # Design system (colors, typography, components)
+├── PRODUCT.md                   # Product definition & brand personality
+├── skills-lock.json             # Installed skills manifest
+└── render.yaml                  # Render web service config (Docker, env vars)
 ```
 
 ## Key Decisions
@@ -264,6 +308,17 @@ puxeiocabo/
 - **Contact flow:** Form submission at `POST /contact/send` saves to `ContactInquiry` table + notifies admin via EmailJS. Admin reviews at `GET /contact/inquiries` (JWT + Admin). No user authentication required for submission.
 - **Forgot-password security:** Always returns success regardless of whether the email exists (prevents email enumeration). Token created + email sent only if account found.
 
+- **Scraper DB import:** Uses Prisma directly in `scraper/` (dedicated `scraper/prisma/schema.prisma` with Fighter-only model) rather than moving scraper into backend or chaining separate scripts. Chosen for simplicity — scraper has own Prisma client, imports to same shared DB.
+- **Batch upsert:** 500 fighters per batch via Prisma `$transaction([...upserts])` (array of promises, NOT interactive `async (tx) =>`). Interactive transactions fail on Neon due to PgBouncer transaction pooling — they hold a session open across round-trips, which pooled connections don't support. Array-based `$transaction` sends all ops in one DB call and works on any pool mode.
+- **Scraper CI/CD:** GitHub Actions over Render cron (Render cron requires paid plan). Workflow split into 3 modes:
+  - **Weekly** (no inputs): 2 sequential jobs — pages 1-9810, then 9811-19620. Split point based on actual data: 0.7 pages/s * 6h = 15300 pages before timeout.
+  - **Range test** (`start_page` + `end_page`): single job scraping exact range.
+  - **Resume** (`resume: true`): downloads artifact from latest run, `run --skip-existing` fills gaps.
+  - Each job uploads `data/pages/` as artifact (`if: always()`). Resume uses `gh run download` to fetch latest artifact.
+- **Cookie renewal:** Manual — cookies expire and user must update secrets. Scraper already has retry with exponential backoff for 405 responses.
+- **Default branch:** Remote default branch is `main`. Workflow file at `.github/workflows/scraper-weekly.yml`.
+- **PostgreSQL backup:** Manual `pg_dump` via locally available tooling (no automated backup). Latest: `backup-2026-05-29.sql` (4.7MB, 112k lines).
+
 ## Key Infrastructure Changes
 
 ### Database: SQLite → Neon PostgreSQL
@@ -284,9 +339,21 @@ puxeiocabo/
 - **Dockerfile**: multi-stage (frontend build → backend build → runtime)
 - Backend serves built frontend as static assets when `NODE_ENV=production`
 - SPA catch-all (`backend/src/main.ts`): Express `app.use()` middleware with explicit API prefix exclusions. `/reports/new` and `/reports/:id` (numeric) served as SPA HTML via `Accept: text/html` check. `app.use()` was chosen over `app.get('*')` because newer path-to-regexp throws `PathError` on wildcard.
-- **`render.yaml`**: Web Service with Docker runtime, health check at `/api`
+- **`render.yaml`**: Web Service with Docker runtime (free plan, Ohio region), health check at `/api`. 13 env vars: `NODE_ENV`, `PORT`, `SUPABASE_BUCKET` (set in yaml) + 10 sync:false (set via dashboard): DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET, SUPABASE_URL, SUPABASE_SERVICE_KEY, EMAILJS_PUBLIC_KEY, EMAILJS_PRIVATE_KEY, EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_GENERIC, ADMIN_EMAIL, APP_URL
 - Local dev unchanged: `npm run dev` runs both backend + frontend via concurrently
-- Env vars set via Render dashboard (sync: false in render.yaml): DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET, SUPABASE_URL, SUPABASE_SERVICE_KEY, EMAILJS_*, etc.
+
+### CI/CD: GitHub Actions (scraper)
+- **Workflow**: `.github/workflows/scraper-weekly.yml` — 3 mutually exclusive modes:
+  - **Weekly** (schedule, no inputs): 2 sequential jobs — `scrape-first-half` (pages 1-9810), then `scrape-second-half` (9811-19620). Split point based on empirical rate 0.7 pages/s — each half ~3.9h, under the 6h job timeout. Second half only runs if first half succeeds.
+  - **Range test** (`workflow_dispatch` with `start_page` + `end_page`): single `scrape-range` job. Scrapes exact range. Also runs `resume --failed` + import + artifact upload.
+  - **Resume** (`workflow_dispatch` with `resume: true`): downloads artifact from latest successful run via `gh run download`, then `run --skip-existing` fills gaps.
+- **Schedule**: `0 0 * * 0` (Sunday 00:00 UTC)
+- **Steps per job**: checkout → setup-node (22, cache npm) → `npm ci` → `npx prisma generate` → `run` (with range flags or skip-existing) → `resume --failed` → `import` → upload artifact (`if: always()`)
+- **Working directory**: `scraper/`
+- **Secrets**: `DATABASE_URL`, `BUCKLER_ID`, `BUCKLER_R_ID`, `BUCKLER_PRAISE_DATE` — set via `gh secret set` CLI
+- **Imports**: Uses `prisma.$transaction([...upserts])` (array of promises, NOT interactive `async (tx) =>`). Neon's PgBouncer transaction pooling doesn't support interactive transactions — they hold a session open across round-trips.
+- **Scraper CLI**: `run` command supports `-k, --skip-existing` (skips pages already cached on disk) and `-s, --start` / `-e, --end` (range). `resume --failed` retries errored pages from page log. `import` parses cached pages and upserts fighters.
+- **Notes**: Relies on manual cookie renewal when they expire. Artifact uploads preserve progress between modes.
 
 ### Frontend API URL
 - `BACKEND_URL` default changed to `''` (same-origin in production)

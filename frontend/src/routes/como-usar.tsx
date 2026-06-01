@@ -11,24 +11,28 @@ import {
   Camera,
   Users,
   ScrollText,
+  UserPlus,
+  Link2,
+  Ban,
+  FileSearch,
 } from "lucide-react";
 
 export const Route = createFileRoute("/como-usar")({
   head: () => ({
     meta: [
       {
-        title: "Como usar o Puxei o Cabo — Denuncie rage-quitters no SF6",
+        title: "Como usar o Puxei o Cabo — Blocklist comunitária do SF6",
       },
       {
         name: "description",
         content:
-          "Denuncie rage-quitters do Street Fighter 6 e consulte a block list da comunidade. Busque um jogador, envie a prova em JPEG e veja quem já foi denunciado antes de aceitar uma revanche.",
+          "Blocklist unificada da comunidade brasileira de Street Fighter 6. Consulte rage-quitters antes de aceitar uma revanche, denuncie jogadores que desconectam e bloqueie no jogo pelo CFN.",
       },
       { property: "og:title", content: "Como usar o Puxei o Cabo" },
       {
         property: "og:description",
         content:
-          "Block list comunitária do SF6. Denuncie rage-quitters, veja o histórico de denúncias de qualquer jogador e proteja a comunidade brasileira de quem desconecta para não perder pontos.",
+          "Blocklist comunitária do SF6. Consulte antes de jogar, denuncie rage-quitters e bloqueie no jogo. Proteja a comunidade brasileira de quem desconecta para não perder pontos.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -43,34 +47,76 @@ export const Route = createFileRoute("/como-usar")({
   component: ComoUsarPage,
 });
 
-const steps = [
+const ecosystemActs = [
   {
     icon: Search,
-    image: "/playerSearch.png",
-    title: "Busque o jogador",
+    title: "Consulte",
     description:
-      'Pesquise pelo nome ou código de usuário do oponente que desconectou. O sistema consulta o ranking oficial da Capcom e retorna o perfil do lutador. O código de usuário único garante que não haja confusão entre jogadores com nomes parecidos.',
+      "Antes de aceitar uma revanche, pesquise o nome ou código de usuário do oponente no site. Se ele tiver denúncias confirmadas, não aceite a luta. A consulta é pública e não requer cadastro.",
   },
   {
     icon: Upload,
-    image: "/playerProof.png",
-    title: "Envie a prova",
+    title: "Denuncie",
     description:
-      "Faça upload do print da tela de desconexão. Só JPEG é aceito — isso faz parte da verificação de autenticidade. A imagem passa por análise EXIF automaticamente para detectar falsificações.",
+      "Caiu com um rage-quitter? Registre-se, vincule seu lutador e envie a prova em JPEG. Sua denúncia passará por moderação e, se aprovada, aparecerá no site para que todos vejam.",
+  },
+  {
+    icon: Ban,
+    title: "Bloqueie",
+    description:
+      "Com o código de usuário ou o nome do jogador denunciado, vá no SF6 → CFN → Buscar Jogador → Bloqueie. A blocklist do site vira sua blocklist pessoal no jogo.",
+  },
+];
+
+const consultSteps = [
+  {
+    icon: FileSearch,
+    title: "Veja as denúncias recentes",
+    description:
+      "Na página inicial do site você encontra as denúncias mais recentes aprovadas pela moderação. Use a busca para filtrar por nome ou código de usuário.",
+  },
+  {
+    icon: Search,
+    title: "Pesquise um jogador",
+    description:
+      "Digite o nome ou o código de usuário do oponente. O sistema consulta o banco de dados oficial da Capcom e retorna o perfil do lutador com o histórico completo de denúncias.",
+  },
+  {
+    icon: Eye,
+    title: "Consulte o histórico",
+    description:
+      "Veja todas as denúncias aprovadas contra aquele jogador. Se houver registos confirmados de rage-quit, recuse a revanche e bloqueie o jogador no CFN.",
+  },
+];
+
+const reportSteps = [
+  {
+    icon: UserPlus,
+    image: "/playerSearch.png",
+    title: "Crie sua conta",
+    description:
+      "Registre-se com seu email e uma senha. Verifique seu email para ativar a conta. É rápido, gratuito e não pedimos informações pessoais além do necessário para a LGPD.",
+  },
+  {
+    icon: Link2,
+    image: "/playerProof.png",
+    title: "Vincule seu lutador",
+    description:
+      "Busque seu shortId (código de usuário) no banco de dados oficial da Capcom e vincule à sua conta. Isso garante que cada denúncia venha de um jogador real do SF6.",
+  },
+  {
+    icon: Upload,
+    image: "/descriptionReport.png",
+    title: "Envie a denúncia",
+    description:
+      "Busque o rage-quitter pelo nome ou shortId, escreva um comentário com os detalhes da partida e anexe o print em JPEG. O print precisa mostrar seu nome, o nome do oponente e a mensagem de desconexão.",
   },
   {
     icon: ClipboardCheck,
-    image: "/descriptionReport.png",
-    title: "Descreva o ocorrido",
-    description:
-      "Adicione um comentário com detalhes da partida: horário, plataforma (PC, PS5, Xbox) e qualquer contexto que ajude a moderação. Seu relato é a peça principal da denúncia.",
-  },
-  {
-    icon: ShieldCheck,
     image: "/moderationReview.png",
-    title: "Acompanhe a moderação",
+    title: "Acompanhe",
     description:
-      "Sua denúncia entra na fila de revisão. Um administrador analisa o caso — a prova, os metadados EXIF e seu relato — e decide: aprovada, rejeitada ou sinalizada pela IA. Você recebe o status e, se rejeitada, o motivo.",
+      "A denúncia entra na fila de moderação. Você acompanha o status pelo painel: pendente, aprovada ou rejeitada. Se rejeitada, veja o motivo, edite e reenvie.",
   },
 ];
 
@@ -85,13 +131,13 @@ const moderationStages = [
     icon: Users,
     title: "Revisão humana",
     description:
-      "Um administrador analisa cada denúncia sinalizada: confere a imagem, o comentário, os metadados EXIF e o histórico do jogador denunciado. O veredito pode ser aprovado, rejeitado (com motivo) ou sinalizado pela IA para atenção extra.",
+      "Um administrador analisa cada denúncia sinalizada: confere a imagem, o comentário, os metadados EXIF e o histórico do jogador denunciado. Só denúncias com provas reais entram na blocklist.",
   },
   {
     icon: ScrollText,
     title: "Status da denúncia",
     description:
-      "Pendente: aguardando revisão. Aprovada: confirmada e visível na página inicial. Rejeitada: você recebe o motivo e pode editar e reenviar a denúncia com novas informações. Cada status é comunicado com clareza.",
+      "Pendente: aguardando revisão. Aprovada: confirmada e visível para todos no site. Rejeitada: você recebe o motivo e pode editar e reenviar. Cada status é comunicado com clareza.",
   },
 ];
 
@@ -125,7 +171,7 @@ function ComoUsarPage() {
         <div className="relative grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           <div>
             <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-6">
-              Denuncie com confiança
+              Blocklist comunitária do SF6
             </p>
             <h1 className="text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight">
               Puxei
@@ -133,9 +179,9 @@ function ComoUsarPage() {
             </h1>
             <div className="mt-4 h-1 w-24 bg-arcade-blue rounded-full" />
             <p className="mt-8 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
-            A block list da comunidade brasileira de Street Fighter 6.
-            Denuncie rage-quitters, consulte o histórico de qualquer jogador
-            e saiba com quem você está aceitando jogar antes da partida começar.
+              A blocklist unificada da comunidade brasileira de Street Fighter 6.
+              Consulte rage-quitters antes de aceitar uma revanche,
+              denuncie quem desconecta e bloqueie no jogo pelo CFN.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link to="/register">
@@ -163,17 +209,84 @@ function ComoUsarPage() {
       </section>
 
       <section className="py-20 md:py-28">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl mb-16">
+          <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
+            Ecossistema
+          </p>
+          <h2 className="text-3xl md:text-5xl leading-tight">Como funciona</h2>
+          <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+            Consulte, denuncie, bloqueie. Três passos para uma comunidade mais justa.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {ecosystemActs.map((act, index) => (
+            <div
+              key={act.title}
+              className="rounded-xl border border-arcade-blue/10 bg-arcade-blue/[0.02] p-8"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <span className="text-4xl font-bold text-arcade-blue/20 leading-none">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="h-px flex-1 bg-arcade-blue/20" />
+              </div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-arcade-blue/10 mb-5">
+                <act.icon className="h-6 w-6 text-arcade-blue" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">{act.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {act.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="py-20 md:py-28">
+        <div className="max-w-2xl mb-16">
+          <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
+            Para jogadores
+          </p>
+          <h2 className="text-3xl md:text-5xl leading-tight">
+            Consultar antes de jogar
+          </h2>
+          <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+            Descubra se o oponente já foi denunciado antes de aceitar a revanche.
+            Não precisa de cadastro.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {consultSteps.map((step) => (
+            <div
+              key={step.title}
+              className="group rounded-xl border border-arcade-blue/10 bg-arcade-blue/[0.02] p-8 transition-all duration-150 hover:border-arcade-blue/30 hover:shadow-[0_0_24px_oklch(0.60_0.22_235_/_0.08)]"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-arcade-blue/10 mb-5 group-hover:bg-arcade-blue/15 transition-colors duration-150">
+                <step.icon className="h-6 w-6 text-arcade-blue" />
+              </div>
+              <h3 className="text-base font-semibold mb-2">{step.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {step.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="py-20 md:py-28">
+        <div className="max-w-2xl mb-16">
           <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
             Passo a passo
           </p>
-          <h2 className="text-3xl md:text-5xl leading-tight">Como denunciar</h2>
+          <h2 className="text-3xl md:text-5xl leading-tight">
+            Contribuir com a blocklist
+          </h2>
           <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-            Quatro passos. Leva menos de dois minutos.
+            Quatro passos. Sua denúncia ajuda a comunidade inteira.
           </p>
         </div>
         <div className="mt-16 md:mt-20 grid gap-16 md:gap-20">
-          {steps.map((step, index) => (
+          {reportSteps.map((step, index) => (
             <div
               key={step.title}
               className="grid md:grid-cols-2 gap-8 md:gap-16 items-start"
@@ -217,8 +330,8 @@ function ComoUsarPage() {
               Depois da denúncia
             </h2>
             <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-              Toda denúncia passa por duas camadas de verificação antes de ser
-              aprovada.
+              Toda denúncia passa por duas camadas de verificação antes de entrar
+              na blocklist.
             </p>
           </div>
           <div className="space-y-8">
@@ -250,7 +363,7 @@ function ComoUsarPage() {
             Credibilidade
           </p>
           <h2 className="text-3xl md:text-5xl leading-tight">
-            Por que confiar
+            Por que confiar na blocklist
           </h2>
           <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
             O Puxei o Cabo é uma ferramenta da comunidade, não uma empresa. Sem
@@ -279,12 +392,11 @@ function ComoUsarPage() {
         <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-arcade-blue/5 blur-[100px]" />
         <div className="relative max-w-xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl leading-tight">
-            Pronto para denunciar?
+            Faça parte da blocklist
           </h2>
           <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-            Crie sua conta em segundos. É gratis, não pedimos seu CPF nem seu
-            email verdadeiro. Só um email válido e o código de usuário do seu lutador na
-            Capcom.
+            Quanto mais denúncias, mais completa fica a lista para todo mundo.
+            Crie sua conta em segundos. Só um email válido para criar sua conta.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link to="/register">
@@ -301,7 +413,7 @@ function ComoUsarPage() {
             </Link>
           </div>
           <p className="mt-8 text-xs text-muted-foreground">
-            Perguntas? Dúvidas? A comunidade responde.
+            Consulte, denuncie, bloqueie. A comunidade agradece.
           </p>
         </div>
       </section>
