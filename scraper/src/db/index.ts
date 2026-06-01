@@ -79,29 +79,28 @@ export async function importFighters(config: Config): Promise<void> {
       const batch = fighters.slice(i, i + BATCH_SIZE);
 
       try {
-        await prisma.$transaction(async (tx) => {
-          for (const f of batch) {
-            await tx.fighter.upsert({
-              where: { shortId: f.shortId },
-              update: {
-                fighterId: f.fighterId,
-                platformId: f.platformId,
-                platformName: f.platformName,
-                platformTool: f.platformTool,
-                circleName: f.circleName,
-              },
-              create: {
-                shortId: f.shortId,
-                fighterId: f.fighterId,
-                platformId: f.platformId,
-                platformName: f.platformName,
-                platformTool: f.platformTool,
-                circleName: f.circleName,
-              },
-            });
-          }
-        });
+        const upserts = batch.map(f =>
+          prisma.fighter.upsert({
+            where: { shortId: f.shortId },
+            update: {
+              fighterId: f.fighterId,
+              platformId: f.platformId,
+              platformName: f.platformName,
+              platformTool: f.platformTool,
+              circleName: f.circleName,
+            },
+            create: {
+              shortId: f.shortId,
+              fighterId: f.fighterId,
+              platformId: f.platformId,
+              platformName: f.platformName,
+              platformTool: f.platformTool,
+              circleName: f.circleName,
+            },
+          })
+        );
 
+        await prisma.$transaction(upserts);
         imported += batch.length;
       } catch (err) {
         console.error(`Batch error at offset ${i}:`, (err as Error).message);
