@@ -41,6 +41,7 @@ backend/uploads/*
 backend/*.sqlite
 backend/*.sqlite-journal
 backend/*.db
+*.sql
 
 # Prisma
 backend/prisma/migrations/
@@ -62,3 +63,6 @@ data/pages/
 *.pid
 *.seed
 *.pid.lock
+
+# Agents
+.agents/
