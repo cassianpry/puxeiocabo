@@ -5,6 +5,8 @@ export interface TourStep {
   title: string
   description: string
   sectionId: string
+  position?: 'left' | 'right'
+  offsetTop?: string
 }
 
 interface TourGuideProps {
@@ -81,7 +83,8 @@ export function TourGuide({ steps, onComplete, onSkip }: TourGuideProps) {
   const isFirstStep = currentStep === 0
 
   return (
-    <div className="fixed right-8 top-1/2 -translate-y-1/2 -mt-[50px] z-50 w-full max-w-sm">
+    <div className={`fixed top-1/2 -translate-y-1/2 z-50 w-full max-w-sm ${steps[currentStep]?.position === 'left' ? 'left-8' : 'right-8'}`}
+      style={{ marginTop: steps[currentStep]?.offsetTop ?? '-50px' }}>
       <div className="bg-card border-t-2 border-t-arcade-blue rounded-xl shadow-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">

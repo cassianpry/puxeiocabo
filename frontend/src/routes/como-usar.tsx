@@ -177,7 +177,7 @@ const tourSteps = [
     sectionId: "tour-hero",
   },
   {
-    title: "Consulte",
+    title: "Como funciona",
     description:
       "Antes de aceitar uma revanche, pesquise o nome ou código de usuário do oponente no site. A consulta é pública e não requer cadastro.",
     sectionId: "tour-ecosystem",
@@ -193,18 +193,59 @@ const tourSteps = [
     description:
       "Com o código de usuário ou nome do jogador denunciado, vá no SF6 → CFN → Buscar Jogador → Bloqueie. A blocklist do site vira sua blocklist pessoal no jogo.",
     sectionId: "tour-ecosystem",
+    position: "left",
   },
   {
     title: "Pesquise antes de jogar",
     description:
       "Na página inicial, busque pelo nome ou código de usuário do oponente. Veja o histórico de denúncias aprovadas e decida se aceita a revanche. Não precisa de cadastro.",
     sectionId: "tour-consult",
+    offsetTop: "-200px",
   },
   {
-    title: "Contribua com a blocklist",
+    title: "01 — Crie sua conta",
     description:
-      "No painel, clique em 'Nova Denúncia', busque o rage-quitter pelo código de usuário, anexe o print JPEG mostrando a desconexão e envie. Sua denúncia ajuda a comunidade inteira.",
-    sectionId: "tour-report",
+      "Registre-se com seu email e uma senha. Verifique seu email para ativar a conta. É rápido, gratuito e não pedimos informações pessoais além do necessário para a LGPD.",
+    sectionId: "tour-report-1",
+  },
+  {
+    title: "02 — Vincule seu lutador",
+    description:
+      "Busque seu shortId (código de usuário) no banco de dados oficial da Capcom e vincule à sua conta. Isso garante que cada denúncia venha de um jogador real do SF6.",
+    sectionId: "tour-report-2",
+  },
+  {
+    title: "03 — Envie a denúncia",
+    description:
+      "Busque o rage-quitter pelo nome ou shortId, escreva um comentário com os detalhes da partida e anexe o print em JPEG. O print precisa mostrar seu nome, o nome do oponente e a mensagem de desconexão.",
+    sectionId: "tour-report-3",
+  },
+  {
+    title: "04 — Acompanhe",
+    description:
+      "A denúncia entra na fila de moderação. Você acompanha o status pelo painel: pendente, aprovada ou rejeitada. Se rejeitada, veja o motivo, edite e reenvie.",
+    sectionId: "tour-report-4",
+  },
+  {
+    title: "Depois da denúncia",
+    description:
+      "Toda denúncia passa por duas camadas de verificação: análise automática de metadados e revisão humana. Você acompanha cada status pelo painel.",
+    sectionId: "tour-moderation",
+    position: "left",
+    offsetTop: "100px",
+  },
+  {
+    title: "Por que confiar na blocklist",
+    description:
+      "Denúncias aprovadas são públicas para todos. Análise EXIF impede prints falsos. A base de jogadores vem dos dados oficiais da Capcom.",
+    sectionId: "tour-trust",
+    offsetTop: "-200px",
+  },
+  {
+    title: "Faça parte da blocklist",
+    description:
+      "Crie sua conta em segundos. Só um email válido é necessário. Quanto mais denúncias, mais completa fica a lista para todo mundo.",
+    sectionId: "tour-cta",
   },
 ]
 
@@ -359,6 +400,7 @@ function ComoUsarPage() {
           {reportSteps.map((step, index) => (
             <div
               key={step.title}
+              id={`tour-report-${index + 1}`}
               className="grid md:grid-cols-2 gap-8 md:gap-16 items-start"
             >
               <div className={index % 2 === 1 ? "md:order-2" : ""}>
@@ -390,7 +432,7 @@ function ComoUsarPage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-28">
+      <section id="tour-moderation" className="py-20 md:py-28">
         <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
           <div className="md:sticky md:top-32">
             <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
@@ -427,7 +469,7 @@ function ComoUsarPage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-28">
+      <section id="tour-trust" className="py-20 md:py-28">
         <div className="max-w-2xl mb-16">
           <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
             Credibilidade
@@ -458,7 +500,7 @@ function ComoUsarPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden rounded-2xl border border-arcade-blue/10 bg-gradient-to-br from-arcade-blue/[0.03] to-transparent py-16 md:py-20 px-8 mt-12">
+      <section id="tour-cta" className="relative overflow-hidden rounded-2xl border border-arcade-blue/10 bg-gradient-to-br from-arcade-blue/[0.03] to-transparent py-16 md:py-20 px-8 mt-12">
         <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-arcade-blue/5 blur-[100px]" />
         <div className="relative max-w-xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl leading-tight">

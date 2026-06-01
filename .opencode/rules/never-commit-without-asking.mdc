@@ -1,0 +1,11 @@
+---
+description: Never commit or push without asking the user first
+---
+
+# Never commit or push without asking
+
+**Always ask before staging, committing, or pushing to any branch.**
+
+- Do not run `git add`, `git commit`, or `git push` without explicit user confirmation.
+- If the user's task logically ends with committing (e.g., "fix this bug", "implement feature X"), present the changes and ask "Should I commit and push this?"
+- The one exception: `.context/` scaffolding files may be committed during workflow setup since they are internal to the agent workflow.
