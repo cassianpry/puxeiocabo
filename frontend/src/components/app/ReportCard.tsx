@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import {
   Card,
   CardContent,
@@ -30,13 +31,17 @@ export function ReportCard({ report, index }: ReportCardProps) {
   }
 
   return (
-    <Card
-      className={`group overflow-hidden p-0 gap-0 transition-shadow duration-150 hover:ring-1 hover:ring-foreground/10${index !== undefined ? " card-enter" : ""}`}
-      style={
-        index !== undefined ? { animationDelay: `${index * 60}ms` } : undefined
-      }
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 200, damping: 22 }}
     >
-      <Dialog>
+      <Card
+        className={`group overflow-hidden p-0 gap-0 transition-shadow duration-150 hover:ring-1 hover:ring-foreground/10${index !== undefined ? " card-enter" : ""}`}
+        style={
+          index !== undefined ? { animationDelay: `${index * 60}ms` } : undefined
+        }
+      >
+        <Dialog>
         <DialogTrigger asChild>
           <div className="relative cursor-pointer overflow-hidden">
             <img
@@ -106,5 +111,6 @@ export function ReportCard({ report, index }: ReportCardProps) {
         </span>
       </CardFooter>
     </Card>
+    </motion.div>
   );
 }

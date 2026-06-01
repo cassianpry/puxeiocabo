@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 
 export interface TourStep {
@@ -83,52 +84,65 @@ export function TourGuide({ steps, onComplete, onSkip }: TourGuideProps) {
   const isFirstStep = currentStep === 0
 
   return (
-    <div className={`fixed top-1/2 -translate-y-1/2 z-50 w-full max-w-sm ${steps[currentStep]?.position === 'left' ? 'left-8' : 'right-8'}`}
-      style={{ marginTop: steps[currentStep]?.offsetTop ?? '-50px' }}>
-      <div className="bg-card border-t-2 border-t-arcade-blue rounded-xl shadow-xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            {steps.map((_, i) => (
-              <div
-                key={i}
-                className={`h-2 w-2 rounded-full transition-colors ${
-                  i <= currentStep ? 'bg-arcade-blue' : 'bg-muted-foreground/30'
-                }`}
-              />
-            ))}
+    <motion.div
+      layout
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      className="fixed z-50"
+      style={{
+        top: '50%',
+        left: steps[currentStep]?.position === 'left' ? '2rem' : undefined,
+        right: steps[currentStep]?.position === 'left' ? undefined : '2rem',
+      }}
+    >
+      <div
+        className="-translate-y-1/2 w-full max-w-sm"
+        style={{ marginTop: steps[currentStep]?.offsetTop ?? '-50px' }}
+      >
+        <div className="bg-card border-t-2 border-t-arcade-blue rounded-xl shadow-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              {steps.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-2 w-2 rounded-full transition-colors ${
+                    i <= currentStep ? 'bg-arcade-blue' : 'bg-muted-foreground/30'
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-xs text-muted-foreground">
+                Passo {currentStep + 1} de {steps.length}
+              </span>
+              <button
+                onClick={onSkip}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+              >
+                Pular
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-xs text-muted-foreground">
-              Passo {currentStep + 1} de {steps.length}
-            </span>
-            <button
-              onClick={onSkip}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+
+          <h3 className="text-base font-semibold mb-1">{steps[currentStep].title}</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {steps[currentStep].description}
+          </p>
+
+          <div className="flex items-center justify-between mt-6">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrev}
+              disabled={isFirstStep}
             >
-              Pular
-            </button>
+              ← Anterior
+            </Button>
+            <Button size="sm" onClick={handleNext}>
+              {isLastStep ? 'Finalizar →' : 'Próximo →'}
+            </Button>
           </div>
-        </div>
-
-        <h3 className="text-base font-semibold mb-1">{steps[currentStep].title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {steps[currentStep].description}
-        </p>
-
-        <div className="flex items-center justify-between mt-6">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrev}
-            disabled={isFirstStep}
-          >
-            ← Anterior
-          </Button>
-          <Button size="sm" onClick={handleNext}>
-            {isLastStep ? 'Finalizar →' : 'Próximo →'}
-          </Button>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

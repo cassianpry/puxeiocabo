@@ -5,6 +5,7 @@ import { Search, X } from "lucide-react";
 import type { Report, PaginatedResponse } from "@/types/api";
 import { ReportCard } from "@/components/app/ReportCard";
 import { AppPagination } from "@/components/app/Pagination";
+import { Reveal } from "@/components/app/Reveal";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -56,33 +57,39 @@ function HomePage() {
         <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-arcade-blue/5 blur-[120px]" />
         <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-arcade-blue/5 blur-[120px]" />
         <div className="relative grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-          <div>
-            <div className="mt-4 h-1 w-24 bg-arcade-blue rounded-full" />
-            <h1 className="text-3xl md:text-4xl font-bold mt-8 leading-tight">
-              Saiba quem são os rage-quitters do SF6
-            </h1>
-            <p className="mt-4 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
-              O Puxei o Cabo é uma blocklist colaborativa da comunidade
-              brasileira. Pesquise jogadores, veja denúncias confirmadas e
-              mantenha sua blocklist no jogo atualizada contra quem desconecta.
-            </p>
-          </div>
-          <div className="hidden md:flex items-center justify-center">
-            <img
-              src="/logo.png"
-              alt="Puxei o Cabo"
-              className="w-full max-w-xl h-auto opacity-80 hover:opacity-100 transition-opacity duration-150"
-            />
-          </div>
+          <Reveal>
+            <div>
+              <div className="mt-4 h-1 w-24 bg-arcade-blue rounded-full" />
+              <h1 className="text-3xl md:text-4xl font-bold mt-8 leading-tight">
+                Saiba quem são os rage-quitters do SF6
+              </h1>
+              <p className="mt-4 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
+                O Puxei o Cabo é uma blocklist colaborativa da comunidade
+                brasileira. Pesquise jogadores, veja denúncias confirmadas e
+                mantenha sua blocklist no jogo atualizada contra quem desconecta.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal direction="right" delay={0.1}>
+            <div className="hidden md:flex items-center justify-center">
+              <img
+                src="/logo.png"
+                alt="Puxei o Cabo"
+                className="w-full max-w-xl h-auto opacity-80 hover:opacity-100 transition-opacity duration-150"
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
       <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Denúncias Recentes</h2>
-          <span className="text-sm text-muted-foreground">
-            {total} no total
-          </span>
-        </div>
+        <Reveal>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Denúncias Recentes</h2>
+            <span className="text-sm text-muted-foreground">
+              {total} no total
+            </span>
+          </div>
+        </Reveal>
 
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 w-full sm:max-w-xs">
@@ -137,7 +144,9 @@ function HomePage() {
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {reports.map((report, index) => (
-              <ReportCard key={report.id} report={report} index={index} />
+              <Reveal key={report.id} delay={index * 0.05}>
+                <ReportCard report={report} index={index} />
+              </Reveal>
             ))}
           </div>
         )}

@@ -1,6 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/useAuth";
-import { TourGuide } from "@/components/app/TourGuide";
+import { motion } from "framer-motion";
+import { TourGuide, type TourStep } from "@/components/app/TourGuide";
+import { Reveal } from "@/components/app/Reveal";
 import { Button } from "@/components/ui/button";
 import {
   Search,
@@ -169,7 +171,7 @@ const trustPoints = [
   },
 ];
 
-const tourSteps = [
+const tourSteps: TourStep[] = [
   {
     title: "Bem-vindo à blocklist",
     description:
@@ -280,98 +282,108 @@ function ComoUsarPage() {
         <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-arcade-blue/5 blur-[120px]" />
         <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-arcade-blue/5 blur-[120px]" />
         <div className="relative grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-          <div>
-            <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-6">
-              Blocklist comunitária do SF6
-            </p>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight">
-              Puxei
-              <br />o Cabo
-            </h1>
-            <div className="mt-4 h-1 w-24 bg-arcade-blue rounded-full" />
-            <p className="mt-8 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
-              A blocklist unificada da comunidade brasileira de Street Fighter 6.
-              Consulte rage-quitters antes de aceitar uma revanche,
-              denuncie quem desconecta e bloqueie no jogo pelo CFN.
-            </p>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link to="/register">
-                <Button size="lg">
-                  Começar agora{" "}
-                  <ArrowRight />
-                </Button>
-              </Link>
-              <Link to="/">
-                <Button size="lg" variant="outline">
-                  Ver denúncias recentes{" "}
-                  <ArrowRight />
-                </Button>
-              </Link>
+          <Reveal>
+            <div>
+              <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-6">
+                Blocklist comunitária do SF6
+              </p>
+              <h1 className="text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight">
+                Puxei
+                <br />o Cabo
+              </h1>
+              <div className="mt-4 h-1 w-24 bg-arcade-blue rounded-full" />
+              <p className="mt-8 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
+                A blocklist unificada da comunidade brasileira de Street Fighter 6.
+                Consulte rage-quitters antes de aceitar uma revanche,
+                denuncie quem desconecta e bloqueie no jogo pelo CFN.
+              </p>
+              <div className="mt-10 flex flex-wrap gap-4">
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <Link to="/register">
+                    <Button size="lg">
+                      Começar agora{" "}
+                      <ArrowRight />
+                    </Button>
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <Link to="/">
+                    <Button size="lg" variant="outline">
+                      Ver denúncias recentes{" "}
+                      <ArrowRight />
+                    </Button>
+                  </Link>
+                </motion.div>
+              </div>
             </div>
-          </div>
-          <div className="hidden md:flex items-center justify-center">
-            <img
-              src="/logo.png"
-              alt="Puxei o Cabo"
-              className="w-full max-w-xl h-auto opacity-80 hover:opacity-100 transition-opacity duration-150"
-            />
-          </div>
+          </Reveal>
+          <Reveal direction="right" delay={0.1}>
+            <div className="hidden md:flex items-center justify-center">
+              <img
+                src="/logo.png"
+                alt="Puxei o Cabo"
+                className="w-full max-w-xl h-auto opacity-80 hover:opacity-100 transition-opacity duration-150"
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
 
       <section id="tour-ecosystem" className="py-20 md:py-28">
-        <div className="max-w-2xl mb-16">
-          <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
-            Ecossistema
-          </p>
-          <h2 className="text-3xl md:text-5xl leading-tight">Como funciona</h2>
-          <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-            Consulte, denuncie, bloqueie. Três passos para uma comunidade mais justa.
-          </p>
-        </div>
+        <Reveal>
+          <div className="max-w-2xl mb-16">
+            <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
+              Ecossistema
+            </p>
+            <h2 className="text-3xl md:text-5xl leading-tight">Como funciona</h2>
+            <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+              Consulte, denuncie, bloqueie. Três passos para uma comunidade mais justa.
+            </p>
+          </div>
+        </Reveal>
         <div className="grid md:grid-cols-3 gap-6">
           {ecosystemActs.map((act, index) => (
-            <div
-              key={act.title}
-              className="rounded-xl border border-arcade-blue/10 bg-arcade-blue/[0.02] p-8"
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <span className="text-4xl font-bold text-arcade-blue/20 leading-none">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="h-px flex-1 bg-arcade-blue/20" />
+            <Reveal key={act.title} delay={index * 0.1}>
+              <div className="rounded-xl border border-arcade-blue/10 bg-arcade-blue/[0.02] p-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-4xl font-bold text-arcade-blue/20 leading-none">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="h-px flex-1 bg-arcade-blue/20" />
+                </div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-arcade-blue/10 mb-5">
+                  <act.icon className="h-6 w-6 text-arcade-blue" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{act.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {act.description}
+                </p>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-arcade-blue/10 mb-5">
-                <act.icon className="h-6 w-6 text-arcade-blue" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">{act.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {act.description}
-              </p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       <section id="tour-consult" className="py-20 md:py-28">
-        <div className="max-w-2xl mb-16">
-          <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
-            Para jogadores
-          </p>
-          <h2 className="text-3xl md:text-5xl leading-tight">
-            Consultar antes de jogar
-          </h2>
-          <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-            Descubra se o oponente já foi denunciado antes de aceitar a revanche.
-            Não precisa de cadastro.
-          </p>
-        </div>
+        <Reveal>
+          <div className="max-w-2xl mb-16">
+            <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
+              Para jogadores
+            </p>
+            <h2 className="text-3xl md:text-5xl leading-tight">
+              Consultar antes de jogar
+            </h2>
+            <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+              Descubra se o oponente já foi denunciado antes de aceitar a revanche.
+              Não precisa de cadastro.
+            </p>
+          </div>
+        </Reveal>
         <div className="grid md:grid-cols-3 gap-6">
-          {consultSteps.map((step) => (
-            <div
-              key={step.title}
-              className="group rounded-xl border border-arcade-blue/10 bg-arcade-blue/[0.02] p-8 transition-all duration-150 hover:border-arcade-blue/30 hover:shadow-[0_0_24px_oklch(0.60_0.22_235_/_0.08)]"
-            >
+          {consultSteps.map((step, index) => (
+            <Reveal key={step.title} delay={index * 0.1}>
+              <div className="group rounded-xl border border-arcade-blue/10 bg-arcade-blue/[0.02] p-8 transition-all duration-150 hover:border-arcade-blue/30 hover:shadow-[0_0_24px_oklch(0.60_0.22_235_/_0.08)]"
+              >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-arcade-blue/10 mb-5 group-hover:bg-arcade-blue/15 transition-colors duration-150">
                 <step.icon className="h-6 w-6 text-arcade-blue" />
               </div>
@@ -380,29 +392,35 @@ function ComoUsarPage() {
                 {step.description}
               </p>
             </div>
+          </Reveal>
           ))}
         </div>
       </section>
 
       <section id="tour-report" className="py-20 md:py-28">
-        <div className="max-w-2xl mb-16">
-          <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
-            Passo a passo
-          </p>
-          <h2 className="text-3xl md:text-5xl leading-tight">
-            Contribuir com a blocklist
-          </h2>
-          <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-            Quatro passos. Sua denúncia ajuda a comunidade inteira.
-          </p>
-        </div>
+        <Reveal>
+          <div className="max-w-2xl mb-16">
+            <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
+              Passo a passo
+            </p>
+            <h2 className="text-3xl md:text-5xl leading-tight">
+              Contribuir com a blocklist
+            </h2>
+            <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+              Quatro passos. Sua denúncia ajuda a comunidade inteira.
+            </p>
+          </div>
+        </Reveal>
         <div className="mt-16 md:mt-20 grid gap-16 md:gap-20">
           {reportSteps.map((step, index) => (
-            <div
+            <Reveal
               key={step.title}
-              id={`tour-report-${index + 1}`}
-              className="grid md:grid-cols-2 gap-8 md:gap-16 items-start"
+              delay={index * 0.1}
             >
+              <div
+                id={`tour-report-${index + 1}`}
+                className="grid md:grid-cols-2 gap-8 md:gap-16 items-start"
+              >
               <div className={index % 2 === 1 ? "md:order-2" : ""}>
                 <div className="flex items-center gap-3 mb-1">
                   <span className="text-5xl md:text-6xl font-bold text-arcade-blue/20 leading-none">
@@ -428,30 +446,31 @@ function ComoUsarPage() {
                 />
               </div>
             </div>
+          </Reveal>
           ))}
         </div>
       </section>
 
       <section id="tour-moderation" className="py-20 md:py-28">
         <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
-          <div className="md:sticky md:top-32">
-            <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
-              Moderação
-            </p>
-            <h2 className="text-3xl md:text-5xl leading-tight">
-              Depois da denúncia
-            </h2>
-            <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-              Toda denúncia passa por duas camadas de verificação antes de entrar
-              na blocklist.
-            </p>
-          </div>
+          <Reveal>
+            <div className="md:sticky md:top-32">
+              <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
+                Moderação
+              </p>
+              <h2 className="text-3xl md:text-5xl leading-tight">
+                Depois da denúncia
+              </h2>
+              <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+                Toda denúncia passa por duas camadas de verificação antes de entrar
+                na blocklist.
+              </p>
+            </div>
+          </Reveal>
           <div className="space-y-8">
-            {moderationStages.map((stage) => (
-              <div
-                key={stage.title}
-                className="rounded-xl border border-arcade-blue/10 bg-arcade-blue/[0.02] p-6 md:p-8"
-              >
+            {moderationStages.map((stage, index) => (
+              <Reveal key={stage.title} delay={index * 0.1}>
+                <div className="rounded-xl border border-arcade-blue/10 bg-arcade-blue/[0.02] p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-arcade-blue/10">
                     <stage.icon className="h-5 w-5 text-arcade-blue" />
@@ -464,30 +483,32 @@ function ComoUsarPage() {
                   {stage.description}
                 </p>
               </div>
+            </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       <section id="tour-trust" className="py-20 md:py-28">
-        <div className="max-w-2xl mb-16">
-          <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
-            Credibilidade
-          </p>
-          <h2 className="text-3xl md:text-5xl leading-tight">
-            Por que confiar na blocklist
-          </h2>
-          <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-            O Puxei o Cabo é uma ferramenta da comunidade, não uma empresa. Sem
-            dados vendidos, sem anúncios, sem agenda oculta.
-          </p>
-        </div>
+        <Reveal>
+          <div className="max-w-2xl mb-16">
+            <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
+              Credibilidade
+            </p>
+            <h2 className="text-3xl md:text-5xl leading-tight">
+              Por que confiar na blocklist
+            </h2>
+            <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+              O Puxei o Cabo é uma ferramenta da comunidade, não uma empresa. Sem
+              dados vendidos, sem anúncios, sem agenda oculta.
+            </p>
+          </div>
+        </Reveal>
         <div className="grid md:grid-cols-3 gap-6">
-          {trustPoints.map((point) => (
-            <div
-              key={point.title}
-              className="group rounded-xl border border-arcade-blue/10 bg-arcade-blue/[0.02] p-8 transition-all duration-150 hover:border-arcade-blue/30 hover:shadow-[0_0_24px_oklch(0.60_0.22_235_/_0.08)]"
-            >
+          {trustPoints.map((point, index) => (
+            <Reveal key={point.title} delay={index * 0.1}>
+              <div className="group rounded-xl border border-arcade-blue/10 bg-arcade-blue/[0.02] p-8 transition-all duration-150 hover:border-arcade-blue/30 hover:shadow-[0_0_24px_oklch(0.60_0.22_235_/_0.08)]"
+              >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-arcade-blue/10 mb-5 group-hover:bg-arcade-blue/15 transition-colors duration-150">
                 <point.icon className="h-6 w-6 text-arcade-blue" />
               </div>
@@ -496,13 +517,15 @@ function ComoUsarPage() {
                 {point.description}
               </p>
             </div>
+          </Reveal>
           ))}
         </div>
       </section>
 
       <section id="tour-cta" className="relative overflow-hidden rounded-2xl border border-arcade-blue/10 bg-gradient-to-br from-arcade-blue/[0.03] to-transparent py-16 md:py-20 px-8 mt-12">
         <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-arcade-blue/5 blur-[100px]" />
-        <div className="relative max-w-xl mx-auto text-center">
+        <Reveal>
+          <div className="relative max-w-xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl leading-tight">
             Faça parte da blocklist
           </h2>
@@ -511,23 +534,28 @@ function ComoUsarPage() {
             Crie sua conta em segundos. Só um email válido para criar sua conta.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link to="/register">
-              <Button size="lg">
-                  Criar conta{" "}
-                  <ArrowRight />
-                </Button>
-            </Link>
-            <Link to="/login">
-              <Button size="lg" variant="outline">
-                  Já tenho conta{" "}
-                  <LogIn />
-                </Button>
-            </Link>
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Link to="/register">
+                <Button size="lg">
+                    Criar conta{" "}
+                    <ArrowRight />
+                  </Button>
+              </Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Link to="/login">
+                <Button size="lg" variant="outline">
+                    Já tenho conta{" "}
+                    <LogIn />
+                  </Button>
+              </Link>
+            </motion.div>
           </div>
           <p className="mt-8 text-xs text-muted-foreground">
             Consulte, denuncie, bloqueie. A comunidade agradece.
           </p>
         </div>
+        </Reveal>
       </section>
 
       <section className="mt-6 text-center">

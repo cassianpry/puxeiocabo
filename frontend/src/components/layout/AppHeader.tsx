@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import { AuthNav } from "./AuthNav";
 import type { Role } from "@/types/api";
 
@@ -25,12 +26,21 @@ export function AppHeader({
             <img src="/logo.png" alt="Puxei o Cabo" className="h-14 w-auto" />
             {title}
           </Link>
-          <Link
-            to="/como-usar"
-            className="text-sm text-muted-foreground hover:text-primary transition-colors duration-150"
-          >
-            Como usar
-          </Link>
+          <motion.div whileHover="hover" className="relative">
+            <Link
+              to="/como-usar"
+              className="text-sm text-muted-foreground transition-colors duration-150 hover:text-primary"
+            >
+              Como usar
+            </Link>
+            <motion.span
+              className="absolute -bottom-0.5 left-0 h-px bg-primary"
+              variants={{ hover: { scaleX: 1 } }}
+              initial={{ scaleX: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              style={{ originX: "left" }}
+            />
+          </motion.div>
         </div>
         <AuthNav
           isAuthenticated={isAuthenticated}
