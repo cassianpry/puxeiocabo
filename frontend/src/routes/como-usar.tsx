@@ -1,4 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/useAuth";
+import { TourGuide } from "@/components/app/TourGuide";
 import { Button } from "@/components/ui/button";
 import {
   Search,
@@ -16,8 +18,13 @@ import {
   Ban,
   FileSearch,
 } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/como-usar")({
+  validateSearch: (search: Record<string, string>) => {
+    const result = search.tour === 'true' ? { tour: true } : {}
+    return result
+  },
   head: () => ({
     meta: [
       {
@@ -162,10 +169,73 @@ const trustPoints = [
   },
 ];
 
+const tourSteps = [
+  {
+    title: "Bem-vindo à blocklist",
+    description:
+      "Você agora faz parte da blocklist colaborativa da comunidade brasileira de SF6. Consulte, denuncie e bloqueie rage-quitters no jogo pelo código de usuário.",
+    sectionId: "tour-hero",
+  },
+  {
+    title: "Consulte",
+    description:
+      "Antes de aceitar uma revanche, pesquise o nome ou código de usuário do oponente no site. A consulta é pública e não requer cadastro.",
+    sectionId: "tour-ecosystem",
+  },
+  {
+    title: "Denuncie",
+    description:
+      "Caiu com um rage-quitter? Registre-se, vincule seu lutador e envie a prova em JPEG. Sua denúncia passará por moderação e, se aprovada, aparecerá no site.",
+    sectionId: "tour-ecosystem",
+  },
+  {
+    title: "Bloqueie",
+    description:
+      "Com o código de usuário ou nome do jogador denunciado, vá no SF6 → CFN → Buscar Jogador → Bloqueie. A blocklist do site vira sua blocklist pessoal no jogo.",
+    sectionId: "tour-ecosystem",
+  },
+  {
+    title: "Pesquise antes de jogar",
+    description:
+      "Na página inicial, busque pelo nome ou código de usuário do oponente. Veja o histórico de denúncias aprovadas e decida se aceita a revanche. Não precisa de cadastro.",
+    sectionId: "tour-consult",
+  },
+  {
+    title: "Contribua com a blocklist",
+    description:
+      "No painel, clique em 'Nova Denúncia', busque o rage-quitter pelo código de usuário, anexe o print JPEG mostrando a desconexão e envie. Sua denúncia ajuda a comunidade inteira.",
+    sectionId: "tour-report",
+  },
+]
+
 function ComoUsarPage() {
+  const { tour } = Route.useSearch()
+  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  const [tourDone] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('tourDone') === '1'
+    }
+    return false
+  })
+
+  function handleTourEnd() {
+    localStorage.setItem('tourDone', '1')
+    navigate({ to: '/dashboard' })
+  }
+
+  const showTour = tour === true && isAuthenticated && !tourDone
+
   return (
     <div className="pb-32">
-      <section className="relative overflow-hidden pt-20 md:pt-32 pb-16 md:pb-24">
+      {showTour && (
+        <TourGuide
+          steps={tourSteps}
+          onComplete={handleTourEnd}
+          onSkip={handleTourEnd}
+        />
+      )}
+      <section id="tour-hero" className="relative overflow-hidden pt-20 md:pt-32 pb-16 md:pb-24">
         <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-arcade-blue/5 blur-[120px]" />
         <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-arcade-blue/5 blur-[120px]" />
         <div className="relative grid md:grid-cols-2 gap-12 md:gap-16 items-center">
@@ -208,7 +278,7 @@ function ComoUsarPage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-28">
+      <section id="tour-ecosystem" className="py-20 md:py-28">
         <div className="max-w-2xl mb-16">
           <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
             Ecossistema
@@ -242,7 +312,7 @@ function ComoUsarPage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-28">
+      <section id="tour-consult" className="py-20 md:py-28">
         <div className="max-w-2xl mb-16">
           <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
             Para jogadores
@@ -273,7 +343,7 @@ function ComoUsarPage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-28">
+      <section id="tour-report" className="py-20 md:py-28">
         <div className="max-w-2xl mb-16">
           <p className="text-xs font-medium tracking-[0.15em] text-arcade-blue uppercase mb-3">
             Passo a passo

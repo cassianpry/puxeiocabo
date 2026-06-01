@@ -27,7 +27,7 @@ function AuthLayout() {
 
   async function handleLink(shortId: string) {
     await linkShortId(shortId)
-    router.invalidate()
+    router.navigate({ to: '/como-usar', search: { tour: true } })
   }
 
   if (needsLink) {
